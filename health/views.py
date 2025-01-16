@@ -22,8 +22,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from django.http import HttpResponse
-# Create your views here.
 
+
+########################################################################################################
+############################ Pages Templates ########################################
+########################################################################################################
 def Home(request):
     dis = Feedback.objects.all()  # Fetch feedback data from the Feedback model
     return render(request, 'carousel.html', {'dis': dis})
@@ -38,17 +41,7 @@ def Admin_Home(request):
     d = {'dis':dis.count(),'pat':pat.count(),'doc':doc.count(),'feed':feed.count()}
     return render(request,'admin_home.html',d)
 
-@login_required(login_url="login")
-def assign_status(request,pid):
-    doctor = Doctor.objects.get(id=pid)
-    if doctor.status == 1:
-        doctor.status = 2
-        messages.success(request, 'Selected doctor are successfully withdraw his approval.')
-    else:
-        doctor.status = 1
-        messages.success(request, 'Selected doctor are successfully approved.')
-    doctor.save()
-    return redirect('view_doctor')
+
 
 @login_required(login_url="login")
 def User_Home(request):
@@ -74,6 +67,51 @@ def Contact(request):
 def Gallery(request):
     return render(request,'gallery.html')
 
+
+@login_required(login_url="login")
+def delete_doctor(request,pid):
+    doc = Doctor.objects.get(id=pid)
+    doc.delete()
+    return redirect('view_doctor')
+
+@login_required(login_url="login")
+def delete_feedback(request,pid):
+    doc = Feedback.objects.get(id=pid)
+    doc.delete()
+    return redirect('view_feedback')
+
+@login_required(login_url="login")
+def delete_patient(request,pid):
+    doc = Patient.objects.get(id=pid)
+    doc.delete()
+    return redirect('view_patient')
+
+@login_required(login_url="login")
+def delete_searched(request,pid):
+    doc = Search_Data.objects.get(id=pid)
+    doc.delete()
+    return redirect('view_search_pat')
+
+@login_required(login_url="login")
+def View_Doctor(request):
+    doc = Doctor.objects.all()
+    d = {'doc':doc}
+    return render(request,'view_doctor.html',d)
+
+@login_required(login_url="login")
+def View_Patient(request):
+    patient = Patient.objects.all()
+    d = {'patient':patient}
+    return render(request,'view_patient.html',d)
+
+@login_required(login_url="login")
+def View_Feedback(request):
+    dis = Feedback.objects.all()
+    d = {'dis':dis}
+    return render(request,'view_feedback.html',d)
+########################################################################################################
+############################ Authtentications Logics  ########################################
+########################################################################################################
 
 def Login_User(request):
     error = ""
@@ -175,6 +213,23 @@ def Change_Password(request):
     d = {'error':error,'terror':terror,'data':sign}
     return render(request,'change_password.html',d)
 
+
+########################################################################################################
+############################ Main Logics Starts here  ########################################
+########################################################################################################
+
+@login_required(login_url="login")
+def assign_status(request,pid):
+    doctor = Doctor.objects.get(id=pid)
+    if doctor.status == 1:
+        doctor.status = 2
+        messages.success(request, 'Selected doctor are successfully withdraw his approval.')
+    else:
+        doctor.status = 1
+        messages.success(request, 'Selected doctor are successfully approved.')
+    doctor.save()
+    return redirect('view_doctor')
+
 @login_required(login_url="login")
 def add_doctor(request,pid=None):
     doctor = None
@@ -215,47 +270,7 @@ def view_search_pat(request):
     return render(request, 'view_search_pat.html', {'data': data})
 
 
-@login_required(login_url="login")
-def delete_doctor(request,pid):
-    doc = Doctor.objects.get(id=pid)
-    doc.delete()
-    return redirect('view_doctor')
 
-@login_required(login_url="login")
-def delete_feedback(request,pid):
-    doc = Feedback.objects.get(id=pid)
-    doc.delete()
-    return redirect('view_feedback')
-
-@login_required(login_url="login")
-def delete_patient(request,pid):
-    doc = Patient.objects.get(id=pid)
-    doc.delete()
-    return redirect('view_patient')
-
-@login_required(login_url="login")
-def delete_searched(request,pid):
-    doc = Search_Data.objects.get(id=pid)
-    doc.delete()
-    return redirect('view_search_pat')
-
-@login_required(login_url="login")
-def View_Doctor(request):
-    doc = Doctor.objects.all()
-    d = {'doc':doc}
-    return render(request,'view_doctor.html',d)
-
-@login_required(login_url="login")
-def View_Patient(request):
-    patient = Patient.objects.all()
-    d = {'patient':patient}
-    return render(request,'view_patient.html',d)
-
-@login_required(login_url="login")
-def View_Feedback(request):
-    dis = Feedback.objects.all()
-    d = {'dis':dis}
-    return render(request,'view_feedback.html',d)
 
 @login_required(login_url="login")
 def View_My_Detail(request):
