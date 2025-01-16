@@ -95,7 +95,3 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 
 ---
 
-## Setup and Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/heart-risk-prediction.git
