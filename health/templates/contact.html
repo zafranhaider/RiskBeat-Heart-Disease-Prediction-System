@@ -1,0 +1,67 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+<!-- Map Section -->
+
+
+<!-- Contact Section -->
+<section class="contact-section bg-light py-5" id="contact">
+    <div class="container py-xl-5 py-lg-4">
+        <!-- Section Title -->
+        <div class="title-section text-center mb-5">
+            <h2 class="text-uppercase font-weight-bold text-dark">Contact Us</h2>
+            <p class="text-muted">We would love to hear from you</p>
+            <hr class="w-25 mx-auto" style="border-top: 2px solid #61bebc;">
+        </div>
+
+        <!-- Contact Info and Form -->
+        <div class="row">
+            <!-- Contact Info -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase font-weight-bold text-dark mb-4">Get in Touch</h5>
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-3">
+                        <i class="fa fa-map-marker text-primary mr-2"></i>Ansari Nagar West, New Delhi, Delhi
+                    </li>
+                    <li class="mb-3">
+                        <i class="fa fa-phone text-primary mr-2"></i>+91 12345 67890
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope text-primary mr-2"></i>
+                        <a href="mailto:binarycoders@gmail.com" class="text-muted">binarycoders@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-6">
+                <div class="form-bg-w3ls p-4 shadow-sm rounded">
+                    <form action="#" method="post">
+                        <div class="form-group">
+                            <label for="name" class="text-muted">Name</label>
+                            <input type="text" name="Name" id="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="text-muted">Email</label>
+                            <input type="email" name="Email" id="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="text-muted">Subject</label>
+                            <input type="text" name="Subject" id="subject" class="form-control" placeholder="Enter subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="text-muted">Message</label>
+                            <textarea name="Message" id="message" class="form-control" placeholder="Write your message" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase font-weight-bold" style="background-color: #61bebc; border: none;">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

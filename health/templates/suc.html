@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+<section class="section-padding" style="padding-top: 70px;">
+    <div class="container">
+        <div class="text-center">
+            <!-- Success Icon -->
+            <h2 class="text-success">Submission Successful!</h2>
+            <p class="lead">Thank you! Your submission has been successfully recorded.</p>
+        </div>
+
+        <!-- Optional details section -->
+        <div class="mt-4" style="max-width: 600px; margin: 0 auto;">
+            <table class="table table-bordered">
+                <tbody>
+              
+                    <tr>
+                        <th>Status</th>
+                        <td><span class="text-success">Received</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Back to Home button -->
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-primary">Go to Home</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

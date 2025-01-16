@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+<section class="about py-5 bg-light">
+    <div class="container py-xl-5 py-lg-4">
+        <!-- Title Section -->
+        <div class="title-section text-center mb-5">
+            <h2 class="text-uppercase font-weight-bold text-dark mb-3">About Us</h2>
+            <p class="text-muted">Empowering Healthcare Through Machine Learning</p>
+            <hr class="w-25 mx-auto" style="border-top: 2px solid #61bebc;">
+        </div>
+
+        <!-- Image Section -->
+        <div class="text-center mb-4">
+            <img src="{% static 'images/Picture1.png' %}" alt="Heart Disease Prediction" class="img-fluid shadow-lg rounded" style="max-width: 350px;">
+        </div>
+
+        <!-- Content Section -->
+        <div class="content">
+            <h5 class="text-uppercase font-weight-bold text-center mb-4" style="color: #61bebc;">Heart Disease Risk Prediction</h5>
+            <h6 class="text-center text-muted mb-4">A <span class="font-italic" style="color: #61bebc;">CodeOra</span> Product</h6>
+
+            <p class="text-justify text-muted">
+                Machine learning is transforming industries across the globe, and the healthcare sector is no exception. By leveraging the power of predictive analytics, healthcare professionals can anticipate and manage risks with unprecedented accuracy. Our innovative solution focuses on detecting and predicting heart disease risks, equipping doctors with the insights they need to deliver patient-specific care.
+            </p>
+
+            <p class="text-justify text-muted">
+                At <span style="color: #61bebc;">CodeOra</span>, our mission is to empower healthcare providers with cutting-edge tools that enhance diagnostic precision and improve patient outcomes. By integrating machine learning into routine medical processes, we aim to make a significant impact on global health.
+            </p>
+        </div>
+
+        <!-- Call to Action Section -->
+  
+</section>
+
+{% endblock %}

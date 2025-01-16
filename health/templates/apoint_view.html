@@ -1,0 +1,93 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+<style>
+.button-group {
+    display: flex;
+    gap: 5px; /* Space between the buttons */
+}
+</style>
+
+<section class="section-padding" style="padding-top: 70px;">
+    <div class="container">
+        <h2 class="text-center">Appointments</h2>
+        <div style="overflow-x: auto; max-height: 400px;">
+            {% if appointments %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Appointment Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.name }}</td>
+                        <td>{{ appointment.email }}</td>
+                        <td>{{ appointment.contact_number }}</td>
+                        <td>{{ appointment.get_appointment_type_display }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.message }}</td>
+                        <td>
+                            <form method="post" action="{% url 'update_booking_status' appointment.id %}">
+                                {% csrf_token %}
+                                <div class="button-group">
+                                    <button type="submit" name="status" value="approved" class="btn btn-success btn-sm">Approve</button>
+                                    <button type="submit" name="status" value="rejected" class="btn btn-danger btn-sm">Reject</button>
+                                    <button type="submit" name="status" value="unavailable" class="btn btn-secondary btn-sm">Unavailable</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-appointments-container">
+                <p class="no-appointments-title">No Appointments Available Today</p>
+                <p class="no-appointments-subtitle">Check back later for updates or contact us for assistance.</p>
+            </div>
+            {% endif %}
+            
+            <style>
+            .no-appointments-container {
+                text-align: center;
+                padding: 30px;
+                background: linear-gradient(135deg, #f9f9f9, #e9ecef);
+                border: 2px dashed #dee2e6;
+                border-radius: 12px;
+                margin-top: 30px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .no-appointments-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            }
+            
+            .no-appointments-title {
+                font-size: 22px;
+                font-weight: bold;
+                color: #343a40;
+                margin-bottom: 10px;
+            }
+            
+            .no-appointments-subtitle {
+                font-size: 16px;
+                color: #6c757d;
+            }
+            </style>
+            
+            
+        </div>
+    </div>
+</section>
+{% endblock %}

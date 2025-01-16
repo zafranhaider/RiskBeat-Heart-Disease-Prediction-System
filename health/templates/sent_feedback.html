@@ -1,0 +1,59 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+{% if terror == "create" %}
+<script>
+    alert('Send Feedback Successfully');
+    window.location="{% url 'sent_feedback' %}";
+</script>
+{% endif %}
+
+	<section class="logins py-5">
+		<div class="container py-xl-5 py-lg-3">
+			<div class="title-section mb-md-5 mb-4">
+				<h6 class="w3ls-title-sub"></h6>
+				<br><br>
+				<h3 class="w3ls-title text-uppercase text-dark font-weight-bold">Send Feedback</h3>
+			</div><hr/>
+			<div class="login px-sm-12" style="width:100%">
+				<form action="" method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="form-group row">
+						<div class="col-md-12">
+						<label>Username</label>
+						<input type="text" class="form-control" name="uname" value="{{request.user.username}}" required="" readonly>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-12">
+						<label>Write Message</label>
+						<textarea class="form-control" name="msg" placeholder="Write Messages" required="">
+                        </textarea>
+                        </div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-md-12">
+							<label>Rate Us</label>
+							<div>
+								<input type="radio" id="star5" name="rating" value="5" required>
+								<label for="star5" title="5 stars">★-5</label>
+								<input type="radio" id="star4" name="rating" value="4">
+								<label for="star4" title="4 stars">★-4</label>
+								<input type="radio" id="star3" name="rating" value="3">
+								<label for="star3" title="3 stars">★-3</label>
+								<input type="radio" id="star2" name="rating" value="2">
+								<label for="star2" title="2 stars">★-2</label>
+								<input type="radio" id="star1" name="rating" value="1">
+								<label for="star1" title="1 star">★-1</label>
+							</div>
+						</div>
+					</div>
+					
+					<button type="submit" class="btn submit mt-4" style="background-color: #726f6e;">Send Feedback</button>
+				</form>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}
