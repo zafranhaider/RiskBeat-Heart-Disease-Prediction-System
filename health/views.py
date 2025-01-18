@@ -473,6 +473,11 @@ def appointment_status(request):
 ############################ Machine Learning Logics Algoritham ########################################
 ########################################################################################################
 
+
+########################################################################################################
+############################ Heart Disese Logics Algoritham ########################################
+########################################################################################################
+
 def preprocess_inputs(df, scaler):
     df = df.copy()
     # Split df into X and y
@@ -499,31 +504,51 @@ FEATURE_NAME_MAP = {
 }
 
 
-
 def prdict_heart_disease(list_data):
-    csv_file = Admin_Helath_CSV.objects.get(id=1)
-    df = pd.read_csv(csv_file.csv_file)
+    # Load the dataset from CSV
+    csv_file_path = './Machine_Learning/heart.csv'  
+
+    # Read the CSV file
+    df = pd.read_csv(csv_file_path)
 
     X = df[['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']]
     y = df['target']
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.82, random_state=0)
-    nn_model = XGBClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
-    nn_model.fit(X_train, y_train)
-    # 0.82=87% Acuracy
+
+    # Initialize the model and load saved parameters if model file exists
+    nn_model = XGBClassifier(
+        n_estimators=143,
+        max_depth=8,
+        learning_rate=0.2292430275415037,
+        subsample=0.8559154846023602,
+        colsample_bytree=0.6122259726638296,
+        reg_alpha=0.4751707824062298,
+        reg_lambda=1.727246500873494,
+        random_state=0
+    )
+
+    # Load the pre-trained model if it exists
+    try:
+        nn_model.load_model('./Machine_Learning/heart.json')  # Add the path to the saved model
+        print("Model loaded successfully!")
+    except Exception as e:
+        print("No pre-trained model found, training a new model...")
+        nn_model.fit(X_train, y_train)  # Train a new model if the saved one doesn't exist
+
     # Convert input to proper format
     list_data = np.array([list_data], dtype=np.float32)
     pred = nn_model.predict(list_data)
-
+    
     # Feature importance extraction
     feature_importances = nn_model.feature_importances_
     feature_names = X.columns
     important_factors = [
-        (FEATURE_NAME_MAP[feature_names[i]], feature_importances[i]) for i in range(len(feature_importances))
+        (FEATURE_NAME_MAP.get(feature_names[i], feature_names[i]), feature_importances[i]) 
+        for i in range(len(feature_importances))
     ]
     important_factors.sort(key=lambda x: x[1], reverse=True)
 
     return (nn_model.score(X_test, y_test) * 100), pred, important_factors
-
 
 
 
@@ -582,3 +607,6 @@ def predict_desease(request, pred, accuracy):
     return render(request, 'predict_disease.html', context)
 
 
+########################################################################################################
+############################ Life Assessment Logics Algoritham ########################################
+########################################################################################################

@@ -6,70 +6,42 @@
     <div class="container py-xl-5 py-lg-3">
         <!-- Title Section -->
         <div class="title-section text-center mb-5">
-            <h6 class="w3ls-title-sub text-danger">Heart Prediction Output</h6>
-            <h3 class="w3ls-title text-uppercase text-dark font-weight-bold">Prediction Results</h3>
+            <h6 class="w3ls-title-sub text-danger">Heart Prediction</h6>
+            <h3 class="w3ls-title text-uppercase text-dark font-weight-bold">Your Prediction Results</h3>
+            <p class="text-muted">Analyzed with precision and accuracy for your health.</p>
             <hr class="w-25 mx-auto" style="border-top: 2px solid #61bebc;">
         </div>
 
         <!-- Prediction Output -->
         <div class="prediction-output text-center mb-5">
-            <h4 class="font-weight-bold text-dark">Prediction Output</h4>
-            <hr>
-            <p><strong>Accuracy (%) is:</strong> <span class="text-primary">{{ accuracy }}</span></p>
-            <p><strong>Result:</strong>
-                {% if pred == 0 %}
-                <span class="text-success font-weight-bold">{{ pred_message }}</span>
-                {% else %}
-                <span class="text-danger font-weight-bold">{{ pred_message }}</span>
-                <h5 class="mt-4">Top Contributing Factors:</h5>
-                <ul>
-                    {% for factor, importance in contributing_factors %}
-                    <h5>{{ factor }}: {{ importance|floatformat:2 }}</h5>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </p>
-            
-        </div>
-
-        {% if pred != "0" %}
-        <!-- Doctor Contact Section -->
-        <div class="doctor-contact-section py-4">
-            <h4 class="text-center font-weight-bold text-dark mb-4">Contact Our Doctors</h4>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Image</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Contact</th>
-                            <th>Address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for i in doctor %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><img src="{{ i.image.url }}" alt="Doctor Image" class="img-fluid rounded" style="width: 80px; height: 90px;"></td>
-                            <td>{{ i.user.first_name }} {{ i.user.last_name }}</td>
-                            <td>{{ i.user.email }}</td>
-                            <td>{{ i.contact }}</td>
-                            <td>{{ i.address }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">No Record Found.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="card shadow p-4">
+                <h2 class="font-weight-bold text-dark">Prediction Summary</h2>
+                <hr>
+                <p>
+                    <strong>Accuracy:</strong> 
+                    <span class="badge badge-primary p-1"style="font-size: 0.75rem;">{{ accuracy }}%</span>
+                </p>
+                <p>
+                    <strong>Result:</strong> 
+                    {% if pred == 0 %}
+                    <span class="badge badge-success p-2">{{ pred_message }}</span>
+                    {% else %}
+                    <span class="badge badge-danger p-2">{{ pred_message }}</span>
+                    <div class="mt-4">
+                        <h5>Top Contributing Factors:</h5>
+                        <ul class="list-group mt-2">
+                            {% for factor, importance in contributing_factors %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ factor }}
+                                <span class="badge badge-info">{{ importance|floatformat:2 }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </p>
             </div>
         </div>
-        {% endif %}
-    </div>
-</section>
+
 
 {% endblock %}
