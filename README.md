@@ -1,4 +1,4 @@
-# Heart Disease Risk Prediction System
+# Heart Disease Risk Prediction 
 A Django-based web application that predicts the risk of heart disease using Machine Learning algorithms like Gradient Boosting and Logistic Regression. The system provides personalized insights for early diagnosis, enhanced treatment planning, and efficient healthcare management.
 
 ---
