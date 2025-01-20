@@ -513,18 +513,18 @@ def prdict_heart_disease(list_data):
 
     X = df[['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']]
     y = df['target']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.82, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.92, random_state=0)
 
     # Initialize the model and load saved parameters if model file exists
     nn_model = XGBClassifier(
-        n_estimators=143,
-        max_depth=8,
-        learning_rate=0.2292430275415037,
-        subsample=0.8559154846023602,
-        colsample_bytree=0.6122259726638296,
-        reg_alpha=0.4751707824062298,
-        reg_lambda=1.727246500873494,
-        random_state=0
+        n_estimators= 62,
+        max_depth= 3,
+        learning_rate= 0.09185460139255142,
+        subsample= 0.9445087255877626,
+        colsample_bytree= 0.9503068865846166,
+        reg_alpha= 0.6822185735880166,
+        reg_lambda= 4.781662063326414,
+        random_state=0,
     )
 
     # Load the pre-trained model if it exists
