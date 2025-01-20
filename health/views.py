@@ -517,14 +517,14 @@ def prdict_heart_disease(list_data):
 
     # Initialize the model and load saved parameters if model file exists
     nn_model = XGBClassifier(
-        n_estimators=143,
-        max_depth=8,
-        learning_rate=0.2292430275415037,
-        subsample=0.8559154846023602,
-        colsample_bytree=0.6122259726638296,
-        reg_alpha=0.4751707824062298,
-        reg_lambda=1.727246500873494,
-        random_state=0
+        n_estimators=166,
+        max_depth= 6,
+        learning_rate= 0.024732561568874125,
+        subsample= 0.7805684973814158,
+        colsample_bytree= 0.9389311570118616,
+        reg_alpha= 0.7406459603133639,
+        reg_lambda= 2.904335752371348,
+        random_state=0,
     )
 
     # Load the pre-trained model if it exists
