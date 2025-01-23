@@ -1,7 +1,11 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView
 from .views import add_activity, add_diet_log, custom_logout, profile
+from django.urls import include, path
+from django.views.generic.base import RedirectView
+from django.urls import re_path
 from . import views
+
 
 urlpatterns = [
     path('', views.home, name='home'),
