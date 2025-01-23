@@ -285,6 +285,7 @@ $(document).ready(function() {
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/add_heartdetail">Predict</a></li>
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/view-diseases">View Disease</a></li>
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/sent_feedback">Feedback</a></li>
+								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/fitness">Tracker</a></li>
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/search-doctor">Search</a></li>
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/apoint">Booking</a></li>
 								
@@ -417,6 +418,8 @@ $(document).ready(function() {
 		<!-- banner -->
 		<div class="mobile-padding">
 			{% block body %}
+			{% block content %}
+			{% endblock %}
 			{% endblock %}
 		</div>
 		

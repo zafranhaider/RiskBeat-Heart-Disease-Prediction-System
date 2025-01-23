@@ -4,11 +4,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from health.views import *
 from .apirep import routerep
+from django.urls import include, path
+from django.views.generic.base import RedirectView
+from django.urls import re_path
 
 urlpatterns = [
     path('api/v1/', include(routerep.urls)),
     path('admin/', admin.site.urls),
     path('', Home, name="home"),
+    path('fitness/', include('fitness.urls')),
+    re_path(r'^$', RedirectView.as_view(url='/fitness/', permanent=True)),
     path('index.html', Home, name="index"),  # Serve index.html
     path('patient_home/', User_Home, name="patient_home"),
     path('doctor_home/', Doctor_Home, name="doctor_home"),
