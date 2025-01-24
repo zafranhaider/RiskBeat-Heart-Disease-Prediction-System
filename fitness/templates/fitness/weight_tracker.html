@@ -1,50 +1,107 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<h2>Weight Tracker</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Weight Tracker</h2>
 
-<canvas id="weightChart" width="400" height="200"></canvas>
-<canvas id="weightChart" width="400" height="200"></canvas>
+    <form method="post" class="w-50 mx-auto bg-light p-4 rounded shadow-sm">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {{ form.as_p }}
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-4">Submit</button>
+        </div>
+    </form>
+
+    <div class="mt-5">
+        <h3 class="text-center mb-4">Weight Progress Chart</h3>
+        <div class="chart-container" style="position: relative; height:40vh; width:80vw; margin: 0 auto;">
+            <canvas id="weightChart"></canvas>
+        </div>
+    </div>
+</div>
 
 <script>
+    // Check the data being passed
+    console.log('Data Points:', {{ weights|safe }});
+    console.log('Labels:', {{ dates|safe }});
+
     var ctx = document.getElementById('weightChart').getContext('2d');
     var dataPoints = {{ weights|safe }};
     var labels = {{ dates|safe }};
 
-    // Default point styles
-    var pointBackgroundColors = new Array(dataPoints.length).fill('rgba(0, 0, 0, 0.1)'); // Light color for all points
-    var pointBorderColors = new Array(dataPoints.length).fill('rgba(0, 0, 0, 0.1)'); // Light color for all points
-    var pointRadius = new Array(dataPoints.length).fill(3); // Smaller radius for all points
+    var pointBackgroundColors = new Array(dataPoints.length).fill('rgba(0, 0, 0, 0.1)');
+    var pointBorderColors = new Array(dataPoints.length).fill('rgba(0, 0, 0, 0.1)');
+    var pointRadius = new Array(dataPoints.length).fill(3);
 
-    // Style for the first point (current weight)
+    // Highlight the most recent weight point
     if (dataPoints.length > 0) {
-        pointBackgroundColors[0] = 'rgb(255, 99, 132)'; // Highlight color
-        pointBorderColors[0] = 'rgb(255, 99, 132)'; // Highlight color
-        pointRadius[0] = 5; // Larger radius for the first point
+        pointBackgroundColors[dataPoints.length - 1] = 'rgb(255, 99, 132)';
+        pointBorderColors[dataPoints.length - 1] = 'rgb(255, 99, 132)';
+        pointRadius[dataPoints.length - 1] = 5;
     }
 
+    // Create Chart.js line chart
     var chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Weight Over Time',
-                backgroundColor: 'rgb(255, 99, 132)',
+                label: 'Weight Over Time (kg)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: dataPoints,
+                fill: true,
                 pointBackgroundColor: pointBackgroundColors,
                 pointBorderColor: pointBorderColors,
-                pointRadius: pointRadius
+                pointRadius: pointRadius,
+                tension: 0.3 // Smoothing the line
             }]
         },
-        options: {}
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Weight (kg)'
+                    },
+                    beginAtZero: false
+                }
+            }
+        }
     });
 </script>
-
 
 {% endblock %}
