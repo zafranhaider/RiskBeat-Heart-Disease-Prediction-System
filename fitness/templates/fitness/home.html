@@ -2,16 +2,16 @@
 
 {% block title %}Home{% endblock %}
 {% block content %}
-<div class="homepage">
+<div class="homepage" style="margin-top: 20px;">
     <!-- Hero Section -->
     <header class="hero-section">
         <div class="hero-content">
             <h1>Welcome to the <span>Fitness Tracker</span></h1>
-            {% if user.is_authenticated %}
+        
             <a href="{% url 'profile' %}" class="cta-btn">Go to Profile</a>
-            {% else %}
-            <a href="{% url 'register' %}" class="cta-btn">Get Started</a>
-            {% endif %}
+      
+            <a href="{% url 'register' %}" class="cta-btn">Add Data</a>
+
         </div>
     </header>
 
@@ -64,7 +64,7 @@
     }
 
     .hero-section {
-        background: linear-gradient(135deg, #4caf50, #81c784);
+        background: linear-gradient(135deg, #247cff, #81c784);
         color: white;
         padding: 40px 20px;
         text-align: center;
@@ -89,7 +89,7 @@
     }
 
     .cta-btn:hover {
-        background: #fbc02d;
+        background: #247cff;
     }
 
     .features {
