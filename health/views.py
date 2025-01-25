@@ -8,6 +8,8 @@ from .models import *
 from django.contrib.auth import authenticate, login, logout
 import numpy as np
 import pandas as pd
+
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 from django.db.models import Q
@@ -60,9 +62,26 @@ def Doctor_Home(request):
 def About(request):
     return render(request,'about.html')
 
-def Contact(request):
-    return render(request,'contact.html')
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('Name')
+        email = request.POST.get('Email')
+        subject = request.POST.get('Subject')
+        message = request.POST.get('Message')
 
+        # Save the data in the database
+        Contact.objects.create(name=name, email=email, subject=subject, message=message)
+
+        
+
+    return render(request, 'contact.html') 
+
+@login_required(login_url="login")
+def view_contacts(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to access this page.")
+    contacts = Contact.objects.all()  # Fetch all contacts, latest first
+    return render(request, 'view_contacts.html', {'contacts': contacts})
 
 def Gallery(request):
     return render(request,'gallery.html')
