@@ -58,7 +58,7 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - Classifies risk levels (low, medium, high) using Gradient Boosting and Logistic Regression.
 - Provides personalized insights for early diagnosis.
 
-### View Diseases
+### View Disease
 - Displays information about heart diseases, symptoms, causes, and treatments.
 - Educates users and doctors for informed decision-making.
 

@@ -37,7 +37,8 @@
             <!-- Contact Form -->
             <div class="col-lg-6">
                 <div class="form-bg-w3ls p-4 shadow-sm rounded">
-                    <form action="#" method="post">
+                    <form action="{% url 'contact' %}" method="post">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="name" class="text-muted">Name</label>
                             <input type="text" name="Name" id="name" class="form-control" placeholder="Enter your name" required>
@@ -58,6 +59,7 @@
                             Submit
                         </button>
                     </form>
+                    
                 </div>
             </div>
         </div>
