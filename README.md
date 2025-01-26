@@ -1,4 +1,4 @@
-# Heart Disease Risk Prediction System
+# RiskBeat
 A Django-based web application that predicts the risk of heart disease using Machine Learning algorithms like Gradient Boosting and Logistic Regression. The system provides personalized insights for early diagnosis, enhanced treatment planning, and efficient healthcare management.
 
 ---
@@ -62,6 +62,11 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - Displays information about heart diseases, symptoms, causes, and treatments.
 - Educates users and doctors for informed decision-making.
 
+### Doctor Appointment Module
+- Allows users to search for doctors by name, specialization, or availability.
+- Displays doctor profiles with qualifications, experience, and ratings.
+- Facilitates in-person and virtual consultations.
+
 ### Search Your Doctor
 - Enables users to find heart specialists by location or expertise.
 - Displays contact details and availability for consultations.
@@ -69,11 +74,6 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 ### Feedback System
 - Collects feedback from users and doctors about system functionality.
 - Gathers suggestions for improvements.
-
-### Doctor Appointment Module
-- Allows users to search for doctors by name, specialization, or availability.
-- Displays doctor profiles with qualifications, experience, and ratings.
-- Facilitates in-person and virtual consultations.
 
 ---
 
