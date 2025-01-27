@@ -48,7 +48,7 @@ class QuestionAskForm(forms.ModelForm):
 class QuesUpdateForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['title','body','status','restrict_comments']
+        fields = ['title','body','restrict_comments']
 
 
 class CommentForm(forms.ModelForm):
