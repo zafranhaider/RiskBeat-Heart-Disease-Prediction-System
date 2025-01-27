@@ -7,11 +7,13 @@ from .apirep import routerep
 from django.urls import include, path
 from django.views.generic.base import RedirectView
 from django.urls import re_path
-
+from community import views
 urlpatterns = [
     path('api/v1/', include(routerep.urls)),
     path('admin/', admin.site.urls),
     path('', Home, name="home"),
+    path('community/',include('community.urls'),name = 'community'),
+    path('oauth/',include('social_django.urls',namespace='social')),
     path('fitness/', include('fitness.urls')),
     re_path(r'^$', RedirectView.as_view(url='/fitness/', permanent=True)),
     path('index.html', Home, name="index"),  # Serve index.html
