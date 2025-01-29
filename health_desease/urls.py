@@ -21,6 +21,7 @@ urlpatterns = [
     
 
     path('doctor_home/', Doctor_Home, name="doctor_home"),
+
     path('admin_home/', Admin_Home, name="admin_home"),
     path('about/', About, name="about"),
     path('contact/', contact, name='contact'),
@@ -56,5 +57,8 @@ urlpatterns = [
     path('appointment-status/', appointment_status, name='appointment_status'),
     path('submission-success/', booking_form, name='submission_success'),
 
-
+    #Cornary Heart
+    path('add_conrheartdetail/', add_conrheartdetail, name="add_conrheartdetail"),
+    path('predict-cheart-disease/<str:pred>/<str:accuracy>/', predict_corndesease, name='predict_corndesease'),
+    # URL to display prediction and doctor info
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
