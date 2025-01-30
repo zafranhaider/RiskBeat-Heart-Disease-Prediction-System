@@ -251,4 +251,9 @@ diseases = [
             "causes": "Damage to heart valves from rheumatic fever.",
             "treatment": "Antibiotics, valve repair or replacement."
         }
-    ]
+    ,
+    {'name': 'Eisenmenger Syndrome', 'symptoms': 'Cyanosis, fatigue, shortness of breath.', 'causes': 'Untreated congenital heart defect leading to lung hypertension.', 'treatment': 'Oxygen therapy, medications, heart-lung transplant.'},
+    {'name': 'Bacterial Endocarditis', 'symptoms': 'Fever, chills, fatigue.', 'causes': 'Bacterial infection of the heart lining or valves.', 'treatment': 'Antibiotics, valve surgery.'},
+    {'name': 'Truncus Arteriosus', 'symptoms': 'Cyanosis, breathlessness, poor feeding in infants.', 'causes': 'Single large vessel instead of separate pulmonary artery and aorta.', 'treatment': 'Surgical repair.'},
+    {'name': 'Left Ventricular Noncompaction', 'symptoms': 'Fatigue, shortness of breath, arrhythmias.', 'causes': 'Abnormal development of the left ventricle.', 'treatment': 'Medication, implantable devices, heart transplant.'},
+]
