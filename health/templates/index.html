@@ -44,6 +44,79 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
+<style>
+	/* Ensure dropdown remains visible on hover for desktop */
+	@media (min-width: 992px) { 
+		.dropdown:hover .dropdown-menu {
+			display: block;
+			margin-top: 0; /* Adjust positioning */
+		}
+	}
+	
+	/* Dropdown menu general styling */
+	.dropdown-menu {
+		min-width: 250px; /* Adjusted width for mobile */
+		padding: 1rem;
+		border-radius: 10px;
+		box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+		background-color: #ffffff;
+		border: 1px solid #eaeaea;
+		font-family: 'Arial', sans-serif;
+		font-size: 14px;
+		color: #333;
+		transition: all 0.3s ease;
+	}
+	
+	/* Smooth hover effect */
+	.dropdown-menu:hover {
+		box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+	
+	/* Dropdown item styling */
+	.dropdown-menu .dropdown-item {
+		margin-bottom: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		border-radius: 6px;
+		transition: background-color 0.2s ease;
+	}
+	
+	/* Highlight effect */
+	.dropdown-menu .dropdown-item:hover {
+		background-color: #f5f5f5;
+		color: #007bff;
+	}
+	
+	/* Mobile Adjustments */
+	@media (max-width: 991px) {
+		.dropdown-menu {
+			width: 100%; /* Full width on mobile */
+			padding: 0.75rem;
+		}
+		.dropdown-menu .dropdown-item {
+			font-size: 16px; /* Slightly larger text for easier tapping */
+			padding: 0.75rem;
+		}
+	}
+	</style>
+<style>
+	/* Hide mobile-only buttons on larger screens */
+	.mobile-only {
+		display: none;
+	}
+	
+	/* Show mobile-only buttons on screens smaller than 768px */
+	@media (max-width: 768px) {
+		.mobile-only {
+			display: block;
+			width: 100%;
+			text-align: center;
+			padding: 10px 0;
+		}
+	}
+	</style>
+	
 <style>#logo {
     margin-left: 0; /* Align content to the left */
     display: flex;
@@ -341,7 +414,7 @@ $(document).ready(function() {
 							<ul class="menu" style="padding:10px;width:100%;">
 								<li><a href="{% url 'patient_home' %}" class="active">Home</a></li>
 								
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2 dropdown">
+								<li class="mx-lg-3 mx-md-3 my-md-0 my-2 dropdown">
 									<a 
 									  style="color: white;"
 									  class="dropdown-toggle" 
@@ -354,47 +427,10 @@ $(document).ready(function() {
 									  <li><a class="dropdown-item" href="/add_conrheartdetail">Coronary Heart Disease</a></li>
 									  <li><a class="dropdown-item" href="/predict_option3">Heart Disease From Lifestyle</a></li>
 									</ul>
-								  </li>
-								  <style>
-									/* Ensure dropdown remains visible on hover */
-									.dropdown:hover .dropdown-menu {
-									  display: block;
-									  margin-top: 0; /* Adjust positioning */
-									}
-																			.dropdown-menu {
-										min-width: 300px; /* Slightly larger width for better visibility */
-										padding: 1rem; /* Comfortable padding */
-										border-radius: 10px; /* Smooth rounded corners */
-										box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for a floating effect */
-										background-color: #ffffff; /* Clean white background */
-										border: 1px solid #eaeaea; /* Light border for separation */
-										font-family: 'Arial', sans-serif; /* Clean, professional font */
-										font-size: 14px; /* Easy-to-read font size */
-										color: #333; /* Dark text for contrast */
-										transition: all 0.3s ease; /* Smooth transition effect */
-										}
-
-										/* Add a hover effect to give feedback */
-										.dropdown-menu:hover {
-										box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15); /* Slightly darker shadow on hover */
-										transform: translateY(-2px); /* Subtle lift effect */
-										}
-
-										/* Add some spacing between dropdown items if applicable */
-										.dropdown-menu .dropdown-item {
-										margin-bottom: 0.5rem; /* Space between items */
-										padding: 0.5rem 0.75rem; /* Inner padding for better click area */
-										border-radius: 6px; /* Rounded corners for items */
-										transition: background-color 0.2s ease; /* Smooth background transition */
-										}
-
-										/* Highlight effect for hover state on items */
-										.dropdown-menu .dropdown-item:hover {
-										background-color: #f5f5f5; /* Light grey hover effect */
-										color: #007bff; /* Optional accent color for text */
-										}
-
-									</style>
+								</li>
+								
+				
+								
 									
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/check-disease">View Disease</a></li>
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/sent_feedback">Feedback</a></li>
@@ -422,22 +458,6 @@ $(document).ready(function() {
 					</div>
 					
 					<!-- CSS -->
-					<style>
-					/* Hide mobile-only buttons on larger screens */
-					.mobile-only {
-						display: none;
-					}
-					
-					/* Show mobile-only buttons on screens smaller than 768px */
-					@media (max-width: 768px) {
-						.mobile-only {
-							display: block;
-							width: 100%;
-							text-align: center;
-							padding: 10px 0;
-						}
-					}
-					</style>
 					
 					<div class="nav_w3ls" style="margin-right:3%">
 
