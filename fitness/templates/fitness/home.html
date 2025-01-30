@@ -2,147 +2,118 @@
 
 {% block title %}Home{% endblock %}
 {% block content %}
-<div class="homepage" style="margin-top: 20px;">
+<div class="homepage mt-4">
     <!-- Hero Section -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1>Welcome to the <span>Fitness Tracker</span></h1>
-        
-            <a href="{% url 'profile' %}" class="cta-btn">Go to Profile</a>
-      
-            <a href="{% url 'register' %}" class="cta-btn">Add Data</a>
-
+    <header class="hero-section text-center py-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold text-light">
+                Welcome to the <span class="highlight">Fitness Tracker</span>
+            </h1>
+            <p class="lead text-light">Your journey to better health starts here.</p>
+            <div class="mt-4">
+                <a href="{% url 'profile' %}" class="btn btn-warning btn-lg me-3 shadow-lg">Go to Profile</a>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg shadow-lg">Add Data</a>
+            </div>
         </div>
     </header>
 
     <!-- Features Section -->
-    <section class="features">
-        <h2>Why Choose Us?</h2>
-        <div class="features-list">
-            <div class="feature-item">
-                <h3>Activity Tracking</h3>
-                <p>Log your daily activities and workouts to stay on track.</p>
-            </div>
-            <div class="feature-item">
-                <h3>Dietary Logs</h3>
-                <p>Maintain a record of your diet and nutrition effortlessly.</p>
-            </div>
-            <div class="feature-item">
-                <h3>Goal Setting</h3>
-                <p>Set realistic fitness goals and track your progress over time.</p>
+    <section class="features py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="mb-4 text-primary fw-bold">Why Choose Us?</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="text-primary">🔥 Activity Tracking</h3>
+                            <p>Log your daily activities and workouts to stay on track.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="text-primary">🥗 Dietary Logs</h3>
+                            <p>Maintain a record of your diet and nutrition effortlessly.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="text-primary">🎯 Goal Setting</h3>
+                            <p>Set realistic fitness goals and track your progress over time.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Navigation Section -->
-    <section class="navigation">
-        <h2>Get Started</h2>
-        {% if user.is_authenticated %}
-        <p>Welcome, <strong>{{ user.username }}</strong>! What would you like to do today?</p>
-        <ul class="navigation-list">
-            <li><a href="{% url 'profile' %}">View Profile</a></li>
-            <li><a href="{% url 'activity_list' %}">View Activity List</a></li>
-            <li><a href="{% url 'diet_log' %}">Log Your Diet</a></li>
-            <li><a href="{% url 'weight_tracker' %}">Track Your Weight</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-        </ul>
-        {% else %}
-        <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">create an account</a> to get started.</p>
-        {% endif %}
+    <section class="navigation py-5">
+        <div class="container text-center">
+            <h2 class="text-primary mb-4 fw-bold">Get Started</h2>
+            {% if user.is_authenticated %}
+            <p class="lead">Welcome, <strong>{{ user.username }}</strong>! What would you like to do today?</p>
+            <ul class="list-unstyled navigation-list d-flex flex-wrap justify-content-center">
+                <li><a href="{% url 'profile' %}" class="btn btn-outline-primary w-100 mb-2 shadow-sm">View Profile</a></li>
+                <li><a href="{% url 'activity_list' %}" class="btn btn-outline-primary w-100 mb-2 shadow-sm">View Activity List</a></li>
+                <li><a href="{% url 'diet_log' %}" class="btn btn-outline-primary w-100 mb-2 shadow-sm">Log Your Diet</a></li>
+                <li><a href="{% url 'weight_tracker' %}" class="btn btn-outline-primary w-100 mb-2 shadow-sm">Track Your Weight</a></li>
+                <li><a href="{% url 'logout' %}" class="btn btn-outline-danger w-100 shadow-sm">Logout</a></li>
+            </ul>
+            {% else %}
+            <p class="lead">Please <a href="{% url 'login' %}" class="text-primary fw-bold">login</a> or <a href="{% url 'register' %}" class="text-primary fw-bold">create an account</a> to get started.</p>
+            {% endif %}
+        </div>
     </section>
 </div>
 
-<!-- Suggested Styles -->
+<!-- Custom CSS -->
 <style>
-    .homepage {
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-    }
-
+    /* Hero Section */
     .hero-section {
-        background: linear-gradient(135deg, #247cff, #81c784);
-        color: white;
-        padding: 40px 20px;
-        text-align: center;
-        border-radius: 8px;
-        margin-bottom: 30px;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        border-radius: 15px;
+        padding: 60px 20px;
     }
 
-    .hero-section h1 span {
+    .hero-section .highlight {
         color: #ffeb3b;
     }
 
-    .cta-btn {
-        display: inline-block;
-        background: #ffeb3b;
-        color: #333;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-weight: bold;
-        border-radius: 5px;
-        margin-top: 10px;
-        transition: 0.3s;
+    .hero-section .btn {
+        transition: 0.3s ease-in-out;
     }
 
-    .cta-btn:hover {
-        background: #247cff;
+    .hero-section .btn:hover {
+        transform: scale(1.1);
     }
 
-    .features {
-        margin-bottom: 30px;
+    /* Features Section */
+    .feature-card {
+        background: #ffffff;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 10px;
     }
 
-    .features h2 {
-        text-align: center;
-        margin-bottom: 20px;
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
     }
 
-    .features-list {
-        display: flex;
-        justify-content: space-around;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-
-    .feature-item {
-        background: #f1f1f1;
-        padding: 20px;
+    /* Navigation Section */
+    .navigation-list .btn {
+        padding: 12px;
         border-radius: 8px;
-        text-align: center;
-        flex: 1;
-        min-width: 250px;
-    }
-
-    .navigation {
-        text-align: center;
-    }
-
-    .navigation h2 {
-        margin-bottom: 15px;
-    }
-
-    .navigation-list {
-        list-style: none;
-        padding: 0;
-    }
-
-    .navigation-list li {
-        margin: 10px 0;
-    }
-
-    .navigation-list a {
-        text-decoration: none;
-        color: #4caf50;
         font-weight: bold;
         transition: 0.3s;
     }
 
-    .navigation-list a:hover {
-        color: #81c784;
+    .navigation-list .btn:hover {
+        background: #0056b3;
+        color: white;
     }
 </style>
 {% endblock %}
