@@ -18,7 +18,7 @@ from django.http import HttpResponseForbidden, HttpResponseBadRequest
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.model_selection import train_test_split
-
+from .disease_data import diseases
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
@@ -236,6 +236,8 @@ def Change_Password(request):
 ############################ Main Logics Starts here  ########################################
 ########################################################################################################
 
+
+
 @login_required(login_url="login")
 def assign_status(request,pid):
     doctor = Doctor.objects.get(id=pid)
@@ -417,11 +419,6 @@ def search_doctor(request):
         'doc': doc,
         'li': li  # Include any additional filtering logic here
     })
-from .disease_data import diseases
-@login_required
-def view_diseases(request):
-    return render(request, 'Diss_view.html', {'diseases': diseases})
-
 
 
 @login_required
@@ -790,3 +787,46 @@ def predict_corndesease(request):
 ########################################################################################################
 ############################ Life Assessment Logics Algoritham ########################################
 ########################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################################################
+############################ Extra Features ########################################
+########################################################################################################
+
+
+
+from django.shortcuts import render
+from .disease_data import diseases
+import re
+
+def check_disease(request):
+    matched_diseases = []
+
+    if request.method == 'POST':
+        user_input = request.POST.get('symptoms', '').lower().replace(" ", "")  # Remove spaces for better matching
+        
+        for disease in diseases:
+            disease_symptoms = disease['symptoms'].lower().replace(" ", "")  # Remove spaces for better matching
+            
+            # Check for partial matches (e.g., "chestpa" should match "chest pain")
+            if re.search(user_input, disease_symptoms):  
+                matched_diseases.append(disease)
+
+    return render(request, 'Diss_view.html', {'diseases': matched_diseases})
