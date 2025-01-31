@@ -83,13 +83,31 @@ body {
 
 <!-- Profile Card -->
 <div class="profile-container">
-    <div class="profile-header">
-        <!-- Profile Picture Placeholder -->
-        <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-avatar">
-        
-        <h2>{{ user.username }}'s Profile</h2>
-    </div>
-    
+    {% if patient %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      
+      <td class="text-center">
+        {% if patient.image %}
+          <img src="{{ patient.image.url }}" style="width:80px;height:80px;border-radius:50%;" alt="Patient Image">
+          <br>
+          <span>{{ patient.user.first_name }} {{ patient.user.last_name }}</span>
+        {% else %}
+          <span>No image available</span>
+          <br>
+          <span>{{ patient.user.first_name }} {{ patient.user.last_name }}</span>
+        {% endif %}
+      </td>
+  
+    </tr>
+  {% else %}
+    <tr>
+      <td colspan="7">No patient profile found for this user</td>
+    </tr>
+  {% endif %}
+  
+  
+
     <div class="profile-details">
         <div class="profile-item">
             <i class="fas fa-envelope"></i>

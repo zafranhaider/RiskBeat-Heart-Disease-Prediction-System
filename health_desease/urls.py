@@ -21,6 +21,7 @@ urlpatterns = [
     
 
     path('doctor_home/', Doctor_Home, name="doctor_home"),
+
     path('admin_home/', Admin_Home, name="admin_home"),
     path('about/', About, name="about"),
     path('contact/', contact, name='contact'),
@@ -48,13 +49,16 @@ urlpatterns = [
     path('delete_feedback/<int:pid>/', delete_feedback, name="delete_feedback"),
     path('predict_desease/<str:pred>/<str:accuracy>/', predict_desease, name="predict_desease"),
     path('apoint/', User_book, name="apoint"),
-    path('view-diseases/', view_diseases, name='view_diseases'),
     path('search-doctor/', search_doctor, name='search_doctor'),
     path('book/', booking_form, name='booking_form'),
     path('appointments/', view_appointments, name='view_appointments'),
     path('update-status/<int:booking_id>/', update_booking_status, name='update_booking_status'),
     path('appointment-status/', appointment_status, name='appointment_status'),
     path('submission-success/', booking_form, name='submission_success'),
+    path('check-disease/', check_disease, name='disease_check'),
 
-
+    #Cornary Heart
+    path('add_conrheartdetail/', add_conrheartdetail, name="add_conrheartdetail"),
+    path('predict-cheart-disease/<str:pred>/<str:accuracy>/', predict_corndesease, name='predict_corndesease'),
+    # URL to display prediction and doctor info
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
