@@ -1,86 +1,143 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<style>.profile-container {
+<style>
+/* Body Background */
+body {
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Profile Container */
+.profile-container {
     max-width: 600px;
-    margin: 2rem auto;
+    margin: 3rem auto;
     padding: 2rem;
-    background-color: #f9f9f9;
+    background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-}
-
-.profile-header {
+    border: 1px solid #ddd;
     text-align: center;
-    margin-bottom: 1.5rem;
 }
 
+/* Profile Picture */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    display: block;
+    margin: 0 auto 1rem;
+}
+
+/* Profile Header */
 .profile-header h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    font-weight: 600;
     color: #333;
-    border-bottom: 2px solid #007bff;
-    display: inline-block;
-    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
+/* Profile Details */
 .profile-details {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 0.5rem 1rem;
-    color: #555;
+    margin-top: 1.5rem;
+    text-align: left;
 }
 
 .profile-item {
     display: flex;
-    flex-direction: row;
     align-items: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.profile-item:last-child {
+    border-bottom: none;
+}
+
+.profile-item i {
+    font-size: 1.2rem;
+    color: #007bff;
+    margin-right: 10px;
 }
 
 .profile-item label {
     font-weight: bold;
-    color: #007bff;
+    color: #333;
+    flex-basis: 40%;
 }
 
 .profile-item span {
-    margin-left: 0.5rem;
+    flex-grow: 1;
+    color: #555;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
     .profile-container {
         padding: 1.5rem;
     }
-    .profile-details {
-        grid-template-columns: 1fr;
-    }
 }
 </style>
+
+<!-- Profile Card -->
 <div class="profile-container">
-    <div class="profile-header">
-        <h2>{{ user.username }}'s Profile</h2>
-    </div>
+    {% if patient %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      
+      <td class="text-center">
+        {% if patient.image %}
+          <img src="{{ patient.image.url }}" style="width:80px;height:80px;border-radius:50%;" alt="Patient Image">
+          <br>
+          <span>{{ patient.user.first_name }} {{ patient.user.last_name }}</span>
+        {% else %}
+          <span>No image available</span>
+          <br>
+          <span>{{ patient.user.first_name }} {{ patient.user.last_name }}</span>
+        {% endif %}
+      </td>
+  
+    </tr>
+  {% else %}
+    <tr>
+      <td colspan="7">No patient profile found for this user</td>
+    </tr>
+  {% endif %}
+  
+  
+
     <div class="profile-details">
         <div class="profile-item">
+            <i class="fas fa-envelope"></i>
             <label>Email:</label>
             <span>{{ user.email }}</span>
         </div>
         <div class="profile-item">
+            <i class="fas fa-birthday-cake"></i>
             <label>Date of Birth:</label>
             <span>{{ user_profile.date_of_birth }}</span>
         </div>
         <div class="profile-item">
+            <i class="fas fa-ruler-vertical"></i>
             <label>Height:</label>
             <span>{{ user_profile.height }} cm</span>
         </div>
         <div class="profile-item">
+            <i class="fas fa-weight"></i>
             <label>Weight:</label>
             <span>{{ user_profile.weight }} kg</span>
         </div>
         <div class="profile-item">
+            <i class="fas fa-running"></i>
             <label>Fitness Level:</label>
             <span>{{ user_profile.fitness_level }}</span>
         </div>
-        <!-- Add more fields as needed -->
     </div>
 </div>
+
+<!-- FontAwesome Icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 {% endblock %}

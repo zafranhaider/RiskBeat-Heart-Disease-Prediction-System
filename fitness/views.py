@@ -81,11 +81,18 @@ def weight_tracker(request):
         'weights': weights
     })
 
+from django.shortcuts import render
+from health.models import Patient  # Import models from the 'health' app
 
 def profile(request):
     user_profile = UserProfile.objects.get(user=request.user)
+    patient = Patient.objects.filter(user=request.user).first()  # Fetch patient associated with logged-in user
+
     context = {
         'user': request.user,
-        'user_profile': user_profile
+        'user_profile': user_profile,
+        'patient': patient  # Pass only the current user's patient
     }
+    
     return render(request, 'fitness/profile.html', context)
+
