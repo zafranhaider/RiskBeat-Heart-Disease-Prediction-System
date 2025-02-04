@@ -649,14 +649,13 @@ def prdict_cheart_disease(list_data):
 
     # Initialize the model and load saved parameters if model file exists
     nn_model = XGBClassifier(
-    n_estimators= 135,
-    max_depth= 11,
-    learning_rate= 0.04838334079427902,
-    subsample= 0.7265434050206288,
-    colsample_bytree= 0.9119230749747274,
-    reg_alpha= 0.1802064379696754,
-    reg_lambda= 3.5909078912712564,
-    random_state=0,
+    n_estimators= 251,
+    max_depth= 3,
+    learning_rate= 0.035998012016241976,
+    subsample= 0.9775449686982007,
+    colsample_bytree= 0.8149219334036141,
+    reg_alpha= 0.9601641553647629,
+    reg_lambda= 2.1747392006396034,
     )
 
     # Load the pre-trained model if it exists
@@ -810,11 +809,6 @@ def predict_corndesease(request):
 ############################ Extra Features ########################################
 ########################################################################################################
 
-
-
-from django.shortcuts import render
-from .disease_data import diseases
-import re
 
 def check_disease(request):
     matched_diseases = []
