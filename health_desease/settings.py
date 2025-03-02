@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'community',
     'social_django',
     'crispy_forms',
+    'diab',
     'rest_framework',
 ]
 

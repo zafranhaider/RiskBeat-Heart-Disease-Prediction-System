@@ -1,0 +1,61 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+<main class="container mt-5">
+    <div class="card shadow-lg mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h2 class="text-center mb-4 text-primary fw-bold">Enter Your Information</h2>
+            <form method="POST" action="{% url 'result' %}">
+                {% csrf_token %}
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="pregnancies" class="form-label">Pregnancies</label>
+                        <input type="number" name="pregnancies" id="pregnancies" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="glucose" class="form-label">Glucose</label>
+                        <input type="number" name="glucose" id="glucose" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="bloodpressure" class="form-label">Blood Pressure</label>
+                        <input type="number" name="bloodpressure" id="bloodpressure" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="skinthickness" class="form-label">Skin Thickness</label>
+                        <input type="number" name="skinthickness" id="skinthickness" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="insulin" class="form-label">Insulin</label>
+                        <input type="number" name="insulin" id="insulin" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="bmi" class="form-label">BMI</label>
+                        <input type="number" step="0.1" name="bmi" id="bmi" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="diabetespedigreefunction" class="form-label">Diabetes Pedigree Function</label>
+                        <input type="number" step="0.001" name="diabetespedigreefunction" id="diabetespedigreefunction" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" name="age" id="age" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Predict</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

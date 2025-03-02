@@ -15,6 +15,7 @@ urlpatterns = [
     path('community/',include('community.urls'),name = 'community'),
     path('oauth/',include('social_django.urls',namespace='social')),
     path('fitness/', include('fitness.urls')),
+    path('diab/', include('diab.urls')),
     re_path(r'^$', RedirectView.as_view(url='/fitness/', permanent=True)),
     path('index.html', Home, name="index"),  # Serve index.html
     path('patient_home/', User_Home, name="patient_home"),
