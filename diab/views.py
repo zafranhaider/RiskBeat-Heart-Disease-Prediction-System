@@ -7,8 +7,8 @@ def home(request):
     return render(request,"home.html")
 
 def result(request):
-    cls=joblib.load('diabetes_model.sav')
-    scaler = joblib.load('scaler.sav')
+    cls=joblib.load('Machine_Learning\diabetes_model.sav')
+    scaler = joblib.load('Machine_Learning\scaler.sav')
     lis=[]
     for key in request.POST:
         if key != 'csrfmiddlewaretoken':  # Exclude CSRF token from the inputs
