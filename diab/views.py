@@ -2,7 +2,7 @@ from django.shortcuts import render
 import joblib
 import numpy as np
 
-
+# app
 def index(request):
     return render(request,"home.html")
 
