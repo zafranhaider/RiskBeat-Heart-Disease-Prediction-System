@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 
 
-def home(request):
+def index(request):
     return render(request,"home.html")
 
 def result(request):
