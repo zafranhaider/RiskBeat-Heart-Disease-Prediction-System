@@ -1,9 +1,9 @@
 from django.shortcuts import render
 import joblib
 import numpy as np
-
-
-def home(request):
+#new
+# app
+def index(request):
     return render(request,"home.html")
 
 def result(request):

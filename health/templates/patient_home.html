@@ -1,62 +1,236 @@
-{% extends 'index.html' %}
+<!DOCTYPE html>
+<html class="no-js">
+  {% extends 'index.html' %}
 {% load static %}
 {% block body %}
+  <head>
+    
+    <meta charset="utf-8">
+    <title>Riskbeat System | The Heart Disease Prediction System</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet" type="text/css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.css' %}">
+    <!-- Template main CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+      <!-- CSS Styling -->
+  <style>
+    .card {
+      border-radius: 12px;
+      transition: all 0.3s ease-in-out;
+      padding: 15px;
+    }
+  
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  
+    .card-text {
+      font-size: 0.95rem;
+      color: #555;
+    }
+  
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+  
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+  </style>
+    <style>
+      body {
+        /* Gradient with multiple shades of blue */
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+        background-attachment: fixed;
+      }
+    </style>
+    <!-- Modernizr -->
+    <script src="assets/js/modernizr-2.6.2.min.js"></script>
+  </head>
+  <body>
+    <header class="main-header">
+      <!-- Header content can be added here -->
+    </header>
 
-<div class="container-fluid" style="margin-top:100px; margin-bottom:2%; width:100%; padding: 20px;">
-    <div class="text-center">
-        <h2 class="font-weight-bold" style="font-family: 'Times New Roman', serif;">Patient Dashboard</h2>
-        <hr class="w-25 mx-auto">
-        <p class="mt-3" style="font-size: 1.2rem; color: #555;">Welcome to your personalized health management dashboard.</p>
-    </div>
-
-    <div class="text-center mt-5">
-        <h1 class="mb-4">Welcome to the Patient Dashboard</h1>
-        <div style="position: relative; width: 100%; max-width: 800px; margin: auto;">
-            <div style="border: 5px solid #6c757d; border-radius: 10px; overflow: hidden; max-height: 450px;">
-                <img src="{% static 'images/gallery/medium-shot-man-getting-vaccine.jpg' %}" 
-                     alt="Static Image" 
-                     style="width: 100%; height: auto; object-fit: cover;">
+    <!-- Carousel -->
+    <div id="homeCarousel" class="carousel slide carousel-home" data-ride="carousel">
+      <!-- Indicators -->
+  
+      <div class="carousel-inner" role="listbox">
+        <!-- Slide 1 -->
+        <div class="item active">
+            <img src="{% static 'assets/images/slider/home-slider-1.jpg' %}" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2 class="carousel-title bounceInDown animated slow">Riskbeat System</h2>
+              <h4 class="carousel-subtitle bounceInUp animated slow">
+                Welcome to Riskbeat System: Your trusted solution for heart disease prediction.
+              </h4>
+            
             </div>
+          </div>
         </div>
+        <!-- Slide 2 -->
+        <div class="item">
+            <img src="{% static 'assets/images/slider/home-slider-2.jpg' %}" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h2 class="carousel-title bounceInDown animated slow">Riskbeat System</h2>
+              <h4 class="carousel-subtitle bounceInUp animated slow">
+                Empowering you with precise and personalized cardiac insights.
+              </h4>
+              
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        
+      </div>
+      <a class="left carousel-control" href="#homeCarousel" role="button" data-slide="prev">
+        <span class="fa fa-angle-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#homeCarousel" role="button" data-slide="next">
+        <span class="fa fa-angle-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+    <!-- /.carousel -->
+
+<!-- Cards Section -->
+<div class="section-home about-us fadeIn animated">
+    <div class="container">
+      <div class="row justify-content-center">
+        <!-- Card Structure -->
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Heart Disease</h5>
+              <p class="card-text">Accurate prediction and insights for assessing heart disease risk.</p>
+              <a href="/add_heartdetail" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Coronary Disease</h5>
+              <p class="card-text">Assess your risk and manage coronary health effectively.</p>
+              <a href="/add_conrheartdetail" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Diabetes Prediction</h5>
+              <p class="card-text">Early prediction tools and monitoring for effective diabetes management.</p>
+              <a href="/diab" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">View Disease</h5>
+              <p class="card-text">View Different Heart Disease</p>
+              <a href="/check-disease" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">AI Risk Diagnosis</h5>
+              <p class="card-text">Leveraging AI for precise risk assessment and accurate diagnosis.</p>
+              <a href="https://riskdiagnosis.vercel.app/" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Fitness Tracker</h5>
+              <p class="card-text">Monitor your fitness and health metrics seamlessly every day.</p>
+              <a href="/fitness" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Booking</h5>
+              <p class="card-text">Schedule consultations and appointments with ease and convenience.</p>
+              <a href="/apoint" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Community</h5>
+              <p class="card-text">Join a supportive network to share experiences and health tips.</p>
+              <a href="/community" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+          <div class="card shadow-sm text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title">Feedback</h5>
+              <p class="card-text">Your feedback helps us improve and deliver better healthcare solutions.</p>
+              <a href="/sent_feedback" class="btn btn-primary">Open</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 </div>
+  
 
-<style>
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 1.8rem;
-        }
+  
 
-        h2 {
-            font-size: 1.5rem;
-        }
-
-        p {
-            font-size: 1rem;
-        }
-
-        .container-fluid {
-            padding: 15px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        h1 {
-            font-size: 1.5rem;
-        }
-
-        h2 {
-            font-size: 1.3rem;
-        }
-
-        p {
-            font-size: 0.9rem;
-        }
-
-        .container-fluid {
-            padding: 10px;
-        }
-    }
-</style>
-
+    <!-- Scripts -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{% static 'assets/js/jquery-1.11.1.min.js' %}"><\/script>')</script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+  </body>
+</html>
 {% endblock %}
