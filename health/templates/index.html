@@ -412,26 +412,18 @@ $(document).ready(function() {
 							</label>
 							<input type="checkbox" id="drop3" />
 							<ul class="menu" style="padding:10px;width:100%;">
-								<li><a href="{% url 'patient_home' %}" class="active">Home</a></li>
+								<li style="margin-right: 15px;">
+									<a href="{% url 'patient_home' %}" class="active">Home</a>
+								  </li>
+								  <li style="margin-right: 15px;">
+									<a href="/community" >Community</a>
+								  </li>
+								  
+								  <li>
+									<a href="/sent_feedback" >FeedBack</a>
+								  </li>
+								  
 								
-								<li class="mx-lg-3 mx-md-3 my-md-0 my-2 dropdown">
-									<a 
-									  style="color: white;"
-									  class="dropdown-toggle" 
-									  data-bs-toggle="dropdown" 
-									  aria-expanded="false">
-									  Predict
-									</a>
-									<ul class="dropdown-menu">
-									  <li><a class="dropdown-item" href="/add_heartdetail">Heart-Disease</a></li>
-									  <li><a class="dropdown-item" href="/add_conrheartdetail">Coronary Disease</a></li>
-									  <li><a class="dropdown-item" href="/diab">Diabetes Prediction</a></li>
-									  <li><a class="dropdown-item" href="/predict_option3">Lifestyle Assessment</a></li>
-									  <li><a class="dropdown-item" href="/check-disease">View Disease</a></li>
-									</ul>
-								</li>
-								
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/search-doctor">Search</a></li>
 							
 							
 					

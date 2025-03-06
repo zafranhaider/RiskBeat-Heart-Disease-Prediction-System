@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'social_django',
     'crispy_forms',
     'diab',
+    'lifestyle',
     'rest_framework',
+    'heartfail',
+    'heartstroke',
 ]
 
 MIDDLEWARE = [
