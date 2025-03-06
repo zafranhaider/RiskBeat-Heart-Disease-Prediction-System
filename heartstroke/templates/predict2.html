@@ -1,0 +1,127 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+   <style>
+       body {
+           background-color: #e9ecef;
+       }
+       .container1
+       {padding-top: 20px;}
+       .form-container1 {
+           background-color: #fff;
+           border-radius: 10px;
+           padding: 50px;
+           box-shadow: 0 0 10px rgba(0,0,0,0.1);
+           max-width: 600px;
+           margin: 50px auto;
+       }
+       h2 {
+           text-align: center;
+           margin-bottom: 20px;
+       }
+       .btn-custom {
+           background-color: #007bff;
+           color: white;
+       }
+       .btn-custom:hover {
+           background-color: #0056b3;
+       }
+   </style>
+</head>
+<body>
+   <div class="container1">
+       <div class="form-container1">
+           <h2>Heart Stroke Prediction Form</h2>
+           {% if prediction is not None %}
+           <div class="alert alert-info text-center" role="alert">
+               <strong>Prediction:</strong> {% if prediction == 1 %} Stroke Likely {% else %} No Stroke {% endif %}
+           </div>
+       
+           <div class="alert alert-secondary text-center" role="alert">
+               <strong>Model Accuracy:</strong> {{ accuracy }}%
+           </div>
+       {% endif %}
+       
+
+   
+
+           <form method="post">
+               {% csrf_token %}
+               <div class="form-group">
+                   <label for="gender">Gender:</label>
+                   <select class="form-control" id="gender" name="gender">
+                       <option value="Male">Male</option>
+                       <option value="Female">Female</option>
+                       <option value="Other">Other</option>
+                   </select>
+               </div>
+               <div class="form-group">
+                   <label for="age">Age:</label>
+                   <input type="number" class="form-control" id="age" name="age" step="0.1" required>
+               </div>
+               <div class="form-group">
+                   <label for="hypertension">Hypertension:</label>
+                   <select class="form-control" id="hypertension" name="hypertension">
+                       <option value="0">No</option>
+                       <option value="1">Yes</option>
+                   </select>
+               </div>
+               <div class="form-group">
+                   <label for="heart_disease">Heart Disease:</label>
+                   <select class="form-control" id="heart_disease" name="heart_disease">
+                       <option value="0">No</option>
+                       <option value="1">Yes</option>
+                   </select>
+               </div>
+               <div class="form-group">
+                   <label for="ever_married">Ever Married:</label>
+                   <select class="form-control" id="ever_married" name="ever_married">
+                       <option value="No">No</option>
+                       <option value="Yes">Yes</option>
+                   </select>
+               </div>
+               <div class="form-group">
+                   <label for="work_type">Work Type:</label>
+                   <select class="form-control" id="work_type" name="work_type">
+                       <option value="Private">Private</option>
+                       <option value="Self-employed">Self-employed</option>
+                       <option value="Govt_job">Govt Job</option>
+                       <option value="Never_worked">Never Worked</option>
+                   </select>
+               </div>
+               <div class="form-group">
+                   <label for="Residence_type">Residence Type:</label>
+                   <select class="form-control" id="Residence_type" name="Residence_type">
+                       <option value="Urban">Urban</option>
+                       <option value="Rural">Rural</option>
+                   </select>
+               </div>
+               <div class="form-group">
+                   <label for="avg_glucose_level">Average Glucose Level:</label>
+                   <input type="number" class="form-control" id="avg_glucose_level" name="avg_glucose_level" step="0.1" required>
+               </div>
+               <div class="form-group">
+                   <label for="bmi">BMI:</label>
+                   <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" required>
+               </div>
+               <div class="form-group">
+                   <label for="smoking_status">Smoking Status:</label>
+                   <select class="form-control" id="smoking_status" name="smoking_status">
+                       <option value="formerly smoked">Formerly Smoked</option>
+                       <option value="never smoked">Never Smoked</option>
+                       <option value="smokes">Smokes</option>
+                       <option value="Unknown">Unknown</option>
+                   </select>
+               </div>
+               <button type="submit" class="btn btn-custom btn-block">Predict</button>
+           </form>
+       </div>
+   </div>
+   <!-- Bootstrap JS and dependencies -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+<head>
+
+    
+    <style>
+         .container1 {
+        
+            padding-top: 50px;
+            max-width: 1000px;
+            margin: 50px auto;
+            background: #fff;
+          
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #343a40;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .btn-submit {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container1">
+    <h2>Lifestyle Assessment For Heart Disease</h2>
+    
+    {% if result %}
+        <div class="alert alert-danger text-center">
+            <strong>{{ result }}</strong>
+        </div>
+    {% endif %}
+    
+    <form method="post" class="form-container">
+        {% csrf_token %}
+    
+        <label class="form-label">Age:</label>
+        <input type="number" class="form-control" name="age" placeholder="Enter your age" min="1" required>
+    
+        <label class="form-label">Gender:</label>
+        <select class="form-select" name="gender" required>
+            <option value="" disabled selected>Select your gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    
+        <label class="form-label">BMI:</label>
+        <input type="number" step="0.1" class="form-control" name="bmi" placeholder="Enter your BMI" required>
+    
+        <label class="form-label">Blood Pressure:</label>
+        <select class="form-select" name="blood_pressure" required>
+            <option value="" disabled selected>Select blood pressure level</option>
+            {% for bp in blood_pressure_levels %}
+                <option value="{{ bp }}">{{ bp }}</option>
+            {% endfor %}
+        </select>
+    
+        <label class="form-label">Activity Level (0-100):</label>
+        <input type="number" class="form-control" name="activity_level" placeholder="Enter activity level" min="0" max="100" required>
+    
+        <label class="form-label">Stress Level (0-10):</label>
+        <input type="number" class="form-control" name="stress" placeholder="Enter stress level" min="0" max="10" required>
+    
+        <label class="form-label">Sleep Quality (0-10):</label>
+        <input type="number" class="form-control" name="sleep_quality" placeholder="Enter sleep quality" min="0" max="10" required>
+    
+        <label class="form-label">Daily Steps:</label>
+        <input type="number" class="form-control" name="daily_steps" placeholder="Enter daily steps count" required>
+    
+        <label class="form-label">Smoking:</label>
+        <select class="form-select" name="smoking" required>
+            <option value="" disabled selected>Do you smoke?</option>
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+    
+        <label class="form-label">Alcohol Consumption:</label>
+        <select class="form-select" name="alcohol" required>
+            <option value="" disabled selected>Do you consume alcohol?</option>
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+    
+        <label class="form-label">Sleep Disorder:</label>
+        <select class="form-select" name="sleep_disorder" required>
+            <option value="None" selected>No Sleep Disorder</option>
+            <option value="Sleep Apnea">Sleep Apnea</option>
+            <option value="Insomnia">Insomnia</option>
+        </select>
+        
+    
+        <button type="submit" class="btn-submit mt-3">Predict</button>
+    </form>
+    
+    
+</div>
+
+</body>
+</html>
+{% endblock %}

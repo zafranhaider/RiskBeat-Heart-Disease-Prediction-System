@@ -1,0 +1,173 @@
+{% extends 'index.html' %}
+{% load static %}
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Heart Failure Prediction</title>
+
+{% block body %}
+<style>
+  /* Global body style */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7f8;
+    margin: 0;
+  
+  }
+
+  /* Container styles */
+  .container {
+    max-width: 900px;
+  
+
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+
+  /* Headings */
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  /* Form styles */
+  form {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input:focus, select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    outline: none;
+  }
+
+  /* Button styles */
+  button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  /* Prediction box */
+  .prediction-box {
+    background: #4a8dff;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    margin: 20px auto;
+  }
+
+  .prediction-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    color: #eaeaea;
+  }
+</style>
+
+<div class="container">
+  <h2 style="padding-top: 100px;">Heart Failure Prediction</h2>
+  {% if prediction is not None %}
+    <div class="prediction-box">
+      <h3>Prediction:</h3>
+      <p class="prediction-text">{{ prediction }}</p>
+    </div>
+    <div class="alert alert-secondary text-center" role="alert">
+      <strong>Model Accuracy:</strong> {{ accuracy }}%
+  </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <label>Age:</label>
+    <input type="number" name="age" step="0.1" required>
+
+    <label>Anaemia:</label>
+    <select name="anaemia">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+
+    <label>Creatinine Phosphokinase:</label>
+    <input type="number" name="creatinine_phosphokinase" required>
+
+    <label>Diabetes:</label>
+    <select name="diabetes">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+
+    <label>Ejection Fraction:</label>
+    <input type="number" name="ejection_fraction" required>
+
+    <label>High Blood Pressure:</label>
+    <select name="high_blood_pressure">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+
+    <label>Platelets:</label>
+    <input type="number" name="platelets" step="0.01" required>
+
+    <label>Serum Creatinine:</label>
+    <input type="number" name="serum_creatinine" step="0.01" required>
+
+    <label>Serum Sodium:</label>
+    <input type="number" name="serum_sodium" required>
+
+    <label>Sex:</label>
+    <select name="sex">
+      <option value="0">Female</option>
+      <option value="1">Male</option>
+    </select>
+
+    <label>Smoking:</label>
+    <select name="smoking">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+
+    <label>Time (Follow-up duration):</label>
+    <input type="number" name="time" required>
+
+    <button type="submit">Predict</button>
+  </form>
+</div>
+{% endblock %}
