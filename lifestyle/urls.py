@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import heart_disease_prediction
+from .views import predict_risk
 
 urlpatterns = [
-    path('', heart_disease_prediction, name='heart_disease_prediction'),
+path("", predict_risk, name="predict"),
+
 ]

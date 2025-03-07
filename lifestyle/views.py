@@ -1,49 +1,66 @@
-from django.shortcuts import render
+import joblib
 import pandas as pd
-import pickle
-import numpy as np
+from django.shortcuts import render
+from django.http import JsonResponse
 
-def load_model():
-    with open("Machine_Learning/life.pkl", "rb") as model_file:
-        model = pickle.load(model_file)
-    return model
+# Load the trained model and label encoders
+model = joblib.load("Machine_Learning/life.pkl")
 
-def heart_disease_prediction(request):
-    result = None
-    blood_pressure_levels = ["Low", "Normal", "Prehypertension", "Hypertension Stage 1", "Hypertension Stage 2"]
-    sleep_disorder_levels = ["None", "Sleep Apnea", "Insomnia"]  # Categorical values
+# Define categorical mappings as used in training
+label_encoders = {
+    "Gender": {"Male": 0, "Female": 1},
+    "Occupation": {"Engineer": 0, "Doctor": 1, "Teacher": 2, "Artist": 3, "Other": 4},
+    "BMI Category": {"Underweight": 0, "Normal weight": 1, "Overweight": 2, "Obese": 3},
+    "Blood Pressure": {"Normal": 0, "Elevated": 1, "High": 2},
+    "Sleep Disorder": {"None": 0, "Insomnia": 1, "Sleep Apnea": 2}
+}
+
+def predict_risk(request):
+    prediction_message = None
 
     if request.method == "POST":
-        age = int(request.POST["age"])
-        gender = request.POST["gender"]
-        bmi = float(request.POST["bmi"])
-        blood_pressure = request.POST["blood_pressure"]
-        activity_level = int(request.POST["activity_level"])
-        stress = int(request.POST["stress"])
-        sleep_quality = int(request.POST["sleep_quality"])
-        daily_steps = int(request.POST["daily_steps"])
-        smoking = request.POST["smoking"]
-        alcohol = request.POST["alcohol"]
-        sleep_disorder = request.POST.get("sleep_disorder", "None")  # Prevents MultiValueDictKeyError
+        # Extract input data from the form
+        gender = request.POST.get("gender")
+        occupation = request.POST.get("occupation")
+        bmi_category = request.POST.get("bmi_category")
+        blood_pressure = request.POST.get("blood_pressure")
+        sleep_disorder = request.POST.get("sleep_disorder")
+        age = float(request.POST.get("age"))
+        sleep_duration = float(request.POST.get("sleep_duration"))
+        quality_of_sleep = float(request.POST.get("quality_of_sleep"))
+        physical_activity = float(request.POST.get("physical_activity"))
+        stress_level = float(request.POST.get("stress_level"))
+        heart_rate = float(request.POST.get("heart_rate"))
+        daily_steps = float(request.POST.get("daily_steps"))
 
-        # Encode categorical values
-        gender = 1 if gender == "Male" else 0
-        blood_pressure = blood_pressure_levels.index(blood_pressure)
-        smoking = 1 if smoking == "Yes" else 0
-        alcohol = 1 if alcohol == "Yes" else 0
-        sleep_disorder = sleep_disorder_levels.index(sleep_disorder)  # Convert categorical sleep disorder
+        # Encode categorical values using label encoders
+        gender_encoded = label_encoders["Gender"].get(gender, -1)
+        occupation_encoded = label_encoders["Occupation"].get(occupation, -1)
+        bmi_encoded = label_encoders["BMI Category"].get(bmi_category, -1)
+        blood_pressure_encoded = label_encoders["Blood Pressure"].get(blood_pressure, -1)
+        sleep_disorder_encoded = label_encoders["Sleep Disorder"].get(sleep_disorder, -1)
 
-        # Dummy placeholder for occupation (since it was removed)
-        occupation = 0  
+        # Ensure all values are valid
+        if -1 in [gender_encoded, occupation_encoded, bmi_encoded, blood_pressure_encoded, sleep_disorder_encoded]:
+            return JsonResponse({"error": "Invalid input values."}, status=400)
 
-        model = load_model()
-        input_data = np.array([[age, gender, bmi, blood_pressure, activity_level, stress, sleep_quality, daily_steps, smoking, alcohol, occupation, sleep_disorder]])
+        # Create DataFrame for model input
+        input_data = pd.DataFrame([[
+            gender_encoded, age, occupation_encoded, sleep_duration, quality_of_sleep,
+            physical_activity, stress_level, bmi_encoded, blood_pressure_encoded,
+            heart_rate, daily_steps, sleep_disorder_encoded
+        ]], columns=[
+            "Gender", "Age", "Occupation", "Sleep Duration", "Quality of Sleep",
+            "Physical Activity Level", "Stress Level", "BMI Category",
+            "Blood Pressure", "Heart Rate", "Daily Steps", "Sleep Disorder"
+        ])
+        
+        prediction = model.predict(input_data)[0]
 
-        prediction = model.predict(input_data)
-        result = "You have chances of heart disease." if prediction[0] == 1 else "You have low risk of heart disease."
+        # Convert prediction to human-readable message
+        if prediction == 1:
+            prediction_message = "You have chances of heart disease"
+        else:
+            prediction_message = "You have no risk"
 
-    return render(request, "heart_form.html", {
-        "result": result,
-        "blood_pressure_levels": blood_pressure_levels,
-        "sleep_disorder_levels": sleep_disorder_levels  # Pass to the template
-    })
+    return render(request, "predict3.html", {"prediction_message": prediction_message})
