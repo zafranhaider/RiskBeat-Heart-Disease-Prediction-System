@@ -2,6 +2,8 @@ import pickle
 import numpy as np
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
 
 # Load the trained model
 model_filename = "Machine_Learning/heartfail.pkl"
@@ -9,6 +11,7 @@ with open(model_filename, "rb") as file:
     model = pickle.load(file)
 # Manually set accuracy from training script
 model_accuracy = 90  # Replace this with the actual printed accuracy value
+@login_required()
 def predict_heart_failure(request):
     prediction = None
     accuracy = model_accuracy  # Pass the stored accuracy

@@ -2,7 +2,7 @@ import joblib
 import pandas as pd
 from django.shortcuts import render
 from django.http import JsonResponse
-
+from django.contrib.auth.decorators import login_required
 # Load the trained model and label encoders
 model = joblib.load("Machine_Learning/life.pkl")
 
@@ -14,7 +14,7 @@ label_encoders = {
     "Blood Pressure": {"Normal": 0, "Elevated": 1, "High": 2},
     "Sleep Disorder": {"None": 0, "Insomnia": 1, "Sleep Apnea": 2}
 }
-
+@login_required()
 def predict_risk(request):
     prediction_message = None
 

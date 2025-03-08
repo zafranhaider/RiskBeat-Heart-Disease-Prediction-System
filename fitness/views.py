@@ -2,15 +2,17 @@ from django.shortcuts import render, redirect
 from .models import FitnessActivity, DietaryLog, WeightEntry, UserProfile
 from .forms import UserRegisterForm, ActivityForm, DietaryLogForm, WeightEntryForm
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
+@login_required()
 def activity_list(request):
     activities = FitnessActivity.objects.filter(user=request.user)
     return render(request, 'fitness/activity_list.html', {'activities': activities})
-
+@login_required()
 def custom_logout(request):
     logout(request)
     return redirect('login')
-
+@login_required()
 def diet_log(request):
     diet_logs = DietaryLog.objects.filter(user=request.user)
     return render(request, 'fitness/diet_log.html', {'diet_logs': diet_logs})
@@ -27,11 +29,11 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'fitness/register.html', {'form': form})
 
-
+@login_required()
 def home(request):
     return render(request, 'fitness/home.html')
 
-
+@login_required()
 def add_activity(request):
     if request.method == 'POST':
         form = ActivityForm(request.POST)
@@ -44,7 +46,7 @@ def add_activity(request):
         form = ActivityForm()  # Make sure this line is correct
 
     return render(request, 'fitness/add_activity.html', {'form': form})
-
+@login_required()
 def add_diet_log(request):
     if request.method == 'POST':
         form = DietaryLogForm(request.POST)
@@ -58,7 +60,7 @@ def add_diet_log(request):
     return render(request, 'fitness/add_diet_log.html', {'form': form})
 
 
-
+@login_required()
 def weight_tracker(request):
     if request.method == 'POST':
         form = WeightEntryForm(request.POST)
@@ -83,7 +85,7 @@ def weight_tracker(request):
 
 from django.shortcuts import render
 from health.models import Patient  # Import models from the 'health' app
-
+@login_required()
 def profile(request):
     user_profile = UserProfile.objects.get(user=request.user)
     patient = Patient.objects.filter(user=request.user).first()  # Fetch patient associated with logged-in user

@@ -1,11 +1,12 @@
 from django.shortcuts import render
 import joblib
 import numpy as np
-#new
-# app
+from django.contrib.auth.decorators import login_required
+
+@login_required()
 def index(request):
     return render(request,"home.html")
-
+@login_required()
 def result(request):
     cls=joblib.load('Machine_Learning\diabetes_model.sav')
     scaler = joblib.load('Machine_Learning\scaler.sav')

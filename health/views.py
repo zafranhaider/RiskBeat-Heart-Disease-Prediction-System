@@ -636,6 +636,8 @@ def preprocess_inputs(df, scaler):
     return X, y
 
 
+
+@login_required()
 def prdict_cheart_disease(list_data):
     # Load the dataset from CSV
     csv_file_path = './Machine_Learning/cornheart.csv'  
@@ -812,6 +814,8 @@ def predict_corndesease(request):
 ########################################################################################################
 
 
+
+@login_required()
 def check_disease(request):
     matched_diseases = []
 

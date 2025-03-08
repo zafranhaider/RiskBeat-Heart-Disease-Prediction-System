@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import pandas as pd
 import joblib
 from django.urls import path
-
+from django.contrib.auth.decorators import login_required
 # Load saved model and encoders
 model = joblib.load("Machine_Learning/stroke_model.pkl")
 label_encoders = joblib.load("Machine_Learning/label_encoders.pkl")
@@ -16,7 +16,7 @@ model_accuracy = 92  # Replace this with the actual printed accuracy value
 
 # Categorical columns used for encoding
 categorical_columns = ["gender", "ever_married", "work_type", "Residence_type", "smoking_status"]
-
+@login_required()
 def predict_stroke(request):
     prediction = None
     accuracy = model_accuracy  # Pass the stored accuracy
