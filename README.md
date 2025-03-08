@@ -1,5 +1,5 @@
 # RiskBeat
-A Django-based web application that predicts the risk of heart disease using Machine Learning algorithms like Gradient Boosting and Logistic Regression. The system provides personalized insights for early diagnosis, enhanced treatment planning, and efficient healthcare management.
+A Django-based web application that predicts the risk of heart disease using Machine Learning algorithms like Xtreme Gradient Boosting. The system provides personalized insights for early diagnosis, enhanced treatment planning, and efficient healthcare management.
 
 ---
 
@@ -58,9 +58,12 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - Classifies risk levels (low, medium, high) using Gradient Boosting and Logistic Regression.
 - Provides personalized insights for early diagnosis.
 
-### View Disease
+### View Diseases
 - Displays information about heart diseases, symptoms, causes, and treatments.
 - Educates users and doctors for informed decision-making.
+
+### Lifestyle Assessment
+- Allows users to input lifestyle habits (gender, age, occupation, sleep duration, quality of sleep, physical activity level, stress levels, BMI category, blood pressure, heart rate, etc.) to predict the initial chances of risk.
 
 ### Doctor Appointment Module
 - Allows users to search for doctors by name, specialization, or availability.
@@ -71,6 +74,16 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - Enables users to find heart specialists by location or expertise.
 - Displays contact details and availability for consultations.
 
+### Fitness Tracker
+- Helps users manage fitness goals by tracking daily calories, food intake, nutritional information, and exercise calories burned.
+
+### Health Deals and Checkup Alerts
+- Notifies users about free health checkup events and medicine discounts.
+
+### Community Module
+- Provides a platform for users, doctors, and health professionals to interact.
+- Users can share experiences, ask questions, and get peer support.
+
 ### Feedback System
 - Collects feedback from users and doctors about system functionality.
 - Gathers suggestions for improvements.
@@ -79,9 +92,10 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 
 ## Project Features
 - **Role-Based Access Control**: Separate functionalities for Admin, Doctor, and User.
-- **Machine Learning Models**: Xtreme Gradient Boosting and Logistic Regression for accurate predictions.
+- **Machine Learning Models**: Gradient Boosting and Logistic Regression for accurate predictions.
 - **User-Friendly Interface**: Easy navigation for health data submission and result viewing.
 - **Doctor Search and Appointment Booking**: Integrated module for finding and booking doctors.
+- **Fitness and Lifestyle Tracking**: Supports health and fitness management.
 - **Feedback Collection**: System improvement based on user suggestions.
 
 ---
@@ -94,4 +108,48 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - **Other Tools**: Python libraries (e.g., Scikit-learn, Pandas, NumPy)
 
 ---
+
+## Setup and Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/RiskBeat.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd RiskBeat
+   ```
+3. Create a virtual environment:
+   ```bash
+   python -m venv env
+   ```
+4. Activate the virtual environment:
+   - Windows:
+     ```bash
+     env\Scripts\activate
+     ```
+   - macOS/Linux:
+     ```bash
+     source env/bin/activate
+     ```
+5. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+6. Apply migrations:
+   ```bash
+   python manage.py migrate
+   ```
+7. Run the development server:
+   ```bash
+   python manage.py runserver
+   ```
+8. Open the browser and go to `http://127.0.0.1:8000/` to access the application.
+
+---
+
+
+
+## Feedback and Contributions
+We welcome feedback and contributions. If you find any issues or have suggestions for improvement, please create an issue or submit a pull request.
+
 
