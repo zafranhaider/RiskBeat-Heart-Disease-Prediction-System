@@ -278,9 +278,8 @@ $(document).ready(function() {
 
 
 
-
 		<!-- second header -->
-		<div class="main-top" style="background:#247cff">
+		<div class="main-top" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%)">
 			<div class="container-fluid">
 				<div class="header d-md-flex justify-content-between align-items-center py-3">
 					<!-- logo -->
@@ -415,10 +414,13 @@ $(document).ready(function() {
 								<li style="margin-right: 15px;">
 									<a href="{% url 'patient_home' %}" class="active">Home</a>
 								  </li>
+								
+								  <li style="margin-right: 15px;">
+									<a href="/check-disease/" >View Diseases</a>
+								  </li>
 								  <li style="margin-right: 15px;">
 									<a href="/community" >Community</a>
 								  </li>
-								  
 								  <li>
 									<a href="/sent_feedback" >FeedBack</a>
 								  </li>
@@ -479,20 +481,9 @@ $(document).ready(function() {
 							</label>
 							<input type="checkbox" id="drop5" />
 							<ul class="menu" style="padding:15px;width:100%">
-								<li><a href="{% url 'doctor_home' %}" class="active">Home</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
-									<a href="/view_search_pat">Users Data</a>
-								</li>
-						
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
-									<a href="/appointments/">View Appointments</a>
-								</li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
-									<a href="/community">Community</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
-									<a href="{% url 'appointment_status' %}">Appointments History</a>
-								</li>
-					
+							
+								
+								
 								<!-- Mobile-only Buttons -->
 								<li class="mobile-only">
 									<a href="{% url 'profile_doctor' %}">Profile</a>
@@ -644,7 +635,7 @@ $(document).ready(function() {
 		<!-- Page Content Goes Here -->
 	</div>
 	
-	<div class="copy-w3pvt" style="background:#247cff;color:white">
+	<div class="copy-w3pvt" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%)">
 		<div class="container py-3">
 			<div class="row">
 				<div class="col-lg-7 w3ls_footer_grid1_left text-lg-left text-center">

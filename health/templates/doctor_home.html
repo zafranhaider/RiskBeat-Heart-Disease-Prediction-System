@@ -6,40 +6,44 @@
     <h2 class="text-center font-weight-bold" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">Doctor Dashboard</h2>
     <hr/>
 
-    <!-- Image Slider Section -->
-    <div id="carouselExample" class="carousel slide container-fluid shadow-lg rounded" style="margin-top:5%;margin-bottom:5%;width:100%;" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="{% static 'images/health.jpeg' %}" class="d-block w-100" style="height:500px; object-fit: cover;">
-            </div>
-            <div class="carousel-item">
-                <img src="{% static 'images/health2.jpeg' %}" class="d-block w-100" style="height:500px; object-fit: cover;">
-            </div>
-            <div class="carousel-item">
-                <img src="{% static 'images/4.jpg' %}" class="d-block w-100" style="height:500px; object-fit: cover;">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"></button>
-        </div>
-    </div>
-
     <!-- Specialties Section -->
     <div class="card mb-5 shadow-sm border-0 rounded hover-effect">
         <div class="card-header bg-primary text-white text-center py-3">
             <h4>Cardiologist Specialties</h4>
         </div>
+        
         <div class="card-body p-4">
+                <!-- Quick Links Section -->
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm p-3 bg-light hover-effect">
+                <h5>Patient Records</h5>
+                <a href="/view_search_pat" class="btn btn-outline-primary mt-2">View Records</a>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm p-3 bg-light hover-effect">
+                <h5>Appointments</h5>
+                <a href="/appointments/" class="btn btn-outline-success mt-2">Manage Appointments</a>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm p-3 bg-light hover-effect">
+                <h5>Appointments History</h5>
+                <a href="{% url 'appointment_status' %}" class="btn btn-outline-info mt-2">Check History of Appointments</a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center"> <!-- Centers the content horizontally -->
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm p-3 bg-light hover-effect">
+                        <h5>Community</h5>
+                        <a href="/community" class="btn btn-outline-success mt-2">View Community</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
             <p class="text-justify">Cardiologists specialize in diagnosing and treating heart-related diseases and conditions. They provide comprehensive care, including preventive measures, advanced diagnostic techniques, and effective treatments for various cardiovascular disorders.</p>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Diagnosis and treatment of heart diseases</li>
@@ -51,44 +55,10 @@
         </div>
     </div>
 
-    <!-- Recent Activity Section -->
-    <div class="card mb-5 shadow-sm border-0 rounded hover-effect">
-        <div class="card-header bg-dark text-white text-center py-3">
-            <h4>Recent Activities</h4>
-        </div>
-        <div class="card-body p-4">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Checked up on 20 patients today</li>
-                <li class="list-group-item">Reviewed 5 medical reports</li>
-                <li class="list-group-item">Consulted with a specialist on a rare case</li>
-                <li class="list-group-item">Performed a successful cardiac procedure</li>
-                <li class="list-group-item">Conducted a heart health awareness seminar</li>
-            </ul>
-        </div>
-    </div>
 
-    <!-- Quick Links Section -->
-    <div class="row text-center">
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm p-3 bg-light hover-effect">
-                <h5>Patient Records</h5>
-                <a href="#" class="btn btn-outline-primary mt-2">View Records</a>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm p-3 bg-light hover-effect">
-                <h5>Appointments</h5>
-                <a href="#" class="btn btn-outline-success mt-2">Manage Appointments</a>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm p-3 bg-light hover-effect">
-                <h5>Medical Reports</h5>
-                <a href="#" class="btn btn-outline-info mt-2">Check Reports</a>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+
 
 <style>
     .hover-effect:hover {
