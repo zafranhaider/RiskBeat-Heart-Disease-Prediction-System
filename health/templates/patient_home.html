@@ -12,6 +12,9 @@
     <!-- Fonts -->
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
     <!-- Font Awesome -->
@@ -22,38 +25,55 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
       <!-- CSS Styling -->
   <style>
-    .card {
-      border-radius: 12px;
-      transition: all 0.3s ease-in-out;
-      padding: 15px;
+     body {
+      background-color: #e4e8f3;
+      font-family: 'Poppins', sans-serif;
     }
-  
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-    }
-  
+
     .card-title {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-  
-    .card-text {
-      font-size: 0.95rem;
-      color: #555;
-    }
-  
-    .btn-primary {
-      background-color: #007bff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: 0.3s;
-    }
-  
-    .btn-primary:hover {
-      background-color: #0056b3;
-    }
+  font-size: 20px;
+  font-weight: 700; /* Bold */
+  color: white !important; /* Fixed white color */
+  text-transform: capitalize;
+}
+
+.card {
+  background: linear-gradient(145deg, #1e293b, #334155);
+  border: none;
+  border-radius: 15px;
+  box-shadow: 5px 5px 15px #111827, -5px -5px 15px #1f2937;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.card:hover {
+  transform: scale(1.05) rotateY(5deg);
+  box-shadow: 5px 5px 20px #1e40af, -5px -5px 20px #1f2937;
+}
+
+.card-body i {
+  font-size: 50px;
+  color: #38bdf8;
+}
+
+.card-text {
+  color: #94a3b8;
+}
+
+.btn-primary {
+  background-color: #38bdf8;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #1e40af;
+  box-shadow: 0 0 15px #38bdf8;
+}
+
   </style>
     <style>
       body {
@@ -116,132 +136,118 @@
     <!-- /.carousel -->
 
 <!-- Cards Section -->
-<div class="section-home about-us fadeIn animated">
-    <div class="container">
-      <div class="row justify-content-center">
-        <!-- Card Structure -->
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Heart Disease</h5>
-              <p class="card-text">Prediction and insights for assessing heart disease risk.</p>
-              <a href="/add_heartdetail" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Heart Failure</h5>
-              <p class="card-text">Prediction and insights for assessing the risk of heart failure and improving patient care..</p>
-              <a href="/heartfail" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Heart Stroke</h5>
-              <p class="card-text">Prediction and insights for assessing the risk of heart stroke and improving patient care..</p>
-              <a href="/heartstroke" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Coronary Disease</h5>
-              <p class="card-text">Assess your risk and manage coronary health effectively.</p>
-              <a href="/add_conrheartdetail" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Diabetes Prediction</h5>
-              <p class="card-text">Early prediction tools and monitoring for effective diabetes management.</p>
-              <a href="/diab" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Life-Style Assessment</h5>
-              <p class="card-text">Minimal Assessment of Your Lifestyle to Predict Small Heart Disease Chances</p>
-              <a href="/lifestyle" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-  
-  
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Riskbeat Diagnosis</h5>
-              <p class="card-text">Leveraging ChatBot for risk assessment and accurate diagnosis.</p>
-              <a href="https://riskdiagnosis.vercel.app/" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Fitness Tracker</h5>
-              <p class="card-text">Monitor your fitness and health metrics seamlessly every day.</p>
-              <a href="/fitness" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Booking</h5>
-              <p class="card-text">Schedule consultations and appointments with ease and convenience.</p>
-              <a href="/apoint" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">View Disease</h5>
-              <p class="card-text">View Different Heart Disease</p>
-              <a href="/check-disease" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Find Your Doctor</h5>
-              <p class="card-text">Find Your Doctor Name Address or His Specialization</p>
-              <a href="/search-doctor" class="btn btn-primary">Open</a>
-            </div>
-          </div>
-        </div>
-      
-
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-          <div class="card shadow-sm text-center h-100">
-            <div class="card-body">
-              <h5 class="card-title">Feedback</h5>
-              <p class="card-text">Your feedback helps us improve and deliver better healthcare solutions.</p>
-              <a href="/sent_feedback" class="btn btn-primary">Open</a>
-            </div>
-          </div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <!-- Card 1 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-heartbeat"></i>
+          <h5 class="card-title mt-3">Heart Disease</h5>
+          <p class="card-text">Prediction and insights for assessing heart disease risk.</p>
+          <a href="/add_heartdetail" class="btn btn-primary">Open</a>
         </div>
       </div>
     </div>
-</div>
-  
+
+    <!-- Card 2 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-procedures"></i>
+          <h5 class="card-title mt-3">Heart Failure</h5>
+          <p class="card-text">Prediction and insights for heart failure and patient care.</p>
+          <a href="/heartfail" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-bolt"></i>
+          <h5 class="card-title mt-3">Heart Stroke</h5>
+          <p class="card-text">Assess stroke risk and improve patient care.</p>
+          <a href="/heartstroke" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-clinic-medical"></i>
+          <h5 class="card-title mt-3">Coronary Disease</h5>
+          <p class="card-text">Manage coronary health effectively.</p>
+          <a href="/add_conrheartdetail" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-diagnoses"></i>
+          <h5 class="card-title mt-3">Diabetes Prediction</h5>
+          <p class="card-text">Early prediction and monitoring for diabetes.</p>
+          <a href="/diab" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-person-booth"></i>
+          <h5 class="card-title mt-3">Lifestyle Assessment</h5>
+          <p class="card-text">Minimal lifestyle assessment to predict heart risk.</p>
+          <a href="/lifestyle" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-robot"></i>
+          <h5 class="card-title mt-3">Riskbeat Diagnosis</h5>
+          <p class="card-text">AI-powered chatbot for accurate diagnosis.</p>
+          <a href="https://riskdiagnosis.vercel.app/" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-running"></i>
+          <h5 class="card-title mt-3">Fitness Tracker</h5>
+          <p class="card-text">Monitor your fitness metrics daily.</p>
+          <a href="/fitness" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card text-center p-4">
+        <div class="card-body">
+          <i class="fas fa-user-md"></i>
+          <h5 class="card-title mt-3">Find Your Doctor</h5>
+          <p class="card-text">Search for a doctor by name or specialization.</p>
+          <a href="/search-doctor" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>  
 
   
 

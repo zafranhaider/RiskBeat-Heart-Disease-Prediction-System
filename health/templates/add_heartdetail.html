@@ -1,111 +1,113 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block body %}
-<!-- Register -->
-<center>
-    <section class="logins py-5">
-        <div class="container py-xl-5 py-lg-3">
-            <div class="title-section mb-md-5 mb-4">
-                <h3 class="w3ls-title text-uppercase text-dark font-weight-bold">Add Your Heart Detail</h3>
+
+<section class="container py-5">
+    <div class="card shadow-lg p-4" style="border-radius: 15px; background-color: #f0f8ff;">
+        <h3 class="text-center text-dark font-weight-bold mb-4">Add Your Heart Detail</h3>
+        <hr>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Age</label>
+                    <input type="number" class="form-control" name="age" min="1" max="120" placeholder="Age" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Sex</label>
+                    <select class="form-control" name="sex" required>
+                        <option value="0">Female</option>
+                        <option value="1">Male</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Chest Pain</label>
+                    <select class="form-control" name="cp" required>
+                        <option value="0">Typical Angina</option>
+                        <option value="1">Atypical Angina</option>
+                        <option value="2">Non-anginal Pain</option>
+                        <option value="3">Asymptomatic</option>
+                    </select>
+                </div>
             </div>
-            <hr />
-            <div class="login px-sm-12" style="width: 100%;">
-                <form action="" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <!-- Row 1 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Age</label>
-                            <input type="number" class="form-control" name="age" min="1" max="120" required>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Sex</label>
-                            <select class="form-control" name="sex" required>
-                                <option value="0">Female</option>
-                                <option value="1">Male</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Chest Pain (cp)</label>
-                            <select class="form-control" name="cp" required>
-                                <option value="0">Typical Angina</option>
-                                <option value="1">Atypical Angina</option>
-                                <option value="2">Non-anginal Pain</option>
-                                <option value="3">Asymptomatic</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Resting BP</label>
-                            <input type="number" class="form-control" name="trestbps" min="50" max="200" required>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Cholesterol</label>
-                            <input type="number" class="form-control" name="chole" min="100" max="600" required>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Fasting BS</label>
-                            <select class="form-control" name="fbs" required>
-                                <option value="0">Less than 120 mg/dl</option>
-                                <option value="1">Greater than 120 mg/dl</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <!-- Row 2 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Resting ECG-Electrocardiogram</label>
-                            <select class="form-control" name="restecg" required>
-                                <option value="0">Normal</option>
-                                <option value="1">ST-T Abnormality</option>
-                                <option value="2">Left Ventricular Hypertrophy</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Maximum Heart Rate (MHR)</label>
-                            <input type="number" class="form-control" name="thalach" required>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Exercise Induced Angina</label>
-                            <select class="form-control" name="exang" required>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Oldpeak (ST Depression)</label>
-                            <input type="number" step="0.1" class="form-control" name="old_peak" required>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Slope of ST <br>Segment</label>
-                            <select class="form-control" name="slope" required>
-                                <option value="0">Upsloping</option>
-                                <option value="1">Flat</option>
-                                <option value="2">Downsloping</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Number of Major Vessels</label>
-                            <input type="number" min="0" max="3" class="form-control" name="ca" required>
-                        </div>
-                    </div>
-
-                    <!-- Row 3 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-2">
-                            <label class="w-100 text-center">Thalassemia</label>
-                            <select class="form-control" name="thal" required>
-                                <option value="1">Normal</option>
-                                <option value="2">Fixed Defect</option>
-                                <option value="3">Reversible Defect</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn submit mt-4" style="background-color: #726f6e;">Send Heart Data</button>
-                </form>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Resting BP</label>
+                    <input type="number" class="form-control" name="trestbps" min="50" max="200" placeholder="BP" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Cholesterol</label>
+                    <input type="number" class="form-control" name="chole" min="100" max="600" placeholder="Cholesterol" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Fasting BS</label>
+                    <select class="form-control" name="fbs" required>
+                        <option value="0">&lt; 120 mg/dl</option>
+                        <option value="1">&gt; 120 mg/dl</option>
+                    </select>
+                </div>
             </div>
-        </div>
-    </section>
-</center>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Resting ECG</label>
+                    <select class="form-control" name="restecg" required>
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T Abnormality</option>
+                        <option value="2">Left Ventricular Hypertrophy</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Max Heart Rate</label>
+                    <input type="number" class="form-control" name="thalach" placeholder="MHR" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Exercise Angina</label>
+                    <select class="form-control" name="exang" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Oldpeak</label>
+                    <input type="number" step="0.1" class="form-control" name="old_peak" placeholder="ST Depression" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Slope of ST</label>
+                    <select class="form-control" name="slope" required>
+                        <option value="0">Upsloping</option>
+                        <option value="1">Flat</option>
+                        <option value="2">Downsloping</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Major Vessels</label>
+                    <input type="number" min="0" max="3" class="form-control" name="ca" placeholder="0-3" required>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Thalassemia</label>
+                    <select class="form-control" name="thal" required>
+                        <option value="1">Normal</option>
+                        <option value="2">Fixed Defect</option>
+                        <option value="3">Reversible Defect</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-dark px-5 py-2" style="background-color: #007bff; color: white; border-radius: 10px;">Submit Heart Data</button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
 {% endblock %}
