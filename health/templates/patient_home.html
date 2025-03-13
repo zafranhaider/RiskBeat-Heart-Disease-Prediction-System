@@ -37,7 +37,7 @@
       }
       .card {
         background: linear-gradient(145deg, #1e293b, #334155);
-        border: none;
+        border: 1px;
         border-radius: 15px;
         box-shadow: 5px 5px 15px #111827, -5px -5px 15px #1f2937;
         transition: all 0.3s ease-in-out;
@@ -76,7 +76,7 @@
       }
       /* Fix spacing from navbar if the navbar is fixed */
       .content-wrapper {
-        margin-top: 80px; /* Adjust this value based on your navbar height */
+        margin-top: 30px; /* Adjust this value based on your navbar height */
       }
     </style>
     <style>
@@ -99,7 +99,8 @@
       <div class="carousel-inner" role="listbox">
         <!-- Slide 1 -->
         <div class="item active">
-          <img src="{% static 'assets/images/slider/home-slider-1.jpg' %}" alt="">
+          <div style="height: 300px; padding-top: 20px; width: 400px; ">
+
           <div class="container">
             <div class="carousel-caption">
               <h2 class="carousel-title bounceInDown animated slow">
@@ -117,17 +118,17 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const titles = [
-          "Riskbeat System",
-          "AI-Powered Health Insights",
-          "Your Wellness, Our Priority",
-          "Predict. Prevent. Protect."
+          "HeartGuard AI",
+          "Empowered by Smart Health",
+          "Your Heart, Our Mission",
+          "Precision Care, Future Ready"
         ];
         
         const subtitles = [
-          "Welcome to Riskbeat System: Your trusted solution for heart disease prediction.",
-          "Leveraging AI to safeguard your heart health.",
-          "Advanced analytics for a healthier future.",
-          "Smart predictions for a safer tomorrow."
+          "HeartGuard AI: Predicting risks, safeguarding lives.",
+          "Harnessing AI to revolutionize heart health insights.",
+          "Personalized health solutions for a stronger tomorrow.",
+          "Intelligent predictions, proactive care, healthier you."
         ];
     
         let index = 0;
@@ -153,6 +154,7 @@
         setInterval(changeText, 4000);
       });
     </script>
+    
     
     <style>
       .fade-out {
@@ -271,6 +273,18 @@
               </div>
             </div>
           </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex">
+            <div class="card text-center p-4 h-100 w-100">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check fa-2x"></i> 
+                    <h5 class="card-title mt-3">Book an Appointment</h5>
+                    <p class="card-text">Book an Appointment For Yourself.</p>
+                    <a href="/apoint/" class="btn btn-primary">Open</a>
+                </div>
+            </div>
+        </div>
+        
           <!-- Card 9 -->
           <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex">
             <div class="card text-center p-4 h-100 w-100">
