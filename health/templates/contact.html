@@ -22,14 +22,14 @@
                 <h5 class="text-uppercase font-weight-bold text-dark mb-4">Get in Touch</h5>
                 <ul class="list-unstyled text-muted">
                     <li class="mb-3">
-                        <i class="fa fa-map-marker text-primary mr-2"></i>Ansari Nagar West, New Delhi, Delhi
+                        <i class="fa fa-map-marker text-primary mr-2"></i>Mirpur AJK
                     </li>
                     <li class="mb-3">
-                        <i class="fa fa-phone text-primary mr-2"></i>+91 12345 67890
+                        <i class="fa fa-phone text-primary mr-2"></i>+92 ----------
                     </li>
                     <li>
                         <i class="fa fa-envelope text-primary mr-2"></i>
-                        <a href="mailto:binarycoders@gmail.com" class="text-muted">binarycoders@gmail.com</a>
+                        <a href="mailto:binarycoders@gmail.com" class="text-muted">zraaeae@gmail.coms@gmail.com</a>
                     </li>
                 </ul>
             </div>
@@ -37,7 +37,8 @@
             <!-- Contact Form -->
             <div class="col-lg-6">
                 <div class="form-bg-w3ls p-4 shadow-sm rounded">
-                    <form action="#" method="post">
+                    <form action="{% url 'contact' %}" method="post">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="name" class="text-muted">Name</label>
                             <input type="text" name="Name" id="name" class="form-control" placeholder="Enter your name" required>
@@ -58,6 +59,7 @@
                             Submit
                         </button>
                     </form>
+                    
                 </div>
             </div>
         </div>

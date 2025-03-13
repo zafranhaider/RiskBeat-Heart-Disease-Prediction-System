@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'  # or 'bootstrap3', 'bootstrap5', 'uni_form', etc.
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,7 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'health',
+    'fitness',
+    'community',
+    'social_django',
+    'crispy_forms',
+    'diab',
+    'lifestyle',
     'rest_framework',
+    'heartfail',
+    'heartstroke',
 ]
 
 MIDDLEWARE = [

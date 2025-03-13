@@ -4,17 +4,32 @@ from django.conf import settings
 from django.conf.urls.static import static
 from health.views import *
 from .apirep import routerep
-
+from django.urls import include, path
+from django.views.generic.base import RedirectView
+from django.urls import re_path
+from community import views
 urlpatterns = [
     path('api/v1/', include(routerep.urls)),
     path('admin/', admin.site.urls),
     path('', Home, name="home"),
+    path('community/',include('community.urls'),name = 'community'),
+    path('oauth/',include('social_django.urls',namespace='social')),
+    path('fitness/', include('fitness.urls')),
+    path('diab/', include('diab.urls')),
+    path('lifestyle/', include('lifestyle.urls')),
+    path('heartfail/', include('heartfail.urls')),
+    path('heartstroke/', include('heartstroke.urls')),
+    re_path(r'^$', RedirectView.as_view(url='/fitness/', permanent=True)),
     path('index.html', Home, name="index"),  # Serve index.html
     path('patient_home/', User_Home, name="patient_home"),
+    
+
     path('doctor_home/', Doctor_Home, name="doctor_home"),
+
     path('admin_home/', Admin_Home, name="admin_home"),
     path('about/', About, name="about"),
-    path('contact/', Contact, name="contact"),
+    path('contact/', contact, name='contact'),
+    path('view-contacts/', view_contacts, name='view_contacts'),
     path('gallery/', Gallery, name="gallery"),
     path('login/', Login_User, name="login"),
     path('login_admin/', Login_admin, name="login_admin"),
@@ -38,13 +53,16 @@ urlpatterns = [
     path('delete_feedback/<int:pid>/', delete_feedback, name="delete_feedback"),
     path('predict_desease/<str:pred>/<str:accuracy>/', predict_desease, name="predict_desease"),
     path('apoint/', User_book, name="apoint"),
-    path('view-diseases/', view_diseases, name='view_diseases'),
     path('search-doctor/', search_doctor, name='search_doctor'),
     path('book/', booking_form, name='booking_form'),
     path('appointments/', view_appointments, name='view_appointments'),
     path('update-status/<int:booking_id>/', update_booking_status, name='update_booking_status'),
     path('appointment-status/', appointment_status, name='appointment_status'),
     path('submission-success/', booking_form, name='submission_success'),
+    path('check-disease/', check_disease, name='disease_check'),
 
-
+    #Cornary Heart
+    path('add_conrheartdetail/', add_conrheartdetail, name="add_conrheartdetail"),
+    path('predict-cheart-disease/<str:pred>/<str:accuracy>/', predict_corndesease, name='predict_corndesease'),
+    # URL to display prediction and doctor info
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+<section class="contact-section bg-light py-5" id="view-contacts">
+    <div class="container py-xl-5 py-lg-4">
+        <!-- Section Title -->
+        <div class="title-section text-center mb-5">
+            <h2 class="text-uppercase font-weight-bold text-dark">Contact Submissions</h2>
+            <p class="text-muted">Here are the messages we received</p>
+            <hr class="w-25 mx-auto" style="border-top: 2px solid #61bebc;">
+        </div>
+
+        <!-- Contact Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ contact.name }}</td>
+                        <td>{{ contact.email }}</td>
+                        <td>{{ contact.subject }}</td>
+                        <td>{{ contact.message }}</td>
+                        
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No contact submissions yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

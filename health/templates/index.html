@@ -34,6 +34,8 @@
 
 <link rel='stylesheet' type='text/css' href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 <link rel='stylesheet' type='text/css' href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -42,6 +44,79 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
+<style>
+	/* Ensure dropdown remains visible on hover for desktop */
+	@media (min-width: 992px) { 
+		.dropdown:hover .dropdown-menu {
+			display: block;
+			margin-top: 0; /* Adjust positioning */
+		}
+	}
+	
+	/* Dropdown menu general styling */
+	.dropdown-menu {
+		min-width: 250px; /* Adjusted width for mobile */
+		padding: 1rem;
+		border-radius: 10px;
+		box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+		background-color: #ffffff;
+		border: 1px solid #eaeaea;
+		font-family: 'Arial', sans-serif;
+		font-size: 14px;
+		color: #333;
+		transition: all 0.3s ease;
+	}
+	
+	/* Smooth hover effect */
+	.dropdown-menu:hover {
+		box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+	
+	/* Dropdown item styling */
+	.dropdown-menu .dropdown-item {
+		margin-bottom: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		border-radius: 6px;
+		transition: background-color 0.2s ease;
+	}
+	
+	/* Highlight effect */
+	.dropdown-menu .dropdown-item:hover {
+		background-color: #f5f5f5;
+		color: #007bff;
+	}
+	
+	/* Mobile Adjustments */
+	@media (max-width: 991px) {
+		.dropdown-menu {
+			width: 100%; /* Full width on mobile */
+			padding: 0.75rem;
+		}
+		.dropdown-menu .dropdown-item {
+			font-size: 16px; /* Slightly larger text for easier tapping */
+			padding: 0.75rem;
+		}
+	}
+	</style>
+<style>
+	/* Hide mobile-only buttons on larger screens */
+	.mobile-only {
+		display: none;
+	}
+	
+	/* Show mobile-only buttons on screens smaller than 768px */
+	@media (max-width: 768px) {
+		.mobile-only {
+			display: block;
+			width: 100%;
+			text-align: center;
+			padding: 10px 0;
+		}
+	}
+	</style>
+	
 <style>#logo {
     margin-left: 0; /* Align content to the left */
     display: flex;
@@ -167,6 +242,7 @@ $(document).ready(function() {
 </head>
 
 <body>
+	
 	<!-- main -->
 	<div id="home" style="margin-bottom:2%">
 		<!-- top header -->
@@ -221,76 +297,156 @@ $(document).ready(function() {
 					{% if request.user.is_staff %}
 					<div class="nav_w3ls" style="margin-right:4%">
 						<nav>
-							
 							<label for="drop1" class="toggle">
 								<i class="navbar-toggler-icon"></i>
-							  </label>
+							</label>
 							<input type="checkbox" id="drop1" />
 							<ul class="menu" style="padding:15px;width:100%">
-
-								<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="{% url 'admin_home' %}" >Home</a></li>
-
+								<li class="mx-lg-4 mx-md-3 my-md-0 my-2">
+									<a href="{% url 'admin_home' %}">Home</a>
+								</li>
+					
 								<li>
-									<label for="drop-2" class="toggle toogle-2"> <span class="fa fa-angle-down" aria-hidden="true"></span>
+									<label for="drop-2" class="toggle toogle-2">
+										<span class="fa fa-angle-down" aria-hidden="true"></span>
 									</label>
 									<a href="#"> Doctor <span class="fa fa-angle-down" aria-hidden="true"></span></a>
 									<ul style="margin-top:2%;width:40%;margin-right:0%">
-										<li style="width:100%;"><a href="/add_doctor" class="drop-text">Add Doctor</a></li>
-										<li style="width:100%;"><a href="/view_doctor" class="drop-text">View Doctor</a></li>
+										<li style="width:100%;">
+											<a href="/add_doctor" class="drop-text">Add Doctor</a>
+										</li>
+										<li style="width:100%;">
+											<a href="/view_doctor" class="drop-text">View Doctor</a>
+										</li>
 									</ul>
 								</li>
+								
 
-
-
-								<li class="mx-lg-4 mx-md-3 my-md-0 my-2"><a href="/view_patient">Patient</a></li>
 								<li class="mx-lg-4 mx-md-3 my-md-0 my-2">
-									<a href="/view_search_pat">Searched Data</a></li>
-								<li><a href="/view_feedback">Feedback</a></li>
-
+									<a href="/view_patient">Patient</a>
+								</li>
+								<li class="mx-lg-4 mx-md-3 my-md-0 my-2">
+									<a href="/view_search_pat">Searched Data</a>
+								</li>
+								<li>
+									<a href="/view_feedback">Feedback</a>
+								</li>
+								<li class="mx-lg-4 mx-md-3 my-md-0 my-2">
+									<a href="/view-contacts">View Contacts</a>
+								</li>
+					
+								<!-- Mobile-only Buttons -->
+								<li class="mobile-only">
+									<a href="{% url 'change_password' %}">Password</a>
+								</li>
+								<li class="mobile-only">
+									<a href="{% url 'logout' %}">Logout</a>
+								</li>
 							</ul>
 						</nav>
 					</div>
+					
 					<div class="nav_w3ls" style="margin-right:3%">
-
 						<nav>
-							
 							<input type="checkbox" id="drop2" />
 							<ul class="menu">
 								<li class="mx-lg-4 mx-md-3 my-md-0 my-2" style="background:red;padding:8px">
 									<!-- First Tier Drop Down -->
-									<label for="drop-2" class="toggle toogle-2"> <span class="fa fa-angle-down" aria-hidden="true"></span>
+									<label for="drop-2" class="toggle toogle-2">
+										<span class="fa fa-angle-down" aria-hidden="true"></span>
 									</label>
-									<a href="#"><i class="fa fa-user"></i> {{request.user.username}} <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+									<a href="#">
+										<i class="fa fa-user"></i> {{request.user.username}}
+										<span class="fa fa-angle-down" aria-hidden="true"></span>
+									</a>
 									<ul style="margin-top:10%;width:80%;margin-right:5%">
-										<li style="width:100%;"><a href="{% url 'change_password' %}" class="drop-text">Password</a></li>
-										<li style="width:100%;"><a href="{% url 'logout' %}" class="drop-text">Logout</a></li>
+										<li style="width:100%;">
+											<a href="{% url 'change_password' %}" class="drop-text">Password</a>
+										</li>
+										<li style="width:100%;">
+											<a href="{% url 'logout' %}" class="drop-text">Logout</a>
+										</li>
 									</ul>
 								</li>
-
-
-
 							</ul>
 						</nav>
 					</div>
-
+					
+					<!-- CSS -->
+					<style>
+					/* Hide mobile-only buttons on larger screens */
+					.mobile-only {
+						display: none;
+					}
+					
+					/* Show mobile-only buttons on screens smaller than 768px */
+					@media (max-width: 768px) {
+						.mobile-only {
+							display: block;
+							width: 100%;
+							text-align: center;
+							padding: 10px 0;
+						}
+					}
+					
+					/* Adjust dropdown styles for mobile if needed */
+					@media (max-width: 768px) {
+						.menu ul {
+							margin-top: 0;
+							width: 100%;
+							padding: 0;
+						}
+					
+						.menu ul li {
+							text-align: center;
+							padding: 10px;
+						}
+					}
+					</style>
+					
 					{% elif request.user.patient_set.all.0 %}
 					<div class="nav_w3ls" style="margin-left:1%;font-weight:bold">
 						<nav>
 							<label for="drop3" class="toggle">
 								<i class="navbar-toggler-icon"></i>
-							  </label>
+							</label>
 							<input type="checkbox" id="drop3" />
-							<ul class="menu" style="padding:10px;width:100%; ">
-								<li><a href="{% url 'patient_home' %}" class="active">Home</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/add_heartdetail">Predict</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/view-diseases">View Disease</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/sent_feedback">Feedback</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/search-doctor">Search</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/apoint">Booking</a></li>
+							<ul class="menu" style="padding:10px;width:100%;">
+								<li style="margin-right: 15px;">
+									<a href="{% url 'patient_home' %}" class="active">Home</a>
+								  </li>
+								  <li style="margin-right: 15px;">
+									<a href="/community" >Community</a>
+								  </li>
+								  
+								  <li>
+									<a href="/sent_feedback" >FeedBack</a>
+								  </li>
+								  
 								
+							
+							
+					
+								<!-- Buttons visible only on mobile -->
+								<li class="mobile-only">
+									<a href="{% url 'profile_doctor' %}" class="drop-text">My Profile</a>
+								</li>
+								<li class="mobile-only">
+									<a href="{% url 'appointment_status' %}" class="drop-text">Booking Status</a>
+								</li>
+								<li class="mobile-only">
+									<a href="{% url 'change_password' %}" class="drop-text">Password</a>
+								</li>
+								
+								<li class="mobile-only">
+									<a href="{% url 'logout' %}" class="drop-text">Logout</a>
+								</li>
 							</ul>
 						</nav>
 					</div>
+					
+					<!-- CSS -->
+					
 					<div class="nav_w3ls" style="margin-right:3%">
 
 						<nav>
@@ -320,44 +476,98 @@ $(document).ready(function() {
 						<nav>
 							<label for="drop5" class="toggle">
 								<i class="navbar-toggler-icon"></i>
-							  </label>
+							</label>
 							<input type="checkbox" id="drop5" />
 							<ul class="menu" style="padding:15px;width:100%">
 								<li><a href="{% url 'doctor_home' %}" class="active">Home</a></li>
-							
 								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
-									<a href="/view_search_pat">Users Data</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/view-diseases">View Disease</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="/appointments/">View Appointments</a></li>
-								<li class="mx-lg-2 mx-md-3 my-md-0 my-2"><a href="{% url 'appointment_status' %}"> Appointments History</a></li>
-								
-
+									<a href="/view_search_pat">Users Data</a>
+								</li>
+						
+								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
+									<a href="/appointments/">View Appointments</a>
+								</li>
+								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
+									<a href="/community">Community</a></li>
+								<li class="mx-lg-2 mx-md-3 my-md-0 my-2">
+									<a href="{% url 'appointment_status' %}">Appointments History</a>
+								</li>
+					
+								<!-- Mobile-only Buttons -->
+								<li class="mobile-only">
+									<a href="{% url 'profile_doctor' %}">Profile</a>
+								</li>
+								<li class="mobile-only">
+									<a href="{% url 'change_password' %}">Password</a>
+								</li>
+								<li class="mobile-only">
+									<a href="{% url 'logout' %}">Logout</a>
+								</li>
 							</ul>
 						</nav>
 					</div>
+					
 					<div class="nav_w3ls" style="margin-right:3%">
-
 						<nav>
-							
 							<input type="checkbox" id="drop6" />
 							<ul class="menu">
 								<li class="mx-lg-4 mx-md-3 my-md-0 my-2" style="background:#6a6767;padding:8px">
 									<!-- First Tier Drop Down -->
-									<label for="drop6" class="toggle toogle-2"> <span class="fa fa-angle-down" aria-hidden="true"></span>
+									<label for="drop6" class="toggle toggle-2">
+										<span class="fa fa-angle-down" aria-hidden="true"></span>
 									</label>
-									<a href="#"><i class="fa fa-user"></i> {{request.user.username}} <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+									<a href="#">
+										<i class="fa fa-user"></i> {{request.user.username}}
+										<span class="fa fa-angle-down" aria-hidden="true"></span>
+									</a>
 									<ul style="margin-top:10%;width:80%;margin-right:5%">
-										<li style="width:100%;"><a href="{% url 'profile_doctor' %}" class="drop-text">Profile</a></li>
-										<li style="width:100%;"><a href="{% url 'change_password' %}" class="drop-text">Password</a></li>
-										<li style="width:100%;"><a href="{% url 'logout' %}" class="drop-text">Logout</a></li>
+										<li style="width:100%;">
+											<a href="{% url 'profile_doctor' %}" class="drop-text">Profile</a>
+										</li>
+										<li style="width:100%;">
+											<a href="{% url 'change_password' %}" class="drop-text">Password</a>
+										</li>
+										<li style="width:100%;">
+											<a href="{% url 'logout' %}" class="drop-text">Logout</a>
+										</li>
 									</ul>
 								</li>
-
-
-
 							</ul>
 						</nav>
 					</div>
+					
+					<!-- CSS -->
+					<style>
+					/* Hide mobile-only buttons on larger screens */
+					.mobile-only {
+						display: none;
+					}
+					
+					/* Show mobile-only buttons on screens smaller than 768px */
+					@media (max-width: 768px) {
+						.mobile-only {
+							display: block;
+							width: 100%;
+							text-align: center;
+							padding: 10px 0;
+						}
+					}
+					
+					/* Adjust dropdown styles for mobile if needed */
+					@media (max-width: 768px) {
+						.menu ul {
+							margin-top: 0;
+							width: 100%;
+							padding: 0;
+						}
+					
+						.menu ul li {
+							text-align: center;
+							padding: 10px;
+						}
+					}
+					</style>
+					
 					<!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRZ6z9k+U3w7Xf9F5PzQp6j6Nw8Bdfz9B/JR3zPxtb8vsF+1Pj9yJg1Wm" crossorigin="anonymous">
 
@@ -417,6 +627,8 @@ $(document).ready(function() {
 		<!-- banner -->
 		<div class="mobile-padding">
 			{% block body %}
+			{% block content %}
+			{% endblock %}
 			{% endblock %}
 		</div>
 		
@@ -443,25 +655,13 @@ $(document).ready(function() {
 				<div class="col-lg-5 w3ls_footer_grid_left1_pos text-lg-right text-center mt-lg-0 mt-2">
 					<ul style="color:white">
 						<li>
-							<a href="#" style="color:white" class="facebook">
-								<span class="fa fa-facebook-f mr-2"></span>Facebook
-							</a>
-						</li>
-						<li class="mx-3">
-							<a href="#" style="color:white" class="twitter">
-								<span class="fa fa-twitter mr-2"></span>Twitter
-							</a>
-						</li>
-						<li>
-							<a href="#" style="color:white" class="google">
-								<span class="fa fa-google-plus mr-2"></span>Google Plus
+							<a href="https://www.linkedin.com/in/syed-zafran-haider/" style="color:white" class="linkedin">
+								<span class="fa fa-linkedin mr-2"></span>LinkedIn
 							</a>
 						</li>
 					</ul>
 				</div>
-			</div>
-		</div>
-	</div>
+				
 	<a href="#home" style="color:white" class="move-top text-center"></a>
 
 

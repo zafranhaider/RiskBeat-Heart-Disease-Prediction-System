@@ -1,0 +1,68 @@
+{% extends 'quora/base.html' %}
+{% block content %}
+	<h1 class="display-5">Ask a Question!</h1>
+	<hr class="my-4">
+	<form method="POST">
+		{% csrf_token %}
+		
+		<!-- Title Field -->
+		<div class="form-group">
+			<label for="{{ form.title.id_for_label }}">Title</label>
+			<input type="text" name="{{ form.title.name }}" class="form-control" id="{{ form.title.id_for_label }}" value="{{ form.title.value|default_if_none:'' }}">
+			{% if form.title.errors %}
+				<div class="text-danger">
+					{% for error in form.title.errors %}
+						{{ error }}
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+
+		<!-- Body Field -->
+		<div class="form-group">
+			<label for="{{ form.body.id_for_label }}">Body</label>
+			<textarea name="{{ form.body.name }}" class="form-control" id="{{ form.body.id_for_label }}" rows="5">{{ form.body.value|default_if_none:'' }}</textarea>
+			{% if form.body.errors %}
+				<div class="text-danger">
+					{% for error in form.body.errors %}
+						{{ error }}
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+
+		<!-- Status Field -->
+		<div class="form-group">
+			<label for="{{ form.status.id_for_label }}">Status</label>
+			<select name="{{ form.status.name }}" class="form-control" id="{{ form.status.id_for_label }}">
+				{% for value, label in form.status.field.choices %}
+					<option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}</option>
+				{% endfor %}
+			</select>
+			{% if form.status.errors %}
+				<div class="text-danger">
+					{% for error in form.status.errors %}
+						{{ error }}
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+
+		<!-- Restrict Comments Field -->
+		<div class="form-group form-check">
+			<input type="checkbox" name="{{ form.restrict_comments.name }}" class="form-check-input" id="{{ form.restrict_comments.id_for_label }}" {% if form.restrict_comments.value %}checked{% endif %}>
+			<label class="form-check-label" for="{{ form.restrict_comments.id_for_label }}">Restrict Comments</label>
+			{% if form.restrict_comments.errors %}
+				<div class="text-danger">
+					{% for error in form.restrict_comments.errors %}
+						{{ error }}
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+
+		<!-- Submit and Reset Buttons -->
+		<input type="submit" name="submit" class="btn btn-success mb-2" value="Ask">
+		<input type="reset" name="reset" class="btn btn-secondary mb-2" value="Reset">
+	</form>
+{% endblock %}

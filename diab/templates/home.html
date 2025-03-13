@@ -1,0 +1,166 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+<main class="container my-5">
+    <div class="card border-0 shadow-lg mx-auto rounded-4 overflow-hidden" style="max-width: 700px; background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);">
+        <div class="card-header bg-primary text-white py-4">
+            <h2 class="text-center mb-0 display-5 fw-bold">
+                <i class="fas fa-heartbeat me-2"></i>Diabetes Risk Assessment
+            </h2>
+        </div>
+        
+        <div class="card-body p-4 p-md-5">
+            <form method="POST" action="{% url 'result' %}" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="row g-4">
+                    <!-- Pregnancy Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" name="pregnancies" id="pregnancies" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="0" min="0" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="pregnancies" class="text-muted">
+                                <i class="fas fa-baby me-2"></i>Pregnancies
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Glucose Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" name="glucose" id="glucose" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="70-200 mg/dL" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="glucose" class="text-muted">
+                                <i class="fas fa-vial me-2"></i>Glucose (mg/dL)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Blood Pressure Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" name="bloodpressure" id="bloodpressure" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="80-200 mmHg" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="bloodpressure" class="text-muted">
+                                <i class="fas fa-heart-pulse me-2"></i>Blood Pressure
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Skin Thickness Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" name="skinthickness" id="skinthickness" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="0-99 mm" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="skinthickness" class="text-muted">
+                                <i class="fas fa-ruler-vertical me-2"></i>Skin Thickness
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Insulin Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" name="insulin" id="insulin" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="0-900 μU/ml" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="insulin" class="text-muted">
+                                <i class="fas fa-syringe me-2"></i>Insulin Level
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- BMI Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" step="0.1" name="bmi" id="bmi" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="18.5-50" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="bmi" class="text-muted">
+                                <i class="fas fa-weight-scale me-2"></i>BMI
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Diabetes Pedigree Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" step="0.001" name="diabetespedigreefunction" 
+                                   id="diabetespedigreefunction" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="0.000-2.000" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="diabetespedigreefunction" class="text-muted">
+                                <i class="fas fa-dna me-2"></i>Pedigree Function
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Age Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="number" name="age" id="age" 
+                                   class="form-control border-3 rounded-3 py-3"
+                                   placeholder="21-100" required
+                                   style="border-color: #e0e0e0;">
+                            <label for="age" class="text-muted">
+                                <i class="fas fa-user-clock me-2"></i>Age
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-lg rounded-pill fw-bold text-white" 
+                            style="background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+                                   transition: all 0.3s ease;">
+                        Analyze Risk
+                        <i class="fas fa-arrow-right-long ms-2"></i>
+                    </button>
+                </div>
+
+                <!-- Privacy Note -->
+                <p class="text-center text-muted mt-4 small">
+                    <i class="fas fa-shield-alt me-2"></i>Your health data is protected with 256-bit encryption
+                </p>
+            </form>
+        </div>
+    </div>
+</main>
+
+<!-- Include Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    .form-control:focus {
+        border-color: #3a7bd5 !important;
+        box-shadow: 0 0 0 3px rgba(58,123,213,0.1);
+    }
+    
+    .form-floating label {
+        transition: all 0.2s ease;
+        opacity: 0.8;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(58,123,213,0.3);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+    }
+</style>
+{% endblock %}

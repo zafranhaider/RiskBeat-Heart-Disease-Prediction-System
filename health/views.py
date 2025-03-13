@@ -8,6 +8,9 @@ from .models import *
 from django.contrib.auth import authenticate, login, logout
 import numpy as np
 import pandas as pd
+import logging
+import re
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 from django.db.models import Q
@@ -17,13 +20,13 @@ from django.http import HttpResponseForbidden, HttpResponseBadRequest
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.model_selection import train_test_split
-
+from .disease_data import diseases
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from django.http import HttpResponse
 
-
+logger = logging.getLogger(__name__)
 ########################################################################################################
 ############################ Pages Templates ########################################
 ########################################################################################################
@@ -60,9 +63,26 @@ def Doctor_Home(request):
 def About(request):
     return render(request,'about.html')
 
-def Contact(request):
-    return render(request,'contact.html')
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('Name')
+        email = request.POST.get('Email')
+        subject = request.POST.get('Subject')
+        message = request.POST.get('Message')
 
+        # Save the data in the database
+        Contact.objects.create(name=name, email=email, subject=subject, message=message)
+
+        
+
+    return render(request, 'contact.html') 
+
+@login_required(login_url="login")
+def view_contacts(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You do not have permission to access this page.")
+    contacts = Contact.objects.all()  # Fetch all contacts, latest first
+    return render(request, 'view_contacts.html', {'contacts': contacts})
 
 def Gallery(request):
     return render(request,'gallery.html')
@@ -217,6 +237,8 @@ def Change_Password(request):
 ########################################################################################################
 ############################ Main Logics Starts here  ########################################
 ########################################################################################################
+
+
 
 @login_required(login_url="login")
 def assign_status(request,pid):
@@ -399,11 +421,6 @@ def search_doctor(request):
         'doc': doc,
         'li': li  # Include any additional filtering logic here
     })
-from .disease_data import diseases
-@login_required
-def view_diseases(request):
-    return render(request, 'Diss_view.html', {'diseases': diseases})
-
 
 
 @login_required
@@ -513,18 +530,18 @@ def prdict_heart_disease(list_data):
 
     X = df[['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']]
     y = df['target']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.82, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.92, random_state=0)
 
     # Initialize the model and load saved parameters if model file exists
     nn_model = XGBClassifier(
-        n_estimators=143,
-        max_depth=8,
-        learning_rate=0.2292430275415037,
-        subsample=0.8559154846023602,
-        colsample_bytree=0.6122259726638296,
-        reg_alpha=0.4751707824062298,
-        reg_lambda=1.727246500873494,
-        random_state=0
+        n_estimators= 62,
+        max_depth= 3,
+        learning_rate= 0.09185460139255142,
+        subsample= 0.9445087255877626,
+        colsample_bytree= 0.9503068865846166,
+        reg_alpha= 0.6822185735880166,
+        reg_lambda= 4.781662063326414,
+        random_state=0,
     )
 
     # Load the pre-trained model if it exists
@@ -606,7 +623,210 @@ def predict_desease(request, pred, accuracy):
     # Rendering the template with the context data
     return render(request, 'predict_disease.html', context)
 
+########################################################################################################
+############################ Cornary Heart Disese Logics Algoritham ########################################
+########################################################################################################
+
+def preprocess_inputs(df, scaler):
+    df = df.copy()
+    # Split df into X and y
+    y = df['TenYearCHD'].copy()
+    X = df.drop('TenYearCHD', axis=1).copy()
+    X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+    return X, y
+
+
+
+@login_required()
+def prdict_cheart_disease(list_data):
+    # Load the dataset from CSV
+    csv_file_path = './Machine_Learning/cornheart.csv'  
+
+    # Read the CSV file
+    df = pd.read_csv(csv_file_path)
+
+    X = df[['male', 'age', 'education', 'currentSmoker', 'cigsPerDay', 'BPMeds',
+            'prevalentStroke', 'prevalentHyp', 'diabetes', 'totChol', 'sysBP', 'diaBP',
+            'BMI', 'heartRate', 'glucose']]
+    y = df['TenYearCHD']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.82, random_state=0)
+
+    # Initialize the model and load saved parameters if model file exists
+    nn_model = XGBClassifier(
+    n_estimators= 251,
+    max_depth= 3,
+    learning_rate= 0.035998012016241976,
+    subsample= 0.9775449686982007,
+    colsample_bytree= 0.8149219334036141,
+    reg_alpha= 0.9601641553647629,
+    reg_lambda= 2.1747392006396034,
+    )
+
+    # Load the pre-trained model if it exists
+    try:
+        nn_model.load_model('./Machine_Learning/cornheart.json')  # Add the path to the saved model
+        print("Model loaded successfully!")
+    except Exception as e:
+        print("No pre-trained model found, training a new model...")
+        nn_model.fit(X_train, y_train)  # Train a new model if the saved one doesn't exist
+
+    # Convert input to proper format
+    list_data = np.array([list_data], dtype=np.float32)
+    pred = nn_model.predict(list_data)
+    
+    # Feature importance extraction
+    feature_importances = nn_model.feature_importances_
+    feature_names = X.columns
+    important_factors = [
+        (FEATURE_NAME_MAP.get(feature_names[i], feature_names[i]), feature_importances[i]) 
+        for i in range(len(feature_importances))
+    ]
+    important_factors.sort(key=lambda x: x[1], reverse=True)
+
+    return (nn_model.score(X_test, y_test) * 100), pred, important_factors
+
+
+
+@login_required(login_url="login")
+def add_conrheartdetail(request):
+    if request.method == "POST":
+        required_fields = [
+            "male", "age", "education", "currentSmoker", "cigsPerDay",
+            "BPMeds", "prevalentStroke", "prevalentHyp", "diabetes",
+            "totChol", "sysBP", "diaBP", "BMI", "heartRate", "glucose"
+        ]
+        
+        list_data = []
+        errors = []
+        
+        # Validate each field
+        for field in required_fields:
+            value = request.POST.get(field)
+            if value is None or value.strip() == '':
+                errors.append(f"Field '{field}' is required.")
+            else:
+                try:
+                    list_data.append(float(value))
+                except ValueError:
+                    errors.append(f"Invalid value for '{field}'. Must be a number.")
+        
+        if errors:
+            return render(request, 'cornheart.html', {'error': ", ".join(errors)})
+        
+        try:
+            # Perform prediction
+            accuracy, pred, feature_contributions = prdict_cheart_disease(list_data)
+            
+            # Save prediction results
+            patient = Patient.objects.get(user=request.user)
+            Search_Data.objects.create(
+                patient=patient,
+                prediction_accuracy=accuracy,
+                result=pred[0],
+                values_list=list_data,
+            )
+            
+            # Fetch doctors based on patient's address
+            patient_address = patient.address
+            doctors = Doctor.objects.filter(address__icontains=patient_address)
+            
+            # Prepare prediction message
+            pred_message = "Low risk of 10-year coronary heart disease." if pred[0] == 0 else "High risk of 10-year coronary heart disease."
+            
+            return render(request, 'corn_pred.html', {
+                'accuracy': accuracy,
+                'pred': pred[0],
+                'pred_message': pred_message,
+                'contributing_factors': feature_contributions,
+                'doctors': doctors  # Include doctors in context
+            })
+            
+        except Patient.DoesNotExist:
+            return render(request, 'cornheart.html', {'error': "Patient profile not found."})
+        except Exception as e:
+            # Log the error
+            logger.error(f"Error in add_conrheartdetail: {e}", exc_info=True)
+            return render(request, 'cornheart.html', {'error': str(e)})
+
+    return render(request, 'cornheart.html')
+
+@login_required(login_url="login")
+def predict_corndesease(request):
+    try:
+        # Get patient address
+        patient = Patient.objects.get(user=request.user)
+        patient_address = patient.address
+        
+        # Fetch doctors based on patient's address
+        doctors = Doctor.objects.filter(address__icontains=patient_address)
+
+        # Perform prediction (assuming you have a function for this)
+        accuracy, pred = predict_corn_disease()  # Update with the actual function
+
+        # Prepare prediction message
+        pred_message = "Low Risk" if pred == 0 else "High Risk"
+
+        # Save prediction results
+        Search_Data.objects.create(
+            patient=patient,
+            prediction_accuracy=accuracy,
+            result=pred,
+        )
+
+        # Render template with context
+        return render(request, 'corn_pred.html', {
+            'accuracy': accuracy,
+            'pred': pred,
+            'pred_message': pred_message,
+            'doctors': doctors
+        })
+
+    except Patient.DoesNotExist:
+        return render(request, 'corn_pred.html', {'error': "Patient profile not found."})
+    except Exception as e:
+        logger.error(f"Error in predict_corndesease: {e}", exc_info=True)
+        return render(request, 'corn_pred.html', {'error': str(e)})
 
 ########################################################################################################
 ############################ Life Assessment Logics Algoritham ########################################
 ########################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################################################
+############################ Extra Features ########################################
+########################################################################################################
+
+
+
+@login_required()
+def check_disease(request):
+    matched_diseases = []
+
+    if request.method == 'POST':
+        user_input = request.POST.get('symptoms', '').lower().replace(" ", "")  # Remove spaces for better matching
+        
+        for disease in diseases:
+            disease_symptoms = disease['symptoms'].lower().replace(" ", "")  # Remove spaces for better matching
+            
+            # Check for partial matches (e.g., "chestpa" should match "chest pain")
+            if re.search(user_input, disease_symptoms):  
+                matched_diseases.append(disease)
+
+    return render(request, 'Diss_view.html', {'diseases': matched_diseases})
