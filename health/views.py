@@ -637,7 +637,7 @@ def preprocess_inputs(df, scaler):
 
 
 
-@login_required()
+
 def prdict_cheart_disease(list_data):
     # Load the dataset from CSV
     csv_file_path = './Machine_Learning/cornheart.csv'  

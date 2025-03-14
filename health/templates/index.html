@@ -48,32 +48,48 @@
         margin-top: 0;
       }
     }
-    .dropdown-menu {
-      min-width: 250px;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-      background-color: #ffffff;
-      border: 1px solid #eaeaea;
-      font-family: 'Arial', sans-serif;
-      font-size: 14px;
-      color: #333;
-      transition: all 0.3s ease;
-    }
-    .dropdown-menu:hover {
-      box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
-      transform: translateY(-2px);
-    }
-    .dropdown-menu .dropdown-item {
-      margin-bottom: 0.5rem;
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-    .dropdown-menu .dropdown-item:hover {
-      background-color: #f5f5f5;
-      color: #007bff;
-    }
+    .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 250px;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+}
+
+.dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu .dropdown-item {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+
     @media (max-width: 991px) {
       .dropdown-menu {
         width: 100%;
@@ -213,6 +229,67 @@
       }
     }
   </style>
+
+
+<style>.nav_w3ls nav ul li {
+  position: relative; /* Ensures dropdown aligns correctly */
+}
+
+.nav_w3ls nav ul li ul {
+  position: absolute;
+  top: 80%; /* Directly below the parent */
+  left: 0;
+  width: 100%;
+  min-width: 200px; /* Adjust width if necessary */
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.nav_w3ls nav ul li:hover ul {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav_w3ls nav ul li ul li {
+  width: 100%;
+}
+
+.nav_w3ls nav ul li ul li a {
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.nav_w3ls nav ul li ul li a:hover {
+  background-color: #f5f5f5;
+}
+</style>
+  <script>document.getElementById("dropdownButton").addEventListener("click", function (event) {
+    event.stopPropagation(); // Prevent immediate closing when clicking button
+    let dropdownMenu = document.getElementById("dropdownMenu");
+    dropdownMenu.classList.toggle("active");
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function (event) {
+    let dropdownMenu = document.getElementById("dropdownMenu");
+    let dropdownButton = document.getElementById("dropdownButton");
+  
+    if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+      dropdownMenu.classList.remove("active");
+    }
+  });
+  </script>
 </head>
 <body>
   <!-- main -->
@@ -390,6 +467,7 @@
               </ul>
             </nav>
           </div>
+     
           {% elif request.user.doctor_set.all.0 %}
           <div class="nav_w3ls" style="margin-right:4%">
             <nav>
