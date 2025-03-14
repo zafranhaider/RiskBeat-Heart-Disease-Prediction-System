@@ -1,73 +1,129 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block body %}
+<!-- Optional: Include Font Awesome CDN in your base template if not already included -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
 
-<div class="container" style="margin-top:5%; margin-bottom:2%;">
-    <h2 class="text-center font-weight-bold" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">Doctor Dashboard</h2>
-    <hr/>
+<style>
+    /* Dashboard Header */
+    .dashboard-header {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #fff;
+        margin-top: 60px;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    /* Card styles */
+    .dashboard-card {
+        border: none;
+        border-radius: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #ffffff;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .card-icon {
+        font-size: 2.5rem;
+        color: #3498db;
+        margin-bottom: 1rem;
+    }
+    /* Specialties Section Card */
+    .specialty-card {
+        border: none;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .specialty-card .card-header {
+        background: #3498db;
+        color: #fff;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .specialty-card .card-body {
+        padding: 2rem;
+    }
+    /* Responsive spacing */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 1.5rem;
+        }
+        .dashboard-card {
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
 
-    <!-- Specialties Section -->
-    <div class="card mb-5 shadow-sm border-0 rounded hover-effect">
-        <div class="card-header bg-primary text-white text-center py-3">
-            <h4>Cardiologist Specialties</h4>
-        </div>
-        
-        <div class="card-body p-4">
-                <!-- Quick Links Section -->
-    <div class="row text-center">
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm p-3 bg-light hover-effect">
-                <h5>Patient Records</h5>
-                <a href="/view_search_pat" class="btn btn-outline-primary mt-2">View Records</a>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm p-3 bg-light hover-effect">
-                <h5>Appointments</h5>
-                <a href="/appointments/" class="btn btn-outline-success mt-2">Manage Appointments</a>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm p-3 bg-light hover-effect">
-                <h5>Appointments History</h5>
-                <a href="{% url 'appointment_status' %}" class="btn btn-outline-info mt-2">Check History of Appointments</a>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row justify-content-center"> <!-- Centers the content horizontally -->
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm p-3 bg-light hover-effect">
-                        <h5>Community</h5>
-                        <a href="/community" class="btn btn-outline-success mt-2">View Community</a>
-                    </div>
+<div class="container-fluid px-4">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header" style="padding-top: 30px;">
+        <h2 class="font-weight-bold" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Doctor Dashboard</h2>
+     
+    </div>
+    
+    <!-- Quick Links Cards -->
+    <div class="row">
+        <!-- Patient Records Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card dashboard-card text-center p-3">
+                <div class="card-body">
+                    <i class="fas fa-notes-medical card-icon"></i>
+                    <h5 class="card-title">Patient Records</h5>
+                    <p class="card-text">Access and update patient details seamlessly.</p>
+                    <a href="/view_search_pat" class="btn btn-outline-primary mt-2">View Records</a>
                 </div>
             </div>
         </div>
-        
-            <p class="text-justify">Cardiologists specialize in diagnosing and treating heart-related diseases and conditions. They provide comprehensive care, including preventive measures, advanced diagnostic techniques, and effective treatments for various cardiovascular disorders.</p>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Diagnosis and treatment of heart diseases</li>
-                <li class="list-group-item">Preventive care and lifestyle counseling</li>
-                <li class="list-group-item">Managing arrhythmias and heart failure</li>
-                <li class="list-group-item">Performing cardiac catheterization</li>
-                <li class="list-group-item">Monitoring and interpreting heart tests</li>
-            </ul>
+        <!-- Appointments Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card dashboard-card text-center p-3">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check card-icon"></i>
+                    <h5 class="card-title">Appointments</h5>
+                    <p class="card-text">Manage your upcoming appointments.</p>
+                    <a href="/appointments/" class="btn btn-outline-success mt-2">Manage Appointments</a>
+                </div>
+            </div>
+        </div>
+        <!-- Appointment History Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card dashboard-card text-center p-3">
+                <div class="card-body">
+                    <i class="fas fa-history card-icon"></i>
+                    <h5 class="card-title">History</h5>
+                    <p class="card-text">Review past appointments easily.</p>
+                    <a href="{% url 'appointment_status' %}" class="btn btn-outline-info mt-2">Check History</a>
+                </div>
+            </div>
+        </div>
+        <!-- Community Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card dashboard-card text-center p-3">
+                <div class="card-body">
+                    <i class="fas fa-users card-icon"></i>
+                    <h5 class="card-title">Community</h5>
+                    <p class="card-text">Connect with peers and patients.</p>
+                    <a href="/community" class="btn btn-outline-warning mt-2">View Community</a>
+                </div>
+            </div>
         </div>
     </div>
-
-
-
-
-
-
-<style>
-    .hover-effect:hover {
-        transform: scale(1.03);
-        transition: 0.3s ease-in-out;
-    }
-    .carousel-indicators button {
-        background-color: #2c3e50;
-    }
-</style>
+    
+    <!-- Specialties Section -->
+    <div class="card specialty-card mb-5">
+        
+            <h4></h4><br>
+        </div>
+        <div class="card-body">
+            <p class="text-justify"></p><br>
+           
+        </div>
+    </div>
+</div>
 
 {% endblock %}

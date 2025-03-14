@@ -1,27 +1,26 @@
 {% extends 'index.html' %}
 {% load static %}
 
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Heart Failure Prediction</title>
-
 {% block body %}
 <style>
   /* Global body style */
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f7f8;
+    height: auto;
+    min-height: 100vh;
     margin: 0;
-  
-  }
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+    background-attachment: fixed;
+}
 
   /* Container styles */
-  .container {
+  .container1 {
     max-width: 900px;
-  
-
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    background: white; /* Ensure form has a different background */
+    padding: 20px;
+    margin: 50px auto;
   }
 
   /* Headings */
@@ -35,6 +34,13 @@
     text-align: center;
     margin-bottom: 20px;
     color: #444;
+  }
+
+  /* Form wrapper */
+  .form-wrapper {
+    background: #fff; /* Separate form background */
+    padding: 20px;
+    border-radius: 10px;
   }
 
   /* Form styles */
@@ -102,8 +108,9 @@
   }
 </style>
 
-<div class="container">
-  <h2 style="padding-top: 100px;">Heart Failure Prediction</h2>
+<div class="container1">
+  <h2 style="padding-top: 50px;">Heart Failure Prediction</h2>
+
   {% if prediction is not None %}
     <div class="prediction-box">
       <h3>Prediction:</h3>
@@ -111,63 +118,65 @@
     </div>
     <div class="alert alert-secondary text-center" role="alert">
       <strong>Model Accuracy:</strong> {{ accuracy }}%
-  </div>
+    </div>
   {% endif %}
 
-  <form method="post">
-    {% csrf_token %}
-    <label>Age:</label>
-    <input type="number" name="age" step="0.1" required>
+  <div class="form-wrapper">
+    <form method="post">
+      {% csrf_token %}
+      <label>Age:</label>
+      <input type="number" name="age" step="0.1" required>
 
-    <label>Anaemia:</label>
-    <select name="anaemia">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </select>
+      <label>Anaemia:</label>
+      <select name="anaemia">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
 
-    <label>Creatinine Phosphokinase:</label>
-    <input type="number" name="creatinine_phosphokinase" required>
+      <label>Creatinine Phosphokinase:</label>
+      <input type="number" name="creatinine_phosphokinase" required>
 
-    <label>Diabetes:</label>
-    <select name="diabetes">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </select>
+      <label>Diabetes:</label>
+      <select name="diabetes">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
 
-    <label>Ejection Fraction:</label>
-    <input type="number" name="ejection_fraction" required>
+      <label>Ejection Fraction:</label>
+      <input type="number" name="ejection_fraction" required>
 
-    <label>High Blood Pressure:</label>
-    <select name="high_blood_pressure">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </select>
+      <label>High Blood Pressure:</label>
+      <select name="high_blood_pressure">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
 
-    <label>Platelets:</label>
-    <input type="number" name="platelets" step="0.01" required>
+      <label>Platelets:</label>
+      <input type="number" name="platelets" step="0.01" required>
 
-    <label>Serum Creatinine:</label>
-    <input type="number" name="serum_creatinine" step="0.01" required>
+      <label>Serum Creatinine:</label>
+      <input type="number" name="serum_creatinine" step="0.01" required>
 
-    <label>Serum Sodium:</label>
-    <input type="number" name="serum_sodium" required>
+      <label>Serum Sodium:</label>
+      <input type="number" name="serum_sodium" required>
 
-    <label>Sex:</label>
-    <select name="sex">
-      <option value="0">Female</option>
-      <option value="1">Male</option>
-    </select>
+      <label>Sex:</label>
+      <select name="sex">
+        <option value="0">Female</option>
+        <option value="1">Male</option>
+      </select>
 
-    <label>Smoking:</label>
-    <select name="smoking">
-      <option value="0">No</option>
-      <option value="1">Yes</option>
-    </select>
+      <label>Smoking:</label>
+      <select name="smoking">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
 
-    <label>Time (Follow-up duration):</label>
-    <input type="number" name="time" required>
+      <label>Time (Follow-up duration):</label>
+      <input type="number" name="time" required>
 
-    <button type="submit">Predict</button>
-  </form>
+      <button type="submit">Predict</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

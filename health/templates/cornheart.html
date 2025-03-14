@@ -1,15 +1,36 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block body %}
+<!-- Add Background Color to Body -->
+<style>
+body {
+    height: auto;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+    background-attachment: fixed;
+}
+    .form-container {
+        background-color: white; /* Keep the form's background white or any other color */
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 90%;
+        max-width: 900px;
+    }
+</style>
+
 <!-- Register -->
 <center>
     <section class="logins py-5">
         <div class="container py-xl-5 py-lg-3">
             <div class="title-section mb-md-5 mb-4">
-                <h3 class="w3ls-title text-uppercase text-dark font-weight-bold">Add Coronary Heart Details</h3>
+                <h3 class="w3ls-title text-uppercase text-dark font-weight-bold" style="background: linear-gradient(to right, white, #dddddd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Add Coronary Heart Details</h3>
+
             </div>
             <hr />
-            <div class="login px-sm-12" style="width: 100%;">
+            <div class="form-container">
                 <form action="{% url 'add_conrheartdetail' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
