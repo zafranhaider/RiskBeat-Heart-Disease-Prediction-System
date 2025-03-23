@@ -19,7 +19,7 @@ A Django-based web application that predicts the risk of heart disease using Mac
 ---
 
 ## Introduction
-The Heart Risk Prediction System leverages advanced data mining and machine learning techniques to analyze medical parameters and predict the risk level of heart disease. It utilizes algorithms like Gradient Boosting and Logistic Regression along with a multilayer perceptron neural network for high-performance prediction accuracy. The system uses 13 medical parameters such as age, sex, blood pressure, cholesterol, and obesity for prediction.
+The Heart Risk Disease Prediction System leverages advanced data mining and machine learning techniques to analyze medical parameters and predict the risk level of heart disease. It utilizes algorithms like Gradient Boosting and Logistic Regression along with a multilayer perceptron neural network for high-performance prediction accuracy. The system uses 13 medical parameters such as age, sex, blood pressure, cholesterol, and obesity for prediction.
 
 ---
 
