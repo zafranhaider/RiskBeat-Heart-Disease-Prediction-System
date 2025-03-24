@@ -1,0 +1,181 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+  /* Global body style */
+  body {
+    height: auto;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+    background-attachment: fixed;
+}
+
+  /* Container styles */
+  .container2 {
+    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    background: white; /* Ensure form has a different background */
+    padding: 20px;
+    margin: 50px auto;
+  }
+
+  /* Headings */
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  /* Form wrapper */
+  .form-wrapper {
+    background: #fff; /* Separate form background */
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  /* Form styles */
+  form {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input:focus, select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    outline: none;
+  }
+
+  /* Button styles */
+  button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  /* Prediction box */
+  .prediction-box {
+    background: #4a8dff;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    margin: 20px auto;
+  }
+
+  .prediction-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    color: #3e4586;
+  }
+</style>
+</head>
+<body>
+  <div class="container2">
+    <h2 class="text-center">Heart Disease Prediction</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" class="form-control" id="age" name="age" required>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender (1=Female, 2=Male):</label>
+        <input type="number" class="form-control" id="gender" name="gender" required>
+      </div>
+      <div class="form-group">
+        <label for="height">Height (cm):</label>
+        <input type="number" class="form-control" id="height" name="height" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" class="form-control" id="weight" name="weight" required>
+      </div>
+      <div class="form-group">
+        <label for="ap_hi">Systolic BP (ap_hi):</label>
+        <input type="number" class="form-control" id="ap_hi" name="ap_hi" required>
+      </div>
+      <div class="form-group">
+        <label for="ap_lo">Diastolic BP (ap_lo):</label>
+        <input type="number" class="form-control" id="ap_lo" name="ap_lo" required>
+      </div>
+      <div class="form-group">
+        <label for="cholesterol">Cholesterol (1-3):</label>
+        <input type="number" class="form-control" id="cholesterol" name="cholesterol" required>
+      </div>
+      <div class="form-group">
+        <label for="gluc">Glucose (1-3):</label>
+        <input type="number" class="form-control" id="gluc" name="gluc" required>
+      </div>
+      <div class="form-group">
+        <label for="smoke">Smoking (0=No, 1=Yes):</label>
+        <input type="number" class="form-control" id="smoke" name="smoke" required>
+      </div>
+      <div class="form-group">
+        <label for="alco">Alcohol (0=No, 1=Yes):</label>
+        <input type="number" class="form-control" id="alco" name="alco" required>
+      </div>
+      <div class="form-group">
+        <label for="active">Physical Activity (0=No, 1=Yes):</label>
+        <input type="number" class="form-control" id="active" name="active" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-4">Predict</button>
+    </form>
+    
+    {% if prediction is not None %}
+    {% if prediction == "Risk of Heart Disease" %}
+      <div class="alert alert-danger mt-4" role="alert"> <!-- Red for high risk -->
+    {% else %}
+      <div class="alert alert-success mt-4" role="alert"> <!-- Green for low risk -->
+    {% endif %}
+        <h4 class="alert-heading">Prediction Result:</h4>
+        <p>{{ prediction }}</p>
+      </div>
+  {% endif %}
+  
+  </div>
+  
+  <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
+{% endblock %}
