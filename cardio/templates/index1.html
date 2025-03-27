@@ -110,6 +110,20 @@
 </head>
 <body>
   <div class="container2">
+    
+      {% if prediction is not None %}
+          {% if prediction == "Risk of Heart Disease" %}
+              <div class="alert alert-danger mt-4" role="alert"> <!-- Red for high risk -->
+          {% else %}
+              <div class="alert alert-success mt-4" role="alert"> <!-- Green for low risk -->
+          {% endif %}
+              <h4 class="alert-heading" style="text-align: center;">Prediction Result:</h4>
+              <p style="text-align: center;">{{ prediction }}</p>
+              <p style="text-align: center; font-weight: bold;">Model Accuracy: 80%</p>
+          </div>
+      {% endif %}
+
+  
     <h2 class="text-center">Heart Disease Prediction</h2>
     <form method="POST">
       {% csrf_token %}
@@ -160,16 +174,7 @@
       <button type="submit" class="btn btn-primary btn-block mt-4">Predict</button>
     </form>
     
-    {% if prediction is not None %}
-    {% if prediction == "Risk of Heart Disease" %}
-      <div class="alert alert-danger mt-4" role="alert"> <!-- Red for high risk -->
-    {% else %}
-      <div class="alert alert-success mt-4" role="alert"> <!-- Green for low risk -->
-    {% endif %}
-        <h4 class="alert-heading">Prediction Result:</h4>
-        <p>{{ prediction }}</p>
-      </div>
-  {% endif %}
+
   
   </div>
   
