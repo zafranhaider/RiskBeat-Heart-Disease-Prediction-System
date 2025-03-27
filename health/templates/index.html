@@ -360,18 +360,7 @@
                     </li>
                   </ul>
                 </li>
-                <li class="mx-lg-4 mx-md-3 my-md-0 my-2">
-                  <a href="/view_patient">Patient</a>
-                </li>
-                <li class="mx-lg-4 mx-md-3 my-md-0 my-2">
-                  <a href="/view_search_pat">Searched Data</a>
-                </li>
-                <li>
-                  <a href="/view_feedback">Feedback</a>
-                </li>
-                <li class="mx-lg-4 mx-md-3 my-md-0 my-2">
-                  <a href="/view-contacts">View Contacts</a>
-                </li>
+             
                 <!-- Mobile-only Buttons -->
                 <li class="mobile-only">
                   <a href="{% url 'change_password' %}">Password</a>
@@ -392,13 +381,10 @@
                     <span class="fa fa-angle-down" aria-hidden="true"></span>
                   </label>
                   <a href="#">
-                    <i class="fa fa-user"></i> {{request.user.username}}
-                    <span class="fa fa-angle-down" aria-hidden="true"></span>
+                     {{request.user.username}}
+       
                   </a>
-                  <ul style="margin-top:10%;width:80%;margin-right:5%">
-                    <li style="width:100%;"><a href="{% url 'change_password' %}" class="drop-text">Password</a></li>
-                    <li style="width:100%;"><a href="{% url 'logout' %}" class="drop-text">Logout</a></li>
-                  </ul>
+                
                 </li>
               </ul>
             </nav>
