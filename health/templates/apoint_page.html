@@ -126,9 +126,10 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ doctor.user.username }}</h5>
                         <p class="card-text">
-                            Specialization: {{ doctor.category }}<br>
-                            Contact: {{ doctor.contact }}<br>
-                            Address: {{ doctor.address }}
+                            <strong>Specialization:</strong> {{ doctor.category }}<br>
+                            <strong>Contact:</strong> {{ doctor.contact }}<br>
+                            <strong>Address:</strong> {{ doctor.address }}
+                            <strong>Experience:</strong> {{ doctor.experience }}
                         </p>
                     </div>
                 </div>
@@ -137,27 +138,83 @@
     </div>
 </div>
 
-<style>.doctor-profiles .row {
-    display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    gap: 1rem; /* Optional: Add spacing between cards */
-    padding-bottom: 1rem; /* Optional: Space below the row for scroll */
+<style>
+/* Doctor Profiles Container */
+.doctor-profiles {
+    font-family: Arial, sans-serif;
 }
 
+/* Title Styling */
+.doctor-profiles h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Row Styling */
+.doctor-profiles .row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 1.2rem;
+    padding-bottom: 1rem;
+}
+
+/* Card Styling */
+.doctor-profiles .card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.doctor-profiles .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Card Image */
+.doctor-profiles .card-img-top {
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Card Title */
+.doctor-profiles .card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+}
+
+/* Card Text */
+.doctor-profiles .card-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* Make Key Titles Bold */
+.doctor-profiles .card-text strong {
+    color: #222;
+}
+
+/* Scrollbar Customization */
 .doctor-profiles .row::-webkit-scrollbar {
-    height: 8px; /* Customize scrollbar height */
+    height: 8px;
 }
 
 .doctor-profiles .row::-webkit-scrollbar-thumb {
-    background: #888; /* Scrollbar thumb color */
+    background: #888;
     border-radius: 4px;
 }
 
 .doctor-profiles .row::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Scrollbar thumb hover color */
+    background: #555;
 }
 </style>
+
 
 
 

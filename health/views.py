@@ -186,6 +186,7 @@ def Signup_User(request):
         l = request.POST['lname']
         u = request.POST['uname']
         e = request.POST['email']
+        z = request.POST['experience']
         p = request.POST['pwd']
         d = request.POST['dob']
         con = request.POST['contact']
@@ -197,7 +198,7 @@ def Signup_User(request):
         if type == "Patient":
             Patient.objects.create(user=user,contact=con,address=add,image=im,dob=d)
         else:
-            Doctor.objects.create(dob=d,image=im,user=user,contact=con,address=add,status=2)
+            Doctor.objects.create(dob=d,image=im,user=user,contact=con,address=add,status=2, experience= z,)
         error = "create"
     d = {'error':error}
     return render(request,'register.html',d)
