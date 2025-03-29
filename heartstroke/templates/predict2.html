@@ -51,76 +51,120 @@
 
    
 
-           <form method="post">
-               {% csrf_token %}
-               <div class="form-group">
-                   <label for="gender">Gender:</label>
-                   <select class="form-control" id="gender" name="gender">
-                       <option value="Male">Male</option>
-                       <option value="Female">Female</option>
-                       <option value="Other">Other</option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="age">Age:</label>
-                   <input type="number" class="form-control" id="age" name="age" step="0.1" required>
-               </div>
-               <div class="form-group">
-                   <label for="hypertension">Hypertension:</label>
-                   <select class="form-control" id="hypertension" name="hypertension">
-                       <option value="0">No</option>
-                       <option value="1">Yes</option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="heart_disease">Heart Disease:</label>
-                   <select class="form-control" id="heart_disease" name="heart_disease">
-                       <option value="0">No</option>
-                       <option value="1">Yes</option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="ever_married">Ever Married:</label>
-                   <select class="form-control" id="ever_married" name="ever_married">
-                       <option value="No">No</option>
-                       <option value="Yes">Yes</option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="work_type">Work Type:</label>
-                   <select class="form-control" id="work_type" name="work_type">
-                       <option value="Private">Private</option>
-                       <option value="Self-employed">Self-employed</option>
-                       <option value="Govt_job">Govt Job</option>
-                       <option value="Never_worked">Never Worked</option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="Residence_type">Residence Type:</label>
-                   <select class="form-control" id="Residence_type" name="Residence_type">
-                       <option value="Urban">Urban</option>
-                       <option value="Rural">Rural</option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="avg_glucose_level">Average Glucose Level:</label>
-                   <input type="number" class="form-control" id="avg_glucose_level" name="avg_glucose_level" step="0.1" required>
-               </div>
-               <div class="form-group">
-                   <label for="bmi">BMI:</label>
-                   <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" required>
-               </div>
-               <div class="form-group">
-                   <label for="smoking_status">Smoking Status:</label>
-                   <select class="form-control" id="smoking_status" name="smoking_status">
-                       <option value="formerly smoked">Formerly Smoked</option>
-                       <option value="never smoked">Never Smoked</option>
-                       <option value="smokes">Smokes</option>
-                       <option value="Unknown">Unknown</option>
-                   </select>
-               </div>
-               <button type="submit" class="btn btn-custom btn-block">Predict</button>
-           </form>
+       <form method="post" id="predictionForm" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select class="form-control" id="gender" name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <div class="invalid-feedback">Please select your gender.</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" class="form-control" id="age" name="age" step="0.1" placeholder="Enter your age" required min="0" max="120">
+            <div class="invalid-feedback">Please enter a valid age (0-120).</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="hypertension">Hypertension:</label>
+            <select class="form-control" id="hypertension" name="hypertension" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+            <div class="invalid-feedback">Please select an option.</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="heart_disease">Heart Disease:</label>
+            <select class="form-control" id="heart_disease" name="heart_disease" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+            <div class="invalid-feedback">Please select an option.</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="ever_married">Ever Married:</label>
+            <select class="form-control" id="ever_married" name="ever_married" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+            <div class="invalid-feedback">Please select an option.</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="work_type">Work Type:</label>
+            <select class="form-control" id="work_type" name="work_type" required>
+                <option value="" disabled selected>Select Work Type</option>
+                <option value="Private">Private</option>
+                <option value="Self-employed">Self-employed</option>
+                <option value="Govt_job">Govt Job</option>
+                <option value="Never_worked">Never Worked</option>
+            </select>
+            <div class="invalid-feedback">Please select your work type.</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="Residence_type">Residence Type:</label>
+            <select class="form-control" id="Residence_type" name="Residence_type" required>
+                <option value="" disabled selected>Select Residence Type</option>
+                <option value="Urban">Urban</option>
+                <option value="Rural">Rural</option>
+            </select>
+            <div class="invalid-feedback">Please select your residence type.</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="avg_glucose_level">Average Glucose Level:</label>
+            <input type="number" class="form-control" id="avg_glucose_level" name="avg_glucose_level" step="0.1" placeholder="Enter your average glucose level" required min="50" max="300">
+            <div class="invalid-feedback">Please enter a valid glucose level (50-300).</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="bmi">BMI:</label>
+            <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" placeholder="Enter your BMI" required min="10" max="50">
+            <div class="invalid-feedback">Please enter a valid BMI (10-50).</div>
+        </div>
+    
+        <div class="form-group">
+            <label for="smoking_status">Smoking Status:</label>
+            <select class="form-control" id="smoking_status" name="smoking_status" required>
+                <option value="" disabled selected>Select Smoking Status</option>
+                <option value="formerly smoked">Formerly Smoked</option>
+                <option value="never smoked">Never Smoked</option>
+                <option value="smokes">Smokes</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+            <div class="invalid-feedback">Please select your smoking status.</div>
+        </div>
+    
+        <button type="submit" class="btn btn-custom btn-block">Predict</button>
+    </form>
+    
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var form = document.getElementById('predictionForm');
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            }, false);
+        })();
+    </script>
+    
        </div>
    </div>
    <!-- Bootstrap JS and dependencies -->
