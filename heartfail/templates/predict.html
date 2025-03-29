@@ -122,61 +122,125 @@
   {% endif %}
 
   <div class="form-wrapper">
-    <form method="post">
+    <form method="post" onsubmit="return validateForm()">
       {% csrf_token %}
+      
       <label>Age:</label>
-      <input type="number" name="age" step="0.1" required>
-
+      <input type="number" id="age" name="age" step="0.1" min="40" max="95" required placeholder="Enter age (40-95)" oninput="validateField('age', 40, 95)">
+      <span id="age-error" class="error"></span>
+      
       <label>Anaemia:</label>
       <select name="anaemia">
-        <option value="0">No</option>
-        <option value="1">Yes</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
       </select>
-
+      
       <label>Creatinine Phosphokinase:</label>
-      <input type="number" name="creatinine_phosphokinase" required>
-
+      <input type="number" id="creatinine_phosphokinase" name="creatinine_phosphokinase" min="23" max="7861" required placeholder="Enter value (23-7861)" oninput="validateField('creatinine_phosphokinase', 23, 7861)">
+      <span id="creatinine_phosphokinase-error" class="error"></span>
+      
       <label>Diabetes:</label>
       <select name="diabetes">
-        <option value="0">No</option>
-        <option value="1">Yes</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
       </select>
-
+      
       <label>Ejection Fraction:</label>
-      <input type="number" name="ejection_fraction" required>
-
+      <input type="number" id="ejection_fraction" name="ejection_fraction" min="14" max="80" required placeholder="Enter percentage (14-80)" oninput="validateField('ejection_fraction', 14, 80)">
+      <span id="ejection_fraction-error" class="error"></span>
+      
       <label>High Blood Pressure:</label>
       <select name="high_blood_pressure">
-        <option value="0">No</option>
-        <option value="1">Yes</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
       </select>
-
+      
       <label>Platelets:</label>
-      <input type="number" name="platelets" step="0.01" required>
-
+      <input type="number" id="platelets" name="platelets" step="0.01" min="25100" max="850000" required placeholder="Enter count (25100-850000)" oninput="validateField('platelets', 25100, 850000)">
+      <span id="platelets-error" class="error"></span>
+      
       <label>Serum Creatinine:</label>
-      <input type="number" name="serum_creatinine" step="0.01" required>
-
+      <input type="number" id="serum_creatinine" name="serum_creatinine" step="0.01" min="0.5" max="9.4" required placeholder="Enter value (0.5-9.4)" oninput="validateField('serum_creatinine', 0.5, 9.4)">
+      <span id="serum_creatinine-error" class="error"></span>
+      
       <label>Serum Sodium:</label>
-      <input type="number" name="serum_sodium" required>
-
+      <input type="number" id="serum_sodium" name="serum_sodium" min="113" max="148" required placeholder="Enter value (113-148)" oninput="validateField('serum_sodium', 113, 148)">
+      <span id="serum_sodium-error" class="error"></span>
+      
       <label>Sex:</label>
       <select name="sex">
-        <option value="0">Female</option>
-        <option value="1">Male</option>
+          <option value="0">Female</option>
+          <option value="1">Male</option>
       </select>
-
+      
       <label>Smoking:</label>
       <select name="smoking">
-        <option value="0">No</option>
-        <option value="1">Yes</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
       </select>
-
+      
       <label>Time (Follow-up duration):</label>
-      <input type="number" name="time" required>
-
+      <input type="number" id="time" name="time" min="4" max="285" required placeholder="Enter duration (4-285)" oninput="validateField('time', 4, 285)">
+      <span id="time-error" class="error"></span>
+      
       <button type="submit">Predict</button>
-    </form>
+  </form>
+  
+  <script>
+      function validateField(fieldId, min, max) {
+          let input = document.getElementById(fieldId);
+          let errorSpan = document.getElementById(`${fieldId}-error`);
+          if (input.value < min || input.value > max) {
+              errorSpan.textContent = `Value must be between ${min} and ${max}.`;
+              input.style.borderColor = "red";
+          } else {
+              errorSpan.textContent = "";
+              input.style.borderColor = "initial";
+          }
+      }
+  
+      function validateForm() {
+          let isValid = true;
+          let fields = [
+              { id: "age", min: 40, max: 95 },
+              { id: "creatinine_phosphokinase", min: 23, max: 7861 },
+              { id: "ejection_fraction", min: 14, max: 80 },
+              { id: "platelets", min: 25100, max: 850000 },
+              { id: "serum_creatinine", min: 0.5, max: 9.4 },
+              { id: "serum_sodium", min: 113, max: 148 },
+              { id: "time", min: 4, max: 285 }
+          ];
+          
+          fields.forEach(field => {
+              let input = document.getElementById(field.id);
+              let errorSpan = document.getElementById(`${field.id}-error`);
+              if (input.value < field.min || input.value > field.max) {
+                  errorSpan.textContent = `Value must be between ${field.min} and ${field.max}.`;
+                  input.style.borderColor = "red";
+                  isValid = false;
+              } else {
+                  errorSpan.textContent = "";
+                  input.style.borderColor = "initial";
+              }
+          });
+          
+          return isValid;
+      }
+  </script>
+  
+  <style>
+      .error {
+          color: red;
+          font-size: 12px;
+          display: block;
+          margin-top: 5px;
+      }
+      input {
+          display: block;
+          margin-bottom: 10px;
+      }
+  </style>
+  
   </div>
 </div>
 {% endblock %}

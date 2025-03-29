@@ -18,6 +18,7 @@ urlpatterns = [
     path('diab/', include('diab.urls')),
     path('lifestyle/', include('lifestyle.urls')),
     path('heartfail/', include('heartfail.urls')),
+    path('health_deals/', include('health_deals.urls')),
     path('heartstroke/', include('heartstroke.urls')),
     path('cardio/', include('cardio.urls')),
     re_path(r'^$', RedirectView.as_view(url='/fitness/', permanent=True)),
@@ -65,5 +66,8 @@ urlpatterns = [
     #Cornary Heart
     path('add_conrheartdetail/', add_conrheartdetail, name="add_conrheartdetail"),
     path('predict-cheart-disease/<str:pred>/<str:accuracy>/', predict_corndesease, name='predict_corndesease'),
+    
     # URL to display prediction and doctor info
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
