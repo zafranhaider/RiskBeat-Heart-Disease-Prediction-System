@@ -6,77 +6,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Health Notifications</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-    .container1 {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 1200px;
-      margin: auto;
-    }
-    h1 {
-      color: #333;
-      margin-bottom: 20px;
-      width: 100%;
-      text-align: center;
-    }
-    .card {
-      background: white;
-      width: 320px;
-      padding: 20px;
-      margin: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .card img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
-    .card h2 {
-      color: #007BFF;
-      font-size: 20px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    .card p {
-      font-size: 16px;
-      color: #555;
-      margin: 0;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+         
+            text-align: center;
+        }
+        .container1 {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Align items to the left for better flow */
+            align-items: stretch; /* Make cards the same height */
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.7); /* Glassy background */
+            backdrop-filter: blur(10px); /* Glassy blur effect */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border */
+            width: calc(25% - 30px); /* Adjust width for 4 cards per row with margin */
+            padding: 20px;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center; /* Center text within the card */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Add transition for animation */
+        }
+        .card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+            background: rgba(255, 255, 255, 0.8); /* Slightly lighten on hover */
+        }
+        .card img {
+            width: 100%; /* Make images take full width of their container */
+            height: 200px; /* Set a fixed height for all images */
+            object-fit: cover; /* Maintain aspect ratio and crop if necessary */
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .card h2 {
+            color: #007BFF;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 16px;
+            color: #555;
+            margin: 0;
+        }
+        p {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .card {
+                width: calc(33.33% - 30px); /* 3 cards per row on medium screens */
+            }
+        }
+        @media (max-width: 768px) {
+            .card {
+                width: calc(50% - 30px); /* 2 cards per row on smaller screens */
+            }
+        }
+        @media (max-width: 480px) {
+            .card {
+                width: calc(100% - 30px); /* 1 card per row on mobile */
+            }
+        }
+
+    </style>
 </head>
 <body>
-  <div class="container1">
-    <h1>Latest Health Notifications</h1>
+    <div class="container1">
+        <h1>Latest Health Notifications</h1>
 
-    {% for notification in notifications %}
-    <div class="card">
-      <h2>{{ notification.title }}</h2>
-      <p>{{ notification.description }}</p>
-      {% if notification.image %}
-        <img src="{{ notification.image.url }}" alt="{{ notification.title }}">
-      {% endif %}
+        {% for notification in notifications %}
+        <div class="card">
+          <h2><a href="{% url 'notification_detail' notification.pk %}">{{ notification.title }}</a></h2>
+         
+            {% if notification.image %}
+            <img src="{{ notification.image.url }}" alt="{{ notification.title }}">
+            {% endif %}
+        </div>
+        {% empty %}
+        <p   style=" margin-top: 100px;  margin-left: 440px;">No notifications available.</p>
+      
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No notifications available.</p>
-    {% endfor %}
-  </div>
 </body>
 </html>
 
