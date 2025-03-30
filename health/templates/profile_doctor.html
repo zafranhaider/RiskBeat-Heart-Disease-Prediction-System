@@ -23,7 +23,6 @@
         </div>
     </div><hr>
 
-
     <div class="row">
         <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
             <strong>Image:</strong>
@@ -49,7 +48,6 @@
             {{pro.dob}}
         </div>
     </div><hr>
-
 
      <div class="row">
         <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
@@ -79,10 +77,94 @@
     </div><hr>
     {% endif %}
     <div class="login px-sm-12" style="width:100%">
-    <a href="{% url 'edit_profile' %}">
-        <button class="btn submit mt-4 " style="width:100%; background-color: #726f6e;">Update Detail</button>
-    </a>
+        <a href="{% url 'edit_profile' %}">
+            <button class="btn submit mt-4 " style="width:100%; background-color: #726f6e;">Update Detail</button>
+        </a>
     </div>
+    <br>
+    <div class="login px-sm-12" style="width:100%">
+        <form id="subscribe-form">
+            <input type="email" name="email" id="email" required placeholder="Enter your email" class="form-control mt-2">
+            <button type="submit" id="subscribe-btn" class="btn submit mt-4" style="width:100%; background-color: #28a745;">
+                Subscribe for Notifications
+            </button>
+            <button type="button" id="unsubscribe-btn" class="btn btn-danger mt-2" style="width:100%; display:none;">
+                Unsubscribe
+            </button>
+        </form>
+        <div id="response-message" class="mt-2"></div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let emailInput = document.getElementById("email");
+            let subscribeBtn = document.getElementById("subscribe-btn");
+            let unsubscribeBtn = document.getElementById("unsubscribe-btn");
+        
+            emailInput.addEventListener("input", function () {
+                checkSubscriptionStatus(emailInput.value);
+            });
+        
+            function checkSubscriptionStatus(email) {
+                if (email.trim() === "") return;
+        
+                fetch("{% url 'check_subscription' %}?email=" + encodeURIComponent(email))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.subscribed) {
+                            subscribeBtn.style.display = "none";
+                            unsubscribeBtn.style.display = "block";
+                        } else {
+                            subscribeBtn.style.display = "block";
+                            unsubscribeBtn.style.display = "none";
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+        
+            document.getElementById("subscribe-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+                let email = emailInput.value;
+        
+                fetch("{% url 'subscribe_email' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("response-message").innerHTML = `<p>${data.message || data.error}</p>`;
+                    checkSubscriptionStatus(email); // Check status again after subscribing
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        
+            document.getElementById("unsubscribe-btn").addEventListener("click", function () {
+                let email = emailInput.value;
+        
+                fetch("{% url 'unsubscribe_email' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("response-message").innerHTML = `<p>${data.message || data.error}</p>`;
+                    checkSubscriptionStatus(email); // Check status again after unsubscribing
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+        </script>
+        
+    
+    
 </div>
 </div>
 {% endblock %}

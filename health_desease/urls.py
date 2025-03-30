@@ -8,6 +8,7 @@ from django.urls import include, path
 from django.views.generic.base import RedirectView
 from django.urls import re_path
 from community import views
+from health_deals.views import *
 urlpatterns = [
     path('api/v1/', include(routerep.urls)),
     path('admin/', admin.site.urls),
@@ -15,6 +16,7 @@ urlpatterns = [
     path('community/',include('community.urls'),name = 'community'),
     path('oauth/',include('social_django.urls',namespace='social')),
     path('fitness/', include('fitness.urls')),
+    path('subscribe/', subscribe_email, name='subscribe_email'),
     path('diab/', include('diab.urls')),
     path('lifestyle/', include('lifestyle.urls')),
     path('heartfail/', include('heartfail.urls')),

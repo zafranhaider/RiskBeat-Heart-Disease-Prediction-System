@@ -430,6 +430,8 @@
                 <li class="mobile-only">
                   <a href="{% url 'appointment_status' %}" class="drop-text">Booking Status</a>
                 </li>
+         
+              
                 <li class="mobile-only">
                   <a href="{% url 'change_password' %}" class="drop-text">Password</a>
                 </li>
@@ -450,9 +452,9 @@
                   </label>
                   <a href="#"><i class="fa fa-sign-in"></i> Hello,{{request.user.username}} <span class="fa fa-angle-down" aria-hidden="true"></span></a>
                   <ul style="margin-top:8%;width:80%;margin-right:5%">
-                    <li style="width:100%;"><a href="{% url 'profile_doctor' %}" class="drop-text"> My Profile</a></li>
+                    <li style="width:100%;"><a href="{% url 'profile_doctor' %}" class="drop-text"> Settings</a></li>
                     <li style="width:100%;"><a href="{% url 'appointment_status' %}" class="drop-text"> Booking Status</a></li>
-                    <li style="width:100%;"><a href="{% url 'change_password' %}" class="drop-text"> Password</a></li>
+           <li style="width:100%;"><a href="{% url 'change_password' %}" class="drop-text"> Password</a></li>
                     <li style="width:100%;"><a href="{% url 'logout' %}" class="drop-text"> Logout</a></li>
                   </ul>
                 </li>
