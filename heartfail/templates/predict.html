@@ -122,69 +122,92 @@
   {% endif %}
 
   <div class="form-wrapper">
-    <form method="post" onsubmit="return validateForm()">
+    <form method="post" onsubmit="return validateForm()" id="predictionForm">
       {% csrf_token %}
-      
+  
       <label>Age:</label>
       <input type="number" id="age" name="age" step="0.1" min="40" max="95" required placeholder="Enter age (40-95)" oninput="validateField('age', 40, 95)">
       <span id="age-error" class="error"></span>
-      
+  
       <label>Anaemia:</label>
-      <select name="anaemia">
+      <select name="anaemia" id="anaemia">
           <option value="0">No</option>
           <option value="1">Yes</option>
       </select>
-      
+  
       <label>Creatinine Phosphokinase:</label>
       <input type="number" id="creatinine_phosphokinase" name="creatinine_phosphokinase" min="23" max="7861" required placeholder="Enter value (23-7861)" oninput="validateField('creatinine_phosphokinase', 23, 7861)">
       <span id="creatinine_phosphokinase-error" class="error"></span>
-      
+  
       <label>Diabetes:</label>
-      <select name="diabetes">
+      <select name="diabetes" id="diabetes">
           <option value="0">No</option>
           <option value="1">Yes</option>
       </select>
-      
+  
       <label>Ejection Fraction:</label>
       <input type="number" id="ejection_fraction" name="ejection_fraction" min="14" max="80" required placeholder="Enter percentage (14-80)" oninput="validateField('ejection_fraction', 14, 80)">
       <span id="ejection_fraction-error" class="error"></span>
-      
+  
       <label>High Blood Pressure:</label>
-      <select name="high_blood_pressure">
+      <select name="high_blood_pressure" id="high_blood_pressure">
           <option value="0">No</option>
           <option value="1">Yes</option>
       </select>
-      
+  
       <label>Platelets:</label>
       <input type="number" id="platelets" name="platelets" step="0.01" min="25100" max="850000" required placeholder="Enter count (25100-850000)" oninput="validateField('platelets', 25100, 850000)">
       <span id="platelets-error" class="error"></span>
-      
+  
       <label>Serum Creatinine:</label>
       <input type="number" id="serum_creatinine" name="serum_creatinine" step="0.01" min="0.5" max="9.4" required placeholder="Enter value (0.5-9.4)" oninput="validateField('serum_creatinine', 0.5, 9.4)">
       <span id="serum_creatinine-error" class="error"></span>
-      
+  
       <label>Serum Sodium:</label>
       <input type="number" id="serum_sodium" name="serum_sodium" min="113" max="148" required placeholder="Enter value (113-148)" oninput="validateField('serum_sodium', 113, 148)">
       <span id="serum_sodium-error" class="error"></span>
-      
+  
       <label>Sex:</label>
-      <select name="sex">
+      <select name="sex" id="sex">
           <option value="0">Female</option>
           <option value="1">Male</option>
       </select>
-      
+  
       <label>Smoking:</label>
-      <select name="smoking">
+      <select name="smoking" id="smoking">
           <option value="0">No</option>
           <option value="1">Yes</option>
       </select>
-      
+  
       <label>Time (Follow-up duration):</label>
       <input type="number" id="time" name="time" min="4" max="285" required placeholder="Enter duration (4-285)" oninput="validateField('time', 4, 285)">
       <span id="time-error" class="error"></span>
-      
+  
       <button type="submit">Predict</button>
   </form>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('predictionForm');
+  
+      // Load saved values
+      for (let field of form.elements) {
+          if (field.name && localStorage.getItem(field.name)) {
+              field.value = localStorage.getItem(field.name);
+          }
+      }
+  
+      // Save on input change
+      form.addEventListener('input', function () {
+          for (let field of form.elements) {
+              if (field.name) {
+                  localStorage.setItem(field.name, field.value);
+              }
+          }
+      });
+  });
+  </script>
+  
   
   <script>
       function validateField(fieldId, min, max) {

@@ -11,7 +11,7 @@
         </div>
         
         <div class="card-body p-4 p-md-5">
-            <form method="POST" action="{% url 'result' %}" class="needs-validation" novalidate>
+            <form method="POST" action="{% url 'result' %}" class="needs-validation" novalidate id="diabetesForm">
                 {% csrf_token %}
                 
                 <div class="row g-4">
@@ -27,7 +27,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- Glucose Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -40,7 +40,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- Blood Pressure Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -53,7 +53,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- Skin Thickness Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -66,7 +66,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- Insulin Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -79,7 +79,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- BMI Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -92,7 +92,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- Diabetes Pedigree Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -106,7 +106,7 @@
                             </label>
                         </div>
                     </div>
-
+            
                     <!-- Age Field -->
                     <div class="col-md-6">
                         <div class="form-floating">
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                 </div>
-
+            
                 <!-- Submit Button -->
                 <div class="d-grid mt-5">
                     <button type="submit" class="btn btn-lg rounded-pill fw-bold text-white" 
@@ -130,12 +130,36 @@
                         <i class="fas fa-arrow-right-long ms-2"></i>
                     </button>
                 </div>
-
+            
                 <!-- Privacy Note -->
                 <p class="text-center text-muted mt-4 small">
                     <i class="fas fa-shield-alt me-2"></i>Your health data is protected with 256-bit encryption
                 </p>
             </form>
+            
+            <!-- Autofill Script -->
+            <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('diabetesForm');
+            
+                // Autofill existing values
+                for (let field of form.elements) {
+                    if (field.name && localStorage.getItem(field.name)) {
+                        field.value = localStorage.getItem(field.name);
+                    }
+                }
+            
+                // Save values to localStorage on input change
+                form.addEventListener('input', function () {
+                    for (let field of form.elements) {
+                        if (field.name) {
+                            localStorage.setItem(field.name, field.value);
+                        }
+                    }
+                });
+            });
+            </script>
+            
         </div>
     </div>
 </main>

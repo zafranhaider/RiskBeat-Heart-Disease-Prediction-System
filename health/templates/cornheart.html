@@ -31,9 +31,9 @@ body {
             </div>
             <hr />
             <div class="form-container">
-                <form action="{% url 'add_conrheartdetail' %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'add_conrheartdetail' %}" method="post" enctype="multipart/form-data" id="conrHeartForm">
                     {% csrf_token %}
-            
+                
                     <!-- Row 1 -->
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -59,7 +59,7 @@ body {
                             </select>
                         </div>
                     </div>
-            
+                
                     <!-- Row 2 -->
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -88,7 +88,7 @@ body {
                             </select>
                         </div>
                     </div>
-            
+                
                     <!-- Row 3 -->
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -111,7 +111,7 @@ body {
                             <input type="number" class="form-control" name="diaBP" min="30" max="120" placeholder="82" required>
                         </div>
                     </div>
-            
+                
                     <!-- Row 4 -->
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -127,9 +127,33 @@ body {
                             <input type="number" class="form-control" name="glucose" min="50" max="300" placeholder="79" required>
                         </div>
                     </div>
-            
+                
                     <button type="submit" class="btn submit mt-4" style="background-color: #726f6e;">Send Heart Data</button>
                 </form>
+                
+                <!-- Autofill Script -->
+                <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const form = document.getElementById('conrHeartForm');
+                
+                    // Autofill existing values from localStorage
+                    for (let field of form.elements) {
+                        if (field.name && localStorage.getItem(field.name)) {
+                            field.value = localStorage.getItem(field.name);
+                        }
+                    }
+                
+                    // Save new values on input/select change
+                    form.addEventListener('input', function () {
+                        for (let field of form.elements) {
+                            if (field.name) {
+                                localStorage.setItem(field.name, field.value);
+                            }
+                        }
+                    });
+                });
+                </script>
+                
             </div>
         </div>
     </section>
