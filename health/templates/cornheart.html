@@ -136,22 +136,22 @@ body {
                 document.addEventListener('DOMContentLoaded', function () {
                     const form = document.getElementById('conrHeartForm');
                 
-                    // Autofill existing values from localStorage
-                    for (let field of form.elements) {
-                        if (field.name && localStorage.getItem(field.name)) {
-                            field.value = localStorage.getItem(field.name);
-                        }
-                    }
-                
-                    // Save new values on input/select change
-                    form.addEventListener('input', function () {
-                        for (let field of form.elements) {
-                            if (field.name) {
-                                localStorage.setItem(field.name, field.value);
-                            }
-                        }
-                    });
-                });
+           // Autofill existing values from localStorage (excluding csrf)
+    for (let field of form.elements) {
+        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+            field.value = localStorage.getItem(field.name);
+        }
+    }
+
+    // Save new values on input/select change (excluding csrf)
+    form.addEventListener('input', function () {
+        for (let field of form.elements) {
+            if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                localStorage.setItem(field.name, field.value);
+            }
+        }
+    });
+});
                 </script>
                 
             </div>

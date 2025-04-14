@@ -124,7 +124,7 @@
       {% endif %}
 
   
-    <h2 class="text-center">Heart Disease Prediction</h2>
+    <h2 class="text-center">Cardio Vas-Disease Prediction</h2>
     <form id="healthForm" method="POST" onsubmit="return validateForm()" class="mt-4">
       {% csrf_token %}
   
@@ -203,21 +203,22 @@
       const form = document.getElementById('healthForm');
   
       // Autofill all saved values
-      for (let element of form.elements) {
-          if (element.name && localStorage.getItem(element.name)) {
-              element.value = localStorage.getItem(element.name);
-          }
-      }
-  
-      // Save values on change/input
-      form.addEventListener('input', () => {
-          for (let element of form.elements) {
-              if (element.name) {
-                  localStorage.setItem(element.name, element.value);
-              }
-          }
-      });
-  });
+   // Autofill existing values from localStorage (excluding csrf)
+   for (let field of form.elements) {
+        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+            field.value = localStorage.getItem(field.name);
+        }
+    }
+
+    // Save new values on input/select change (excluding csrf)
+    form.addEventListener('input', function () {
+        for (let field of form.elements) {
+            if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                localStorage.setItem(field.name, field.value);
+            }
+        }
+    });
+});
   </script>
   
   <script>

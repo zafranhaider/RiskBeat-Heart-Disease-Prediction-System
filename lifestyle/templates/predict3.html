@@ -186,21 +186,22 @@
         const form = document.getElementById('sleepForm');
     
         // Load saved values
+  // Autofill existing values from localStorage (excluding csrf)
+  for (let field of form.elements) {
+        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+            field.value = localStorage.getItem(field.name);
+        }
+    }
+
+    // Save new values on input/select change (excluding csrf)
+    form.addEventListener('input', function () {
         for (let field of form.elements) {
-            if (field.name && localStorage.getItem(field.name)) {
-                field.value = localStorage.getItem(field.name);
+            if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                localStorage.setItem(field.name, field.value);
             }
         }
-    
-        // Save values on input change
-        form.addEventListener('input', function () {
-            for (let field of form.elements) {
-                if (field.name) {
-                    localStorage.setItem(field.name, field.value);
-                }
-            }
-        });
     });
+});
     </script>
     
     <script>

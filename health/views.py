@@ -838,6 +838,9 @@ def check_disease(request):
 
 import random
 
+import random
+from django.contrib import messages
+
 ALL_DISEASES = [
     "Diabetes", "Cardiovascular Disease", "Stroke", "Heart Failure",
     "Cornary Disease"
@@ -847,12 +850,18 @@ def track_user_diseases(request, current_disease):
     if 'viewed_diseases' not in request.session:
         request.session['viewed_diseases'] = []
 
+    if 'suggestion_shown' not in request.session:
+        request.session['suggestion_shown'] = False
+
     viewed = request.session['viewed_diseases']
     if current_disease not in viewed:
         viewed.append(current_disease)
         request.session['viewed_diseases'] = viewed
+        request.session['suggestion_shown'] = False  # Reset on new disease view
 
-    unvisited = list(set(ALL_DISEASES) - set(viewed))
-    if unvisited:
-        suggestion = random.choice(unvisited)
-        messages.info(request, f"According to This Submission You May also Try checking out: {suggestion}")
+    if not request.session['suggestion_shown']:
+        unvisited = list(set(ALL_DISEASES) - set(viewed))
+        if unvisited:
+            suggestion = random.choice(unvisited)
+            messages.info(request, f"According to This Submission You May also Try checking out: {suggestion}")
+            request.session['suggestion_shown'] = True
