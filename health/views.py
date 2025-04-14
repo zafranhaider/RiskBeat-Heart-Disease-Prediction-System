@@ -572,6 +572,7 @@ def prdict_heart_disease(list_data):
 
 @login_required(login_url="login")
 def add_heartdetail(request):
+    track_user_diseases(request, "Cornary Disease")
     if request.method == "POST":
         list_data = []
         value_dict = eval(str(request.POST)[12:-1])
@@ -640,6 +641,7 @@ def preprocess_inputs(df, scaler):
 
 
 def prdict_cheart_disease(list_data):
+    
     # Load the dataset from CSV
     csv_file_path = './Machine_Learning/cornheart.csv'  
 
@@ -690,6 +692,7 @@ def prdict_cheart_disease(list_data):
 
 @login_required(login_url="login")
 def add_conrheartdetail(request):
+    track_user_diseases(request, "Cornary Disease")
     if request.method == "POST":
         required_fields = [
             "male", "age", "education", "currentSmoker", "cigsPerDay",
@@ -831,3 +834,25 @@ def check_disease(request):
                 matched_diseases.append(disease)
 
     return render(request, 'Diss_view.html', {'diseases': matched_diseases})
+
+
+import random
+
+ALL_DISEASES = [
+    "Diabetes", "Cardiovascular Disease", "Stroke", "Heart Failure",
+    "Cornary Disease"
+]
+
+def track_user_diseases(request, current_disease):
+    if 'viewed_diseases' not in request.session:
+        request.session['viewed_diseases'] = []
+
+    viewed = request.session['viewed_diseases']
+    if current_disease not in viewed:
+        viewed.append(current_disease)
+        request.session['viewed_diseases'] = viewed
+
+    unvisited = list(set(ALL_DISEASES) - set(viewed))
+    if unvisited:
+        suggestion = random.choice(unvisited)
+        messages.info(request, f"According to This Submission You May also Try checking out: {suggestion}")

@@ -1,13 +1,14 @@
 import pickle
 import numpy as np
 from django.shortcuts import render
-
+from health.views import track_user_diseases
 # Load the trained model
 MODEL_PATH = "Machine_Learning/cardio.pkl"
 with open(MODEL_PATH, "rb") as file:
     model = pickle.load(file)
 
 def predict3(request):
+    track_user_diseases(request, "Cardiovascular Disease")
     prediction = None  # Default
 
     if request.method == "POST":

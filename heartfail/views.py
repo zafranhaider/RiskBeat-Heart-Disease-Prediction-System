@@ -11,8 +11,10 @@ with open(model_filename, "rb") as file:
     model = pickle.load(file)
 # Manually set accuracy from training script
 model_accuracy = 90  # Replace this with the actual printed accuracy value
+from health.views import track_user_diseases
 @login_required()
 def predict_heart_failure(request):
+    track_user_diseases(request, "Heart Failure")
     prediction = None
     accuracy = model_accuracy  # Pass the stored accuracy
     if request.method == "POST":
@@ -44,3 +46,6 @@ def predict_heart_failure(request):
             return JsonResponse({"error": str(e)})
 
     return render(request, "predict.html", {"prediction": prediction, "accuracy": accuracy})
+
+
+

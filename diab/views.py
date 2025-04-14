@@ -1,10 +1,12 @@
 from django.shortcuts import render
 import joblib
+import random
 import numpy as np
 from django.contrib.auth.decorators import login_required
-
+from health.views import track_user_diseases
 @login_required()
 def index(request):
+    track_user_diseases(request, "Diabetes")
     return render(request,"home.html")
 @login_required()
 def result(request):
@@ -31,3 +33,5 @@ def result(request):
         result='No Diabetes'
     else:result='You have Diabetes'
     return render(request, "result.html", {'result': result})
+
+

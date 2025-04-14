@@ -93,6 +93,29 @@
     <script src="assets/js/modernizr-2.6.2.min.js"></script>
   </head>
   <body>
+    <!-- Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+{% if messages %}
+<script>
+    $(document).ready(function() {
+        {% for message in messages %}
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+            toastr["{{ message.tags|default:"info" }}"]("{{ message|escapejs }}");
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
     <header class="main-header">
       <!-- Header content can be added here -->
     </header>

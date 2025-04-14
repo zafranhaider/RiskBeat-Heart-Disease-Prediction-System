@@ -8,8 +8,7 @@ from django.contrib.auth.decorators import login_required
 model = joblib.load("Machine_Learning/stroke_model.pkl")
 label_encoders = joblib.load("Machine_Learning/label_encoders.pkl")
 imputer = joblib.load("Machine_Learning/imputer.pkl")
-
-
+from health.views import track_user_diseases
 
 # Manually set accuracy from training script
 model_accuracy = 92  # Replace this with the actual printed accuracy value
@@ -18,6 +17,7 @@ model_accuracy = 92  # Replace this with the actual printed accuracy value
 categorical_columns = ["gender", "ever_married", "work_type", "Residence_type", "smoking_status"]
 @login_required()
 def predict_stroke(request):
+    track_user_diseases(request, "Stroke")
     prediction = None
     accuracy = model_accuracy  # Pass the stored accuracy
 
