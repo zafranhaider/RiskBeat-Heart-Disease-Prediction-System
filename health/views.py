@@ -422,11 +422,23 @@ def search_doctor(request):
         'doc': doc,
         'li': li  # Include any additional filtering logic here
     })
+def check_availability(request):
+    doctor_id = request.GET.get('doctor_id')
+    date = request.GET.get('date')
+    time = request.GET.get('time')
 
+    if doctor_id and date and time:
+        is_booked = Booking.objects.filter(
+            doctor_id=doctor_id, date=date, time=time
+        ).exists()
+        return JsonResponse({'available': not is_booked})
+    return JsonResponse({'available': True})
 
+from django.http import JsonResponse
 @login_required
 def booking_form(request):
-    doctors = Doctor.objects.filter(status=1)  # Show only active doctors
+    doctors = Doctor.objects.filter(status=1)
+
     if request.method == "POST":
         name = request.POST['name']
         email = request.POST['email']
@@ -438,7 +450,21 @@ def booking_form(request):
         message = request.POST.get('message', '')
 
         doctor = get_object_or_404(Doctor, id=doctor_id)
-        booking = Booking.objects.create(
+
+        if Booking.objects.filter(doctor=doctor, date=date, time=time).exists():
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'error': 'This date and time is already booked for the selected doctor.'
+                })
+            else:
+                return render(request, 'suc.html', {
+                    'doctors': doctors,
+                    'error_message': 'This date and time is already booked.',
+                    'form_data': request.POST
+                })
+
+        Booking.objects.create(
             name=name,
             email=email,
             contact_number=contact_number,
@@ -448,9 +474,15 @@ def booking_form(request):
             time=time,
             message=message,
         )
-      
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
+
+        messages.success(request, "Appointment booked successfully.")
+        return render(request, 'suc.html', {'doctors': doctors})
 
     return render(request, 'suc.html', {'doctors': doctors})
+
 
 @login_required
 def update_booking_status(request, booking_id):

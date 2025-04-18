@@ -20,6 +20,7 @@ urlpatterns = [
     path('diab/', include('diab.urls')),
     path('lifestyle/', include('lifestyle.urls')),
     path('heartfail/', include('heartfail.urls')),
+    path('check-availability/', check_availability, name='check_availability'),
     path('health_deals/', include('health_deals.urls')),
     path('heartstroke/', include('heartstroke.urls')),
     path('cardio/', include('cardio.urls')),

@@ -31,19 +31,20 @@
                    <form role="form" action="{% url 'booking_form' %}" method="post">
                     {% csrf_token %}
                     <div class="row">
+                
                         <!-- Name -->
                         <div class="col-12">
                             <input type="text" name="name" id="name" class="form-control" 
                                    placeholder="Your Name" required>
                         </div>
                 
-                        <!-- Email Address -->
+                        <!-- Email -->
                         <div class="col-12">
                             <input type="email" name="email" id="email" class="form-control" 
                                    placeholder="Email Address" required>
                         </div>
                 
-                        <!-- Contact Number -->
+                        <!-- Contact -->
                         <div class="col-12">
                             <input type="tel" name="contact_number" id="contact_number" class="form-control" 
                                    placeholder="Contact Number" required>
@@ -55,7 +56,7 @@
                                    placeholder="Search doctor by name, specialization, or location">
                         </div>
                 
-                        <!-- Doctor Selection -->
+                        <!-- Doctor -->
                         <div class="col-12">
                             <select name="doctor" id="doctor" class="form-control" required>
                                 <option value="" disabled selected>Select a Doctor</option>
@@ -76,10 +77,18 @@
                             </select>
                         </div>
                 
-                        <!-- Date -->
-                        <div class="col-lg-6 col-12">
-                            <input type="date" name="date" id="date" class="form-control" required>
+                        <!-- Error message container -->
+                        <div class="col-12">
+                            <div id="availability-error" class="alert alert-danger d-none"></div>
                         </div>
+                
+                        <!-- Date -->
+                       <!-- Date -->
+                    <div class="col-lg-6 col-12">
+                        <input type="date" name="date" id="date" class="form-control" required>
+                        <small id="date-error" class="text-danger d-none"></small>
+                    </div>
+
                 
                         <!-- Time -->
                         <div class="col-lg-6 col-12">
@@ -92,13 +101,94 @@
                                       placeholder="Additional Message"></textarea>
                         </div>
                 
-                        <!-- Submit Button -->
+                        <!-- Submit -->
                         <div class="col-lg-3 col-md-4 col-6 mx-auto">
                             <button type="submit" class="form-control" id="submit-button">Book Now</button>
                         </div>
                     </div>
                 </form>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const doctorInput = document.getElementById("doctor");
+                        const dateInput = document.getElementById("date");
+                        const timeInput = document.getElementById("time");
+                        const submitButton = document.getElementById("submit-button");
+                        const errorDiv = document.getElementById("availability-error");
                 
+                        // Prevent past dates
+                        const today = new Date().toISOString().split("T")[0];
+                        dateInput.setAttribute("min", today);
+                        function checkAvailability() {
+    const doctorId = doctorInput.value;
+    const date = dateInput.value;
+    const time = timeInput.value;
+
+    const dateError = document.getElementById("date-error");
+
+    if (doctorId && date && time) {
+        fetch(`/check-availability/?doctor_id=${doctorId}&date=${date}&time=${time}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.available) {
+                    dateError.textContent = "This date and time is already booked for the selected doctor.";
+                    dateError.classList.remove("d-none");
+                    submitButton.disabled = true;
+                } else {
+                    dateError.textContent = "";
+                    dateError.classList.add("d-none");
+                    submitButton.disabled = false;
+                }
+            });
+    }
+}
+
+                
+                        doctorInput.addEventListener("change", checkAvailability);
+                        dateInput.addEventListener("change", checkAvailability);
+                        timeInput.addEventListener("change", checkAvailability);
+                    });
+                </script>
+                                
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        const form = document.querySelector("form");
+                                        const submitButton = document.getElementById("submit-button");
+                                        const errorDiv = document.getElementById("availability-error");
+                                    
+                                        form.addEventListener("submit", function (e) {
+                                            e.preventDefault(); // prevent normal form submission
+                                    
+                                            const formData = new FormData(form);
+                                    
+                                            fetch("{% url 'booking_form' %}", {
+                                                method: "POST",
+                                                headers: {
+                                                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                                                    'X-Requested-With': 'XMLHttpRequest',
+                                                },
+                                                body: formData
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    // Optional: Show success message or redirect
+                                                    alert("Appointment booked successfully.");
+                                                    window.location.reload();  // or redirect to a success page
+                                                } else {
+                                                    errorDiv.classList.remove("d-none");
+                                                    errorDiv.textContent = data.error;
+                                                    submitButton.disabled = false;
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error("Error:", error);
+                                                errorDiv.classList.remove("d-none");
+                                                errorDiv.textContent = "Something went wrong.";
+                                            });
+                                        });
+                                    });
+                                    </script>
+                                    
                     <script>
                         document.getElementById('search').addEventListener('input', function() {
                             const searchValue = this.value.toLowerCase();
