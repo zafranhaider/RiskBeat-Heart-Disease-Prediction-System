@@ -133,6 +133,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICSTORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path.joinpath(BASE_DIR,'media')
 
@@ -145,4 +146,3 @@ EMAIL_HOST_USER = 'zraaeae@gmail.com'  # Your Gmail address
 EMAIL_HOST_PASSWORD = 'ozwd aodx ifpg lvfm'
 
 
-STATICSTORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
