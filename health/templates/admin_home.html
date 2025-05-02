@@ -1,5 +1,11 @@
 {% extends 'index.html' %}
 {% load static %}
+
+{% block head %}
+  <!-- Ensure proper scaling on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
 {% block body %}
 <style>
   /* Global Styles */
@@ -23,18 +29,12 @@
     top: 57px;
     left: 0;
     width: 250px;
-    height: calc(96vh - 55px);
-    background: linear-gradient(
-      135deg,
-      #1e3c72 0%,
-      #2a5298 25%,
-      #1e90ff 50%,
-      #87cefa 75%,
-      #e0f7fa 100%
-    );
+    height: calc(100vh - 57px);
+    background: inherit;
     padding-top: 3rem;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    transition: transform 0.3s ease;
   }
   .sidebar h2 {
     text-align: center;
@@ -65,6 +65,7 @@
     margin-left: 250px;
     padding: 2rem;
     padding-top: 70px;
+    transition: margin-left 0.3s ease;
   }
 
   .header hr {
@@ -125,10 +126,33 @@
     z-index: 1;
   }
 
-  /* Responsive Adjustments */
+  /* Mobile: hide sidebar and adjust layout */
   @media (max-width: 768px) {
-    .header h1 {
-      font-size: 2rem;
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      padding: 0.5rem 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .sidebar h2 {
+      display: none;
+    }
+    .sidebar ul {
+      display: flex;
+      margin: 0;
+    }
+    .sidebar ul li {
+      padding: 0.5rem 1rem;
+    }
+    .main-content {
+      margin-left: 0;
+      padding-top: 120px;
     }
     .card h3 {
       font-size: 2.5rem;
@@ -136,16 +160,12 @@
     .card h4 {
       font-size: 1.3rem;
     }
-    .main-content {
-      margin-left: 0;
-    }
   }
 </style>
 
 <div class="sidebar">
   <h2>Admin Panel</h2>
   <ul>
-  
     <li><a href="{% url 'change_password' %}">Password</a></li>
     <li><a href="/view-contacts">Contacts</a></li>
     <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -156,7 +176,6 @@
   <div class="header">
     <hr />
   </div>
-
 
   <div class="card-container">
     <a href="{% url 'view_doctor' %}" style="text-decoration: none;">
@@ -187,15 +206,13 @@
         <p>All access are given.</p>
       </div>
     </a>
-    <div class="card-container">
-      <a href="{% url 'upload_notification' %}" style="text-decoration: none;">
-        <div class="card">
-          <h3>Deals</h3>
-          <h4>Upload Health Deals</h4>
-          <p>All access are given.</p>
-        </div>
-      </a>
-      
+    <a href="{% url 'upload_notification' %}" style="text-decoration: none;">
+      <div class="card">
+        <h3>Deals</h3>
+        <h4>Upload Health Deals</h4>
+        <p>All access are given.</p>
+      </div>
+    </a>
   </div>
 </div>
 {% endblock %}
