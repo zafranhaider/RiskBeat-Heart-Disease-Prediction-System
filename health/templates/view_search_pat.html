@@ -5,10 +5,10 @@
 <style>
   @media (max-width: 768px) {
     #example {
-      font-size: 12px;
+      font-size: 13px;
     }
     #example th, #example td {
-      padding: 5px;
+      padding: 6px;
     }
     #example h5 {
       font-size: 14px;
@@ -16,8 +16,8 @@
   }
 
   @media (max-width: 576px) {
-    .table-responsive {
-      overflow-x: auto;
+    #example {
+      font-size: 12px;
     }
     #example h5 {
       font-size: 12px;
@@ -25,13 +25,11 @@
   }
 </style>
 
-<div class="container-fluid" style="width:90%;margin-top:8%">
-  <div class="container-fluid">
-    <h1 align="center" class="w3ls-title text-uppercase text-dark font-weight-bold">Search Logs</h1>
-  </div>
-  <hr>
+<div class="container my-5">
+  <h1 class="text-center text-uppercase text-dark font-weight-bold mb-4">Search Logs</h1>
+
   <div class="table-responsive">
-    <table id="example" class="display table table-bordered table-striped" style="width:100%">
+    <table id="example" class="table table-bordered table-striped">
       <thead class="thead-dark">
         <tr>
           <th>#</th>
@@ -58,15 +56,15 @@
           <td>{{ i.prediction_accuracy }}</td>
           <td>
             {% if i.result == "0" %}
-            <h5 style="color:green">Healthy</h5>
+              <h5 class="text-success">Healthy</h5>
             {% else %}
-            <h5 style="color:red">Unhealthy</h5>
+              <h5 class="text-danger">Unhealthy</h5>
             {% endif %}
           </td>
           <td>{{ i.values_list }}</td>
-          <td style="width:150px">
-            <a href="/delete_searched/{{ i.id }}">
-              <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+          <td>
+            <a href="/delete_searched/{{ i.id }}" onclick="return confirm('Are you sure?')">
+              <button class="btn btn-danger btn-sm">
                 <i class="fa fa-trash-o"></i>
               </button>
             </a>

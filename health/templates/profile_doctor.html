@@ -1,113 +1,99 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block body %}
+
 <style>
-    .div1{
-    color:green;
+    .div1 {
+        color: green;
     }
-    .div2{
-    color:red;
+    .div2 {
+        color: red;
     }
 </style>
-<div class="container" style="width:60%;margin-top:8%;margin-bottom:5%;background:white;border-radius:2%;border:1px solid grey">
-    <br>
-    <h2 class="w3ls-title text-uppercase text-dark font-weight-bold" align="center">My Detail</h2>
 
-<div align="left" class="container-fluid" style="width:100%;margin-bottom:5%">
-    <hr><div class="row" >
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>Full Name:</strong>
-        </div>
-        <div class="col-md-6 div1">
-            {{pro.user.first_name}} {{pro.user.last_name}}
-        </div>
-    </div><hr>
+<div class="container mt-5 mb-5 p-4 bg-white border rounded shadow-sm">
+    <h2 class="text-uppercase text-dark font-weight-bold text-center">My Detail</h2>
+    <hr>
 
-    <div class="row">
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>Image:</strong>
-        </div>
-        <div class="col-md-6">
-            <img src="{{pro.image.url}}" style="width:100px;height:130px"></img>
-        </div></div><hr>
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Full Name:</div>
+        <div class="col-6 div1">{{ pro.user.first_name }} {{ pro.user.last_name }}</div>
+    </div>
+    <hr>
 
-    <div class="row">
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>Email Id :</strong>
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Image:</div>
+        <div class="col-6">
+            <img src="{{ pro.image.url }}" class="img-fluid" style="max-width:100px; height:auto;">
         </div>
-        <div class="col-md-6 div1">
-            {{pro.user.email}}
-        </div>
-    </div><hr>
+    </div>
+    <hr>
 
-     <div class="row">
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>Date of Birth :</strong>
-        </div>
-        <div class="col-md-6 div1">
-            {{pro.dob}}
-        </div>
-    </div><hr>
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Email Id:</div>
+        <div class="col-6 div1">{{ pro.user.email }}</div>
+    </div>
+    <hr>
 
-     <div class="row">
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>Contact :</strong>
-        </div>
-        <div class="col-md-6 div1">
-            {{pro.contact}}
-        </div>
-     </div><hr>
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Date of Birth:</div>
+        <div class="col-6 div1">{{ pro.dob }}</div>
+    </div>
+    <hr>
 
-    <div class="row">
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>City :</strong>
-        </div>
-        <div class="col-md-6 div1">
-            {{pro.address}}
-        </div>
-    </div><hr>
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Contact:</div>
+        <div class="col-6 div1">{{ pro.contact }}</div>
+    </div>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">City:</div>
+        <div class="col-6 div1">{{ pro.address }}</div>
+    </div>
+    <hr>
+
     {% if error != "pat" %}
-    <div class="row">
-        <div class="col-md-6 div2" style="color: #414141; font-weight: 900;">
-            <strong>Specialist :</strong>
-        </div>
-        <div class="col-md-6 div1">
-            {{pro.category}}
-        </div>
-    </div><hr>
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Specialist:</div>
+        <div class="col-6 div1">{{ pro.category }}</div>
+    </div>
+    <hr>
     {% endif %}
-    <div class="login px-sm-12" style="width:100%">
+
+    <div class="mb-4">
         <a href="{% url 'edit_profile' %}">
-            <button class="btn submit mt-4 " style="width:100%; background-color: #726f6e;">Update Detail</button>
+            <button class="btn btn-dark btn-block">Update Detail</button>
         </a>
     </div>
-    <br>
-    <div class="login px-sm-12" style="width:100%">
+
+    <!-- Subscribe/Unsubscribe -->
+    <div>
         <form id="subscribe-form">
             <input type="email" name="email" id="email" required placeholder="Enter your email" class="form-control mt-2">
-            <button type="submit" id="subscribe-btn" class="btn submit mt-4" style="width:100%; background-color: #28a745;">
+            <button type="submit" id="subscribe-btn" class="btn btn-success btn-block mt-3">
                 Subscribe for Notifications
             </button>
-            <button type="button" id="unsubscribe-btn" class="btn btn-danger mt-2" style="width:100%; display:none;">
+            <button type="button" id="unsubscribe-btn" class="btn btn-danger btn-block mt-2" style="display:none;">
                 Unsubscribe
             </button>
         </form>
         <div id="response-message" class="mt-2"></div>
     </div>
-    
+
+    <!-- JS -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let emailInput = document.getElementById("email");
             let subscribeBtn = document.getElementById("subscribe-btn");
             let unsubscribeBtn = document.getElementById("unsubscribe-btn");
-        
+
             emailInput.addEventListener("input", function () {
                 checkSubscriptionStatus(emailInput.value);
             });
-        
+
             function checkSubscriptionStatus(email) {
                 if (email.trim() === "") return;
-        
                 fetch("{% url 'check_subscription' %}?email=" + encodeURIComponent(email))
                     .then(response => response.json())
                     .then(data => {
@@ -121,11 +107,11 @@
                     })
                     .catch(error => console.error("Error:", error));
             }
-        
+
             document.getElementById("subscribe-form").addEventListener("submit", function (event) {
                 event.preventDefault();
                 let email = emailInput.value;
-        
+
                 fetch("{% url 'subscribe_email' %}", {
                     method: "POST",
                     headers: {
@@ -137,14 +123,14 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("response-message").innerHTML = `<p>${data.message || data.error}</p>`;
-                    checkSubscriptionStatus(email); // Check status again after subscribing
+                    checkSubscriptionStatus(email);
                 })
                 .catch(error => console.error("Error:", error));
             });
-        
-            document.getElementById("unsubscribe-btn").addEventListener("click", function () {
+
+            unsubscribeBtn.addEventListener("click", function () {
                 let email = emailInput.value;
-        
+
                 fetch("{% url 'unsubscribe_email' %}", {
                     method: "POST",
                     headers: {
@@ -156,15 +142,12 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("response-message").innerHTML = `<p>${data.message || data.error}</p>`;
-                    checkSubscriptionStatus(email); // Check status again after unsubscribing
+                    checkSubscriptionStatus(email);
                 })
                 .catch(error => console.error("Error:", error));
             });
         });
-        </script>
-        
-    
-    
-</div>
+    </script>
+
 </div>
 {% endblock %}
