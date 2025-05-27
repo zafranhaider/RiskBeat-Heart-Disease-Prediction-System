@@ -43,12 +43,18 @@
 						<div class="col-md-6">
 						<label>Email</label>
 						<input type="email" class="form-control" name="email" placeholder="Enter Email" required="">
+						{% if error == "email_taken" %}
+    <p style="color:red;">Email is already registered.</p>
+{% elif error == "create" %}
+    <p style="color:green;">Account created successfully.</p>
+{% endif %}
+
 						</div>
 						<div class="col-md-6">
 						<label>Contact</label>
 						<input type="text" class="form-control" name="contact" placeholder="Enter Contact" required="">
 						<label>Experience</label>
-						<input type="text" class="form-control" name="experience" placeholder="Enter Experience" required="">
+						<input type="text" class="form-control" name="experience" placeholder="Enter Experience">
 						</div>
 					</div>
 					<div class="form-group row">

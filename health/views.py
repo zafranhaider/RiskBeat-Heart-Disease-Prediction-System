@@ -179,6 +179,8 @@ def Login_admin(request):
     d = {'error': error}
     return render(request, 'admin_login.html', d)
 
+
+
 def Signup_User(request):
     error = ""
     if request.method == 'POST':
@@ -194,14 +196,19 @@ def Signup_User(request):
         type = request.POST['type']
         im = request.FILES['image']
         dat = datetime.date.today()
-        user = User.objects.create_user(email=e, username=u, password=p, first_name=f,last_name=l)
-        if type == "Patient":
-            Patient.objects.create(user=user,contact=con,address=add,image=im,dob=d)
+
+        # Check if email already exists
+        if User.objects.filter(email=e).exists():
+            error = "email_taken"
         else:
-            Doctor.objects.create(dob=d,image=im,user=user,contact=con,address=add,status=2, experience= z,)
-        error = "create"
-    d = {'error':error}
-    return render(request,'register.html',d)
+            user = User.objects.create_user(email=e, username=u, password=p, first_name=f, last_name=l)
+            if type == "Patient":
+                Patient.objects.create(user=user, contact=con, address=add, image=im, dob=d)
+            else:
+                Doctor.objects.create(user=user, contact=con, address=add, dob=d, image=im, status=2, experience=z)
+            error = "create"
+
+    return render(request, 'register.html', {'error': error})
 
 def Logout(request):
     logout(request)
