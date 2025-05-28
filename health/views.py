@@ -73,9 +73,13 @@ def contact(request):
         # Save the data in the database
         Contact.objects.create(name=name, email=email, subject=subject, message=message)
 
+        # Add success message
+        messages.success(request, 'Your message has been sent successfully!')
         
+        return redirect('contact')  # redirect to clear form and show message
 
-    return render(request, 'contact.html') 
+    return render(request, 'contact.html')
+
 
 @login_required(login_url="login")
 def view_contacts(request):

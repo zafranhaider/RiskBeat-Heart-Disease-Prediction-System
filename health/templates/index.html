@@ -326,14 +326,14 @@
         <div class="header d-md-flex justify-content-between align-items-center py-3">
           <!-- logo -->
           <div id="logo">
-            <h1 style="white-space: nowrap; margin: 0;">
-              <a href="" style="display: flex; align-items: center; text-decoration: none;">
-                <span class="fa fa-user-md mr-2"></span>
-               <span class="logo-sp" onclick="event.preventDefault();">Riskbeat</span>
+  <h1 style="white-space: nowrap; margin: 0;">
+    <a href="{% url 'home' %}" style="display: flex; align-items: center; text-decoration: none; color: white;">
+      <span class="fa fa-user-md mr-2"></span>
+      <span class="logo-sp">Riskbeat</span>
+    </a>
+  </h1>
+</div>
 
-              </a>
-            </h1>
-          </div>
           <!-- //logo -->
           <!-- nav -->
           {% if request.user.is_staff %}
