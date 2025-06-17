@@ -15,12 +15,11 @@ urlpatterns = [
     path('', Home, name="home"),
     path('community/',include('community.urls'),name = 'community'),
     path('oauth/',include('social_django.urls',namespace='social')),
-    path('fitness/', include('fitness.urls')),
     path('subscribe/', subscribe_email, name='subscribe_email'),
     path('diab/', include('diab.urls')),
     path('lifestyle/', include('lifestyle.urls')),
     path('heartfail/', include('heartfail.urls')),
-    path('check-availability/', check_availability, name='check_availability'),
+   
     path('health_deals/', include('health_deals.urls')),
     path('heartstroke/', include('heartstroke.urls')),
     path('cardio/', include('cardio.urls')),
@@ -30,7 +29,10 @@ urlpatterns = [
     
 
     path('doctor_home/', Doctor_Home, name="doctor_home"),
-
+    path('get-available-slots/', get_available_slots, name='get_available_slots'),
+    path('manage-slots/', manage_slots, name='manage_slots'),
+    path('api/slots/', get_available_slots, name='get_slots'),
+    path('toggle-slot/<int:slot_id>/', toggle_slot, name='toggle_slot'),
     path('admin_home/', Admin_Home, name="admin_home"),
     path('about/', About, name="about"),
     path('contact/', contact, name='contact'),

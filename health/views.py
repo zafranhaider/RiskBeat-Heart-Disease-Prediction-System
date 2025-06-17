@@ -433,66 +433,236 @@ def search_doctor(request):
         'doc': doc,
         'li': li  # Include any additional filtering logic here
     })
-def check_availability(request):
-    doctor_id = request.GET.get('doctor_id')
-    date = request.GET.get('date')
-    time = request.GET.get('time')
-
-    if doctor_id and date and time:
-        is_booked = Booking.objects.filter(
-            doctor_id=doctor_id, date=date, time=time
-        ).exists()
-        return JsonResponse({'available': not is_booked})
-    return JsonResponse({'available': True})
-
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from .models import Doctor, Booking, DoctorSlot
+from datetime import datetime, timedelta, date
+import json
+
+def get_available_slots(request):
+    doctor_id = request.GET.get('doctor_id')
+    selected_date = request.GET.get('date')
+    
+    if not doctor_id or not selected_date:
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+    
+    try:
+        selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+        day_name = selected_date.strftime('%A')
+    except ValueError:
+        return JsonResponse({'error': 'Invalid date format'}, status=400)
+    
+    # Get active doctor
+    doctor = get_object_or_404(Doctor, id=doctor_id, status=1)
+    
+    # Get doctor's slots for this day of the week
+    slots = DoctorSlot.objects.filter(
+        doctor=doctor,
+        day=day_name,
+        is_active=True
+    )
+    
+    available_slots = []
+    
+    for slot in slots:
+        # Generate time slots within the slot's time range
+        for start_time, end_time in slot.get_time_slots():
+            # Check if this specific time is already booked
+            is_booked = Booking.objects.filter(
+                doctor=doctor,
+                date=selected_date,
+                time__gte=start_time,
+                time__lt=end_time,
+                status__in=['pending', 'approved']
+            ).exists()
+            
+            if not is_booked:
+                available_slots.append({
+                    'slot_id': slot.id,
+                    'start_time': start_time.strftime('%H:%M'),
+                    'end_time': end_time.strftime('%H:%M'),
+                    'formatted': f"{start_time.strftime('%I:%M %p')} - {end_time.strftime('%I:%M %p')}"
+                })
+    
+    return JsonResponse({'slots': available_slots})
+
 @login_required
 def booking_form(request):
     doctors = Doctor.objects.filter(status=1)
-
+    
     if request.method == "POST":
-        name = request.POST['name']
-        email = request.POST['email']
-        contact_number = request.POST['contact_number']
-        doctor_id = request.POST['doctor']
-        appointment_type = request.POST['appointment_type']
-        date = request.POST['date']
-        time = request.POST['time']
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        contact_number = request.POST.get('contact_number')
+        doctor_id = request.POST.get('doctor')
+        appointment_type = request.POST.get('appointment_type')
+        selected_date = request.POST.get('date')
+        slot_id = request.POST.get('slot')
+        start_time = request.POST.get('start_time')
         message = request.POST.get('message', '')
-
-        doctor = get_object_or_404(Doctor, id=doctor_id)
-
-        if Booking.objects.filter(doctor=doctor, date=date, time=time).exists():
+        
+        try:
+            doctor = get_object_or_404(Doctor, id=doctor_id, status=1)
+            slot = get_object_or_404(DoctorSlot, id=slot_id, doctor=doctor)
+            selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+            start_time = datetime.strptime(start_time, '%H:%M').time()
+            
+            # Check if slot is still available
+            is_booked = Booking.objects.filter(
+                doctor=doctor,
+                date=selected_date,
+                time=start_time,
+                status__in=['pending', 'approved']
+            ).exists()
+            
+            if is_booked:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'This time slot is no longer available. Please choose another time.'
+                    })
+                else:
+                    messages.error(request, "This time slot is no longer available. Please choose another time.")
+                    return render(request, 'suc.html', {
+                        'doctors': doctors,
+                        'form_data': request.POST
+                    })
+            
+            # Create the booking
+            Booking.objects.create(
+                name=name,
+                email=email,
+                contact_number=contact_number,
+                doctor=doctor,
+                appointment_type=appointment_type,
+                date=selected_date,
+                slot=slot,
+                time=start_time,
+                message=message,
+            )
+            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            
+            messages.success(request, "Appointment booked successfully!")
+            return render(request, 'suc.html', {'doctors': doctors})
+            
+        except Exception as e:
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({
                     'success': False,
-                    'error': 'This date and time is already booked for the selected doctor.'
+                    'error': str(e)
                 })
             else:
+                messages.error(request, f"Error booking appointment: {str(e)}")
                 return render(request, 'suc.html', {
                     'doctors': doctors,
-                    'error_message': 'This date and time is already booked.',
                     'form_data': request.POST
                 })
-
-        Booking.objects.create(
-            name=name,
-            email=email,
-            contact_number=contact_number,
-            doctor=doctor,
-            appointment_type=appointment_type,
-            date=date,
-            time=time,
-            message=message,
-        )
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({'success': True})
-
-        messages.success(request, "Appointment booked successfully.")
-        return render(request, 'suc.html', {'doctors': doctors})
-
+    
     return render(request, 'suc.html', {'doctors': doctors})
+
+
+
+@login_required
+def manage_slots(request):
+    if not hasattr(request.user, 'doctor_profile'):
+        messages.error(request, "Only doctors can manage slots")
+        return redirect('home')
+
+    doctor = request.user.doctor_profile
+
+    if request.method == "POST":
+        day = request.POST.get('day')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        slot_duration = request.POST.get('slot_duration', 30)
+
+        try:
+            start = datetime.strptime(start_time, '%H:%M').time()
+            end = datetime.strptime(end_time, '%H:%M').time()
+
+            if start >= end:
+                messages.error(request, "End time must be after start time")
+                return redirect('manage_slots')
+
+            DoctorSlot.objects.create(
+                doctor=doctor,
+                day=day,
+                start_time=start_time,
+                end_time=end_time,
+                slot_duration=slot_duration
+            )
+            messages.success(request, "Slot added successfully")
+        except Exception as e:
+            messages.error(request, f"Error adding slot: {str(e)}")
+
+    slots = DoctorSlot.objects.filter(doctor=doctor).order_by('day', 'start_time')
+    days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    slots_by_day = [(day, slots.filter(day=day)) for day in days_order]
+
+    return render(request, 'manage_slots.html', {
+        'slots_by_day': slots_by_day,
+    })
+
+
+from django.http import JsonResponse
+from datetime import datetime
+from django.utils import timezone
+
+def get_available_slots(request):
+    doctor_id = request.GET.get('doctor_id')
+    date_str  = request.GET.get('date')
+
+    if not doctor_id or not date_str:
+        return JsonResponse({'slots': []})
+
+    # parse date and get weekday
+    selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    weekday = selected_date.strftime('%A')
+
+    # get current date/time
+    today = timezone.localdate()
+    now_time = timezone.localtime().time()
+
+    slots = DoctorSlot.objects.filter(doctor_id=doctor_id, day=weekday)
+    response_slots = []
+
+    for slot in slots:
+        # skip slots that started in the past if date is today
+        if selected_date == today and slot.start_time <= now_time:
+            continue
+
+        is_booked = Booking.objects.filter(slot=slot, date=selected_date).exists()
+        response_slots.append({
+            'slot_id': slot.id,
+            'start_time': str(slot.start_time),
+            'formatted': f"{slot.start_time.strftime('%I:%M %p')} - {slot.end_time.strftime('%I:%M %p')}",
+            'is_booked': is_booked
+        })
+
+    return JsonResponse({'slots': response_slots})
+
+@login_required
+@require_POST
+def toggle_slot(request, slot_id):
+    if not hasattr(request.user, 'doctor_profile'):
+        return JsonResponse({'success': False, 'error': 'Unauthorized'})
+    
+    try:
+        slot = DoctorSlot.objects.get(id=slot_id, doctor=request.user.doctor_profile)
+        slot.is_active = not slot.is_active
+        slot.save()
+        return JsonResponse({
+            'success': True, 
+            'is_active': slot.is_active,
+            'new_status': 'Active' if slot.is_active else 'Inactive'
+        })
+    except DoctorSlot.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Slot not found'})
 
 
 @login_required

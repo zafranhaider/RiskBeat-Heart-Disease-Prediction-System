@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'health',
-    'fitness',
     'community',
     'social_django',
     'crispy_forms',

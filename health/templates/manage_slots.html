@@ -1,0 +1,125 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+<section class="section-padding" style="padding-top: 70px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Manage Your Weekly Availability</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{% url 'manage_slots' %}" class="mt-4">
+              {% csrf_token %}
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="day">Day of Week</label>
+                  <select name="day" id="day" class="form-control" required>
+                    <option value="" disabled selected>Select day</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="start_time">Start Time</label>
+                  <input type="time" name="start_time" class="form-control" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="end_time">End Time</label>
+                  <input type="time" name="end_time" class="form-control" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="slot_duration">Slot Duration (min)</label>
+                  <input type="number" name="slot_duration" class="form-control" value="30" min="15" max="120" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Slot</button>
+            </form>
+          </div>
+        </div>
+
+        {% for day, day_slots in slots_by_day %}
+        <div class="card mb-3">
+          <div class="card-header">
+            <h4 class="mb-0">{{ day }}</h4>
+          </div>
+          <div class="card-body p-0">
+            {% if day_slots %}
+            <ul class="list-group list-group-flush">
+              {% for slot in day_slots %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ slot.start_time|time:"h:i A" }} - {{ slot.end_time|time:"h:i A" }}</strong>
+                  <span class="text-muted ml-2">({{ slot.slot_duration }} min slots)</span>
+                </div>
+                <div>
+                  <button class="btn btn-sm {% if slot.is_active %}btn-success{% else %}btn-secondary{% endif %}">
+                    {% if slot.is_active %}
+                    <i class="fas fa-check-circle"></i> Active
+                    {% else %}
+                    <i class="fas fa-times-circle"></i> Inactive
+                    {% endif %}
+                  </button>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <div class="p-3 text-center text-muted">No slots for {{ day }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleSlot(slotId, button) {
+    button.disabled = true;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+    
+    fetch(`{% url 'toggle_slot' 0 %}`.replace('0', slotId), {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.is_active) {
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-success');
+                button.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+            } else {
+                button.classList.remove('btn-success');
+                button.classList.add('btn-secondary');
+                button.innerHTML = '<i class="fas fa-times-circle"></i> Inactive';
+            }
+        } else {
+            alert(data.error || 'Error updating slot');
+            button.innerHTML = originalText;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Something went wrong');
+        button.innerHTML = originalText;
+    })
+    .finally(() => {
+        button.disabled = false;
+    });
+}
+</script>
+
+{% endblock %}
