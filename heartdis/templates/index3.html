@@ -1,0 +1,328 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+  /* Modern gradient background */
+body {
+    height: auto;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+    background-attachment: fixed;
+}
+
+  /* Card container */
+  .form-card {
+    max-width: 800px;
+    margin: 50px auto;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: white;
+  }
+
+  /* Form header */
+  .form-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    text-align: center;
+  }
+
+  .form-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+  }
+
+  /* Form body */
+  .form-body {
+    padding: 30px;
+  }
+
+  /* Two-column layout for form fields */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* Form group styling */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.95rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: #f9fafc;
+  }
+
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+    background-color: white;
+  }
+
+  /* Prediction result styling */
+  .prediction-result {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-left: 4px solid;
+  }
+
+  .risk {
+    border-color: #e63946;
+    background-color: #ffebee;
+  }
+
+  .no-risk {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+  }
+
+  .prediction-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .accuracy {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Error styling */
+  .error-message {
+    color: #e63946;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+  }
+
+  .is-invalid {
+    border-color: #e63946;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .submit-btn {
+      grid-column: span 1;
+    }
+  }
+</style>
+
+<div class="form-card">
+  <div class="form-header">
+    <h2>Heart Disease Risk Assessment</h2>
+  </div>
+  
+  <div class="form-body">
+    {% if prediction is not None %}
+      <div class="prediction-result {% if prediction == 'Risk of Heart Disease' %}risk{% else %}no-risk{% endif %}">
+        <div class="prediction-text">Prediction: {{ prediction }}</div>
+     
+      </div>
+    {% endif %}
+    
+    <form id="healthForm" method="POST" onsubmit="return validateForm()">
+      {% csrf_token %}
+      
+      <div class="form-grid">
+        <!-- Column 1 -->
+        <div class="form-group">
+          <label for="age">Age (years)</label>
+          <input type="number" class="form-control" id="age" name="age" placeholder="29-64 years">
+          <span class="error-message" id="ageError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select class="form-control" id="gender" name="gender">
+            <option value="" disabled selected>Select gender</option>
+            <option value="1">Female</option>
+            <option value="2">Male</option>
+          </select>
+          <span class="error-message" id="genderError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="height">Height (cm)</label>
+          <input type="number" class="form-control" id="height" name="height" placeholder="100-250 cm">
+          <span class="error-message" id="heightError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" class="form-control" id="weight" name="weight" placeholder="30-200 kg">
+          <span class="error-message" id="weightError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="ap_hi">Systolic BP</label>
+          <input type="number" class="form-control" id="ap_hi" name="ap_hi" placeholder="60-240 mmHg">
+          <span class="error-message" id="ap_hiError"></span>
+        </div>
+        
+        <!-- Column 2 -->
+        <div class="form-group">
+          <label for="ap_lo">Diastolic BP</label>
+          <input type="number" class="form-control" id="ap_lo" name="ap_lo" placeholder="40-182 mmHg">
+          <span class="error-message" id="ap_loError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="cholesterol">Cholesterol Level</label>
+          <select class="form-control" id="cholesterol" name="cholesterol">
+            <option value="" disabled selected>Select level</option>
+            <option value="1">Normal</option>
+            <option value="2">Above Normal</option>
+            <option value="3">High</option>
+          </select>
+          <span class="error-message" id="cholesterolError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="gluc">Glucose Level</label>
+          <select class="form-control" id="gluc" name="gluc">
+            <option value="" disabled selected>Select level</option>
+            <option value="1">Normal</option>
+            <option value="2">Above Normal</option>
+            <option value="3">High</option>
+          </select>
+          <span class="error-message" id="glucError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="smoke">Smoking</label>
+          <select class="form-control" id="smoke" name="smoke">
+            <option value="" disabled selected>Select option</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+          <span class="error-message" id="smokeError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="alco">Alcohol Intake</label>
+          <select class="form-control" id="alco" name="alco">
+            <option value="" disabled selected>Select option</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+          <span class="error-message" id="alcoError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="active">Physical Activity</label>
+          <select class="form-control" id="active" name="active">
+            <option value="" disabled selected>Select option</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+          <span class="error-message" id="activeError"></span>
+        </div>
+        
+        <button type="submit" class="submit-btn">Assess My Risk</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('healthForm');
+
+    // Autofill existing values from localStorage (excluding csrf)
+    for (let field of form.elements) {
+      if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+        field.value = localStorage.getItem(field.name);
+      }
+    }
+
+    // Save new values on input/select change (excluding csrf)
+    form.addEventListener('input', function () {
+      for (let field of form.elements) {
+        if (field.name && field.name !== 'csrfmiddlewaretoken') {
+            localStorage.setItem(field.name, field.value);
+        }
+      }
+    });
+  });
+
+  function validateForm() {
+    let isValid = true;
+    
+    function validateField(id, min, max, errorMsg) {
+      let field = document.getElementById(id);
+      let errorElement = document.getElementById(id + "Error");
+      let value = parseFloat(field.value);
+      
+      if (isNaN(value) || value < min || value > max) {
+        errorElement.textContent = errorMsg;
+        field.classList.add("is-invalid");
+        isValid = false;
+      } else {
+        errorElement.textContent = "";
+        field.classList.remove("is-invalid");
+      }
+    }
+
+    validateField("age", 29, 64, "Age must be between 29 and 64.");
+    validateField("gender", 1, 2, "Please select a valid gender.");
+    validateField("height", 100, 250, "Height must be between 100 cm and 250 cm.");
+    validateField("weight", 30, 200, "Weight must be between 30 kg and 200 kg.");
+    validateField("ap_hi", 60, 240, "Systolic BP must be between 60 and 240.");
+    validateField("ap_lo", 40, 182, "Diastolic BP must be between 40 and 182.");
+    validateField("cholesterol", 1, 3, "Please select a cholesterol level.");
+    validateField("gluc", 1, 3, "Please select a glucose level.");
+    validateField("smoke", 0, 1, "Please select an option for smoking.");
+    validateField("alco", 0, 1, "Please select an option for alcohol.");
+    validateField("active", 0, 1, "Please select an option for activity.");
+
+    return isValid;
+  }
+</script>
+{% endblock %}

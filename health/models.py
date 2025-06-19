@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db import models
+from django.contrib.auth.models import User
+from datetime import time
 # Create your models here.
 from .choices import DOCTOR_STATUS
 
@@ -14,9 +16,7 @@ class Patient(models.Model):
     def __str__(self):
         return self.user.username
 
-from django.db import models
-from django.contrib.auth.models import User
-from datetime import time
+
 
 class Doctor(models.Model):
     DOCTOR_STATUS = [(1, "Active"), (0, "Inactive")]
