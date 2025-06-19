@@ -10,7 +10,14 @@ import numpy as np
 import pandas as pd
 import logging
 import re
-
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from .models import Doctor, Booking, DoctorSlot
+from datetime import datetime, timedelta, date
+import json
 import matplotlib.pyplot as plt
 import seaborn as sns
 from django.db.models import Q
@@ -437,14 +444,7 @@ def search_doctor(request):
         'doc': doc,
         'li': li  # Include any additional filtering logic here
     })
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.views.decorators.http import require_POST
-from .models import Doctor, Booking, DoctorSlot
-from datetime import datetime, timedelta, date
-import json
+
 
 def get_available_slots(request):
     doctor_id = request.GET.get('doctor_id')
@@ -861,6 +861,15 @@ def prdict_cheart_disease(list_data):
     
     # Load the dataset from CSV
     csv_file_path = './Machine_Learning/cornheart.csv'  
+    heart_rate = float(list_data[13])
+
+    if heart_rate > 220:
+        # Deadly heart rate
+        return 0.0, [1], [("heartRate", 1.0)], "You are probably dead 💀. Call an ambulance, not a prediction site."
+
+    elif heart_rate > 170:
+        # Dangerously high
+        return 0.0, [1], [("heartRate", 1.0)], "⚠️ Dangerously high heart rate! You are at serious risk of heart disease."
 
     # Read the CSV file
     df = pd.read_csv(csv_file_path)
@@ -902,14 +911,15 @@ def prdict_cheart_disease(list_data):
         for i in range(len(feature_importances))
     ]
     important_factors.sort(key=lambda x: x[1], reverse=True)
+    return (nn_model.score(X_test, y_test) * 100), pred, important_factors, None
 
-    return (nn_model.score(X_test, y_test) * 100), pred, important_factors
 
 
 
 @login_required(login_url="login")
 def add_conrheartdetail(request):
     track_user_diseases(request, "Cornary Disease")
+    
     if request.method == "POST":
         required_fields = [
             "male", "age", "education", "currentSmoker", "cigsPerDay",
@@ -935,8 +945,8 @@ def add_conrheartdetail(request):
             return render(request, 'cornheart.html', {'error': ", ".join(errors)})
         
         try:
-            # Perform prediction
-            accuracy, pred, feature_contributions = prdict_cheart_disease(list_data)
+            # Perform prediction with message handling
+            accuracy, pred, feature_contributions, custom_message = prdict_cheart_disease(list_data)
             
             # Save prediction results
             patient = Patient.objects.get(user=request.user)
@@ -950,22 +960,23 @@ def add_conrheartdetail(request):
             # Fetch doctors based on patient's address
             patient_address = patient.address
             doctors = Doctor.objects.filter(address__icontains=patient_address)
-            
-            # Prepare prediction message
-            pred_message = "Low risk of 10-year coronary heart disease." if pred[0] == 0 else "High risk of 10-year coronary heart disease."
+
+            # Final prediction message
+            pred_message = custom_message if custom_message else (
+                "Low risk of 10-year coronary heart disease." if pred[0] == 0 else "High risk of 10-year coronary heart disease."
+            )
             
             return render(request, 'corn_pred.html', {
                 'accuracy': accuracy,
                 'pred': pred[0],
                 'pred_message': pred_message,
                 'contributing_factors': feature_contributions,
-                'doctors': doctors  # Include doctors in context
+                'doctors': doctors
             })
-            
+        
         except Patient.DoesNotExist:
             return render(request, 'cornheart.html', {'error': "Patient profile not found."})
         except Exception as e:
-            # Log the error
             logger.error(f"Error in add_conrheartdetail: {e}", exc_info=True)
             return render(request, 'cornheart.html', {'error': str(e)})
 

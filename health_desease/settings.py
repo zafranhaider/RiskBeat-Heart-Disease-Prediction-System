@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'heartstroke',
     'cardio',
     'health_deals',
+    'heartdis',
 ]
 
 MIDDLEWARE = [

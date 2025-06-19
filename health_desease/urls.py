@@ -26,6 +26,7 @@ urlpatterns = [
     path('health_deals/', include('health_deals.urls')),
     path('heartstroke/', include('heartstroke.urls')),
     path('cardio/', include('cardio.urls')),
+    path('heartdis/', include('heartdis.urls')),
     re_path(r'^$', RedirectView.as_view(url='/fitness/', permanent=True)),
     path('index.html', Home, name="index"),  # Serve index.html
     path('patient_home/', User_Home, name="patient_home"),
