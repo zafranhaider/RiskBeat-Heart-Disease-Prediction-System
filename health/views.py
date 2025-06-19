@@ -25,6 +25,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from django.http import HttpResponse
+from django.http import JsonResponse
+from datetime import datetime
+from django.views.decorators.http import require_POST
+from django.db import transaction
 
 logger = logging.getLogger(__name__)
 ########################################################################################################
@@ -695,10 +699,10 @@ def appointment_status(request):
         user_bookings = Booking.objects.filter(doctor=doctor)
     except Doctor.DoesNotExist:
         # If the user is not a doctor, fetch bookings where their email matches
-        user_bookings = Booking.objects.filter(email=request.user.email)
-
-    return render(request, 'appointment_status.html', {'bookings': user_bookings})
-
+      bookings = Booking.objects.filter(user=request.user).order_by('-date','-time')
+    return render(request, 'appointment_status.html', {
+        'bookings': bookings
+    })
 
 ########################################################################################################
 ############################ Machine Learning Logics Algoritham ########################################
@@ -1078,3 +1082,97 @@ def track_user_diseases(request, current_disease):
             suggestion = random.choice(unvisited)
             messages.info(request, f"According to This Submission You May also Try checking out: {suggestion}")
             request.session['suggestion_shown'] = True
+
+
+
+
+
+def check_slots(request):
+    """
+    GET params: doctor_id, date (YYYY-MM-DD)
+    Returns every sub-slot (start→end) that:
+      • Comes from an active DoctorSlot
+      • Falls on that weekday
+      • Isn’t already booked at that exact start time
+    """
+    doctor_id = request.GET.get('doctor_id')
+    date_str  = request.GET.get('date')
+    date      = datetime.strptime(date_str, '%Y-%m-%d').date()
+    weekday   = date.strftime('%A')  # “Monday”,…
+
+    # all matching definitions
+    defs = DoctorSlot.objects.filter(
+      doctor_id=doctor_id,
+      day=weekday,
+      is_active=True
+    )
+    available = []
+    for ds in defs:
+        for start, end in ds.get_time_slots():
+            # skip if already booked:
+            if Booking.objects.filter(slot=ds, date=date, time=start).exists():
+                continue
+            available.append({
+                'slot_def_id': ds.id,
+                'start': start.strftime('%H:%M'),
+                'end':   end.strftime('%H:%M'),
+            })
+
+    return JsonResponse({'slots': available})
+
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.db import transaction
+from datetime import datetime
+
+from .models import DoctorSlot, Booking
+
+@require_POST
+@transaction.atomic
+def book_appointment(request):
+    # 1) Ensure AJAX:
+    if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+        return HttpResponseBadRequest("Invalid request type")
+
+    try:
+        # 2) Parse the chosen slot
+        raw = request.POST['chosen_slot']   # e.g. "17|09:30"
+        slot_id, start_time = raw.split('|')
+        date = datetime.strptime(request.POST['date'], '%Y-%m-%d').date()
+
+        # 3) Lookup and lock the slot
+        slot = get_object_or_404(DoctorSlot, pk=slot_id, is_active=True)
+
+        # 4) Attempt create (unique_together prevents dupes)
+        booking, created = Booking.objects.get_or_create(
+            slot=slot,
+            date=date,
+            time=start_time,
+                user=request.user,              # ← add this
+
+            defaults={
+                        'user': request.user,                # ← add this
+
+                'name': request.POST['name'],
+                'email': request.POST['email'],
+                'contact_number': request.POST['contact_number'],
+                'doctor': slot.doctor,
+                'appointment_type': request.POST['appointment_type'],
+                'message': request.POST.get('message', ''),
+            }
+        )
+
+        if not created:
+            return JsonResponse({
+                'success': False,
+                'error': 'Sorry, that slot was just taken.'
+            })
+
+        return JsonResponse({'success': True})
+
+    except KeyError:
+        return JsonResponse({'success': False, 'error': 'Missing form data.'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

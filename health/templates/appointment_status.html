@@ -35,15 +35,12 @@
                                 {% elif booking.status == 'rejected' %}
                                     <span class="text-danger">Rejected</span>
                                 {% elif booking.status == 'unavailable' %}
-                                    <span class="text-muted">Unavailable</span>  <!-- Added Unavailable status -->
+                                    <span class="text-muted">Unavailable</span>
                                 {% endif %}
                             </td>
                         </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center">No appointments found</td>
-                        </tr>
                         {% endfor %}
+                        
                     </tbody>
                 </table>
             </div>

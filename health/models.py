@@ -85,19 +85,24 @@ class Booking(models.Model):
         ('virtual', 'Virtual'),
     ]
     
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
+    user           = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name           = models.CharField(max_length=100)
+    email          = models.EmailField()
     contact_number = models.CharField(max_length=15)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
+    doctor         = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
     appointment_type = models.CharField(max_length=20, choices=APPOINTMENT_TYPES)
-    date = models.DateField()
-    slot = models.ForeignKey(DoctorSlot, on_delete=models.CASCADE, null=True)
-    time = models.TimeField()  # Actual booked time within the slot
-    message = models.TextField(null=True, blank=True)
-    status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='pending')
-    
+    date           = models.DateField()
+    slot           = models.ForeignKey(DoctorSlot, on_delete=models.CASCADE, null=True)
+    time           = models.TimeField()
+    message        = models.TextField(null=True, blank=True)
+    status         = models.CharField(max_length=11, choices=STATUS_CHOICES, default='pending')
+
+    class Meta:
+        unique_together = ('slot','date','time')
+
     def __str__(self):
-        return f"{self.name} - {self.doctor.user.username} - {self.date} {self.time}"
+        return f"{self.user.username if self.user else self.name} – {self.date} {self.time}"
+
 
 
 

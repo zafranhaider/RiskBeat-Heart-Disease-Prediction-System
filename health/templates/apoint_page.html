@@ -22,188 +22,185 @@
 
 <section class="section-padding" id="booking">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-12 mx-auto">
-                <div class="booking-form">
-                    <h2 class="text-center mb-lg-3 mb-2">Book an Appointment</h2>
-
-                   <!-- Doctor Search Section -->
-                   <form role="form" action="{% url 'booking_form' %}" method="post">
-                    {% csrf_token %}
-                    <div class="row">
+      <div class="row">
+        <div class="col-lg-8 col-12 mx-auto">
+          <div class="booking-form">
+            <h2 class="text-center mb-lg-3 mb-2">Book an Appointment</h2>
+            <form id="booking-form"
+            action="{% url 'booking_form' %}"
+            method="post">       {% csrf_token %}
+              <div class="row">
                 
-                        <!-- Name -->
-                        <div class="col-12">
-                            <input type="text" name="name" id="name" class="form-control" 
-                                   placeholder="Your Name" required>
-                        </div>
+                <!-- Name -->
+                <div class="col-12">
+                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                </div>
                 
-                        <!-- Email -->
-                        <div class="col-12">
-                            <input type="email" name="email" id="email" class="form-control" 
-                                   placeholder="Email Address" required>
-                        </div>
+                <!-- Email -->
+                <div class="col-12">
+                  <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                </div>
                 
-                        <!-- Contact -->
-                        <div class="col-12">
-                            <input type="tel" name="contact_number" id="contact_number" class="form-control" 
-                                   placeholder="Contact Number" required>
-                        </div>
+                <!-- Contact -->
+                <div class="col-12">
+                  <input type="tel" name="contact_number" class="form-control" placeholder="Contact Number" required>
+                </div>
                 
-                        <!-- Search -->
-                        <div class="col-12">
-                            <input type="text" name="search" id="search" class="form-control" 
-                                   placeholder="Search doctor by name, specialization, or location">
-                        </div>
+                <!-- Search -->
+                <div class="col-12">
+                  <input type="text" id="search" class="form-control" placeholder="Search doctor by name, specialization, or location">
+                </div>
                 
-                        <!-- Doctor -->
-                        <div class="col-12">
-                            <select name="doctor" id="doctor" class="form-control" required>
-                                <option value="" disabled selected>Select a Doctor</option>
-                                {% for doctor in doctors %}
-                                    <option value="{{ doctor.id }}">
-                                        {{ doctor.user.username }} - {{ doctor.category }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                <!-- Doctor Select -->
+                <div class="col-12">
+                  <select name="doctor" id="doctor" class="form-control" required>
+                    <option value="" disabled selected>Select a Doctor</option>
+                    {% for doctor in doctors %}
+                      <option value="{{ doctor.id }}">{{ doctor.user.username }} – {{ doctor.category }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
                 
-                        <!-- Appointment Type -->
-                        <div class="col-12">
-                            <select name="appointment_type" id="appointment_type" class="form-control" required>
-                                <option value="" disabled selected>Select Appointment Type</option>
-                                <option value="in_person">In-Person</option>
-                                <option value="virtual">Virtual</option>
-                            </select>
-                        </div>
+                <!-- Appointment Type -->
+                <div class="col-12">
+                  <select name="appointment_type" class="form-control" required>
+                    <option value="" disabled selected>Select Appointment Type</option>
+                    <option value="in_person">In-Person</option>
+                    <option value="virtual">Virtual</option>
+                  </select>
+                </div>
                 
-                        <!-- Error message container -->
-                        <div class="col-12">
-                            <div id="availability-error" class="alert alert-danger d-none"></div>
-                        </div>
+                <!-- Date -->
+                <div class="col-lg-6 col-12">
+                  <input type="date" name="date" id="date" class="form-control" required>
+                </div>
                 
-                        <!-- Date -->
-                       <!-- Date -->
-                    <div class="col-lg-6 col-12">
-                        <input type="date" name="date" id="date" class="form-control" required>
-                        <small id="date-error" class="text-danger d-none"></small>
-                    </div>
-
+                <!-- Slot Buttons will go here -->
+                <div class="col-12 mt-3" id="slot-container">
+                  <!-- JS injects radio‐buttons or “No slots available” -->
+                </div>
                 
-                        <!-- Time -->
-                        <div class="col-lg-6 col-12">
-                            <input type="time" name="time" id="time" class="form-control" required>
-                        </div>
+                <!-- Message -->
+                <div class="col-12">
+                  <textarea name="message" class="form-control" rows="5" placeholder="Additional Message"></textarea>
+                </div>
                 
-                        <!-- Message -->
-                        <div class="col-12">
-                            <textarea class="form-control" rows="5" id="message" name="message" 
-                                      placeholder="Additional Message"></textarea>
-                        </div>
+                <!-- Error Display -->
+                <div class="col-12">
+                  <div id="availability-error" class="alert alert-danger d-none"></div>
+                </div>
                 
-                        <!-- Submit -->
-                        <div class="col-lg-3 col-md-4 col-6 mx-auto">
-                            <button type="submit" class="form-control" id="submit-button">Book Now</button>
-                        </div>
-                    </div>
-                </form>
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const doctorInput = document.getElementById("doctor");
-                        const dateInput = document.getElementById("date");
-                        const timeInput = document.getElementById("time");
-                        const submitButton = document.getElementById("submit-button");
-                        const errorDiv = document.getElementById("availability-error");
+                <!-- Submit -->
+                <div class="col-lg-3 col-md-4 col-6 mx-auto">
+                  <button type="submit" class="form-control" id="submit-button" disabled>Book Now</button>
+                </div>
                 
-                        // Prevent past dates
-                        const today = new Date().toISOString().split("T")[0];
-                        dateInput.setAttribute("min", today);
-                        function checkAvailability() {
-    const doctorId = doctorInput.value;
-    const date = dateInput.value;
-    const time = timeInput.value;
-
-    const dateError = document.getElementById("date-error");
-
-    if (doctorId && date && time) {
-        fetch(`/check-availability/?doctor_id=${doctorId}&date=${date}&time=${time}`)
-            .then(response => response.json())
-            .then(data => {
-                if (!data.available) {
-                    dateError.textContent = "This date and time is already booked for the selected doctor.";
-                    dateError.classList.remove("d-none");
-                    submitButton.disabled = true;
-                } else {
-                    dateError.textContent = "";
-                    dateError.classList.add("d-none");
-                    submitButton.disabled = false;
-                }
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const doctorInput   = document.getElementById("doctor");
+    const dateInput     = document.getElementById("date");
+    const slotContainer = document.getElementById("slot-container");
+    const submitButton  = document.getElementById("submit-button");
+    const searchInput   = document.getElementById("search");
+  
+    // Prevent past dates
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.setAttribute("min", today);
+  
+    // Load available slots
+    function loadSlots() {
+      const doctorId = doctorInput.value;
+      const date      = dateInput.value;
+      if (!doctorId || !date) {
+        slotContainer.innerHTML = '';
+        submitButton.disabled = true;
+        return;
+      }
+  
+      fetch(`/check-slots/?doctor_id=${doctorId}&date=${date}`)
+        .then(r => r.json())
+        .then(data => {
+          slotContainer.innerHTML = '';
+          if (data.slots.length) {
+            data.slots.forEach(s => {
+              slotContainer.insertAdjacentHTML('beforeend', `
+                <label class="btn btn-outline-primary m-1">
+                  <input type="radio"
+                         name="chosen_slot"
+                         value="${s.slot_def_id}|${s.start}"
+                         required>
+                  ${s.start} – ${s.end}
+                </label>`);
             });
+            submitButton.disabled = false;
+          } else {
+            slotContainer.innerHTML = '<div class="text-muted">No slots available</div>';
+            submitButton.disabled = true;
+          }
+        })
+        .catch(() => {
+          slotContainer.innerHTML = '<div class="text-danger">Failed to load slots</div>';
+          submitButton.disabled = true;
+        });
     }
-}
-
-                
-                        doctorInput.addEventListener("change", checkAvailability);
-                        dateInput.addEventListener("change", checkAvailability);
-                        timeInput.addEventListener("change", checkAvailability);
-                    });
-                </script>
-                                
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        const form = document.querySelector("form");
-                                        const submitButton = document.getElementById("submit-button");
-                                        const errorDiv = document.getElementById("availability-error");
-                                    
-                                        form.addEventListener("submit", function (e) {
-                                            e.preventDefault(); // prevent normal form submission
-                                    
-                                            const formData = new FormData(form);
-                                    
-                                            fetch("{% url 'booking_form' %}", {
-                                                method: "POST",
-                                                headers: {
-                                                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                                                    'X-Requested-With': 'XMLHttpRequest',
-                                                },
-                                                body: formData
-                                            })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    // Optional: Show success message or redirect
-                                                    alert("Appointment booked successfully.");
-                                                    window.location.reload();  // or redirect to a success page
-                                                } else {
-                                                    errorDiv.classList.remove("d-none");
-                                                    errorDiv.textContent = data.error;
-                                                    submitButton.disabled = false;
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error("Error:", error);
-                                                errorDiv.classList.remove("d-none");
-                                                errorDiv.textContent = "Something went wrong.";
-                                            });
-                                        });
-                                    });
-                                    </script>
-                                    
-                    <script>
-                        document.getElementById('search').addEventListener('input', function() {
-                            const searchValue = this.value.toLowerCase();
-                            const options = document.querySelectorAll('#doctor option');
-                        
-                            options.forEach(option => {
-                                const text = option.textContent.toLowerCase();
-                                if (text.includes(searchValue)) {
-                                    option.style.display = 'block';
-                                } else if (option.value !== '') { // Ensure "Select a Doctor" remains visible
-                                    option.style.display = 'none';
-                                }
-                            });
-                        });
-                        </script>
+  
+    // Filter doctors list
+    function filterDoctors() {
+      const term = searchInput.value.toLowerCase();
+      document.querySelectorAll('#doctor option').forEach(opt => {
+        if (opt.value === "") return;
+        opt.style.display = opt.textContent.toLowerCase().includes(term) ? 'block' : 'none';
+      });
+    }
+  
+    // Event listeners
+    doctorInput.addEventListener('change', loadSlots);
+    dateInput.addEventListener('change',   loadSlots);
+    searchInput.addEventListener('input',  filterDoctors);
+  
+    // AJAX form submit
+    document.getElementById("booking-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      submitButton.disabled = true;
+      const formData = new FormData(this);
+      fetch("{% url 'booking_form' %}", {
+        method: "POST",
+        headers: {
+          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+          'X-Requested-With': 'XMLHttpRequest'    // ← ADD THIS
+        },
+        body: formData
+      })
+      
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          alert("Appointment booked successfully.");
+          window.location.reload();
+        } else {
+          const err = document.getElementById("availability-error");
+          err.textContent = data.error;
+          err.classList.remove("d-none");
+          submitButton.disabled = false;
+        }
+      })
+      .catch(() => {
+        const err = document.getElementById("availability-error");
+        err.textContent = "Something went wrong.";
+        err.classList.remove("d-none");
+        submitButton.disabled = false;
+      });
+    });
+  });
+  </script>
                         
 <!-- Doctor Profiles Display -->
 <div class="doctor-profiles mt-5">
@@ -244,11 +241,13 @@
 
 /* Row Styling */
 .doctor-profiles .row {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 1.2rem;
-    padding-bottom: 1rem;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 1.2rem;
+  padding-bottom: 1rem;
+  flex-direction: row;
+  justify-content: center;
 }
 
 /* Card Styling */
