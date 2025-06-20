@@ -1,198 +1,536 @@
-{% extends 'index.html' %}
-{% load static %}
-{% block body %}
-
-   <style>
-       body {
-        height: auto;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
-    background-attachment: fixed;
-       }
-       .container1
-       {padding-top: 20px;}
-       .form-container1 {
-           background-color: #fff;
-           border-radius: 10px;
-           padding: 50px;
-           box-shadow: 0 0 10px rgba(0,0,0,0.1);
-           max-width: 600px;
-           margin: 50px auto;
-       }
-       h2 {
-           text-align: center;
-           margin-bottom: 20px;
-       }
-       .btn-custom {
-           background-color: #007bff;
-           color: white;
-       }
-       .btn-custom:hover {
-           background-color: #0056b3;
-       }
-   </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Stroke Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0c2461 0%, #1e3799 20%, #4a69bd 40%, #6a89cc 60%, #82ccdd 80%);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .header h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #ff9e7d);
+            border-radius: 2px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+        
+        .prediction-result {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.6s ease-out;
+            text-align: center;
+        }
+        
+        .result-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .result-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .stroke-likely {
+            background: linear-gradient(135deg, #ff6b6b, #ff9e7d);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .no-stroke {
+            background: linear-gradient(135deg, #1dd1a1, #10ac84);
+            color: white;
+            box-shadow: 0 5px 15px rgba(29, 209, 161, 0.4);
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .form-header h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .form-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 2px;
+        }
+        
+        .form-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 5px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+            background: white;
+        }
+        
+        .form-control:hover {
+            border-color: #bdc3c7;
+        }
+        
+        .btn-submit {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #3498db, #2e86de);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #2e86de, #2980b9);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.5);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+        
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            padding: 20px;
+            animation: fadeIn 1.2s ease-out;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .input-icon {
+            color: #3498db;
+            font-size: 1.2rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .result-value {
+                font-size: 1.8rem;
+                padding: 12px 25px;
+            }
+            
+            .btn-submit {
+                padding: 16px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-   <div class="container1">
-       <div class="form-container1">
-           <h2>Heart Stroke Prediction Form</h2>
+    <div class="container">
+        <div class="header">
+            <h1>Heart Stroke Risk Assessment</h1>
+            <p>Complete this form to evaluate your risk of stroke based on medical research and predictive analytics. Your health insights are just a minute away.</p>
+        </div>
+        
+        <!-- Prediction Result -->
+        <div class="prediction-result">
+            <div class="result-title">
+                <i class="fas fa-heartbeat"></i>
+                <span>Prediction Result:</span>
+            </div>
+               <h2>Heart Stroke Prediction</h2>
            {% if prediction is not None %}
            <div class="alert alert-info text-center" role="alert">
                <strong>Prediction:</strong> {% if prediction == 1 %} Stroke Likely {% else %} No Stroke {% endif %}
            </div>
        
-           <div class="alert alert-secondary text-center" role="alert">
-               <strong>Model Accuracy:</strong> {{ accuracy }}%
-           </div>
+     
        {% endif %}
-       
-
-   
-
-       <form method="post" id="predictionForm" novalidate>
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="gender">Gender:</label>
-            <select class="form-control" id="gender" name="gender" required>
-                <option value="" disabled selected>Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-            <div class="invalid-feedback">Please select your gender.</div>
         </div>
-    
-        <div class="form-group">
-            <label for="age">Age:</label>
-            <input type="number" class="form-control" id="age" name="age" step="0.1" placeholder="Enter your age" required min="0" max="120">
-            <div class="invalid-feedback">Please enter a valid age (0-120).</div>
+        
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Health Assessment Form</h2>
+                <p>Provide accurate information for the most reliable prediction. All fields are required.</p>
+            </div>
+            
+            <form method="post" id="predictionForm" novalidate>
+                    {% csrf_token %}
+                <div class="form-grid">
+                    <!-- Personal Information -->
+                    <div class="form-group">
+                        <label for="gender">
+                            <i class="fas fa-venus-mars input-icon"></i>
+                            Gender:
+                        </label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age">
+                            <i class="fas fa-birthday-cake input-icon"></i>
+                            Age:
+                        </label>
+                        <input type="number" class="form-control" id="age" name="age" step="0.1" placeholder="Enter your age" required min="0" max="120">
+                    </div>
+                    
+                    <!-- Health Conditions -->
+                    <div class="form-group">
+                        <label for="hypertension">
+                            <i class="fas fa-heart input-icon"></i>
+                            Hypertension:
+                        </label>
+                        <select class="form-control" id="hypertension" name="hypertension" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="heart_disease">
+                            <i class="fas fa-heartbeat input-icon"></i>
+                            Heart Disease:
+                        </label>
+                        <select class="form-control" id="heart_disease" name="heart_disease" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Lifestyle -->
+                    <div class="form-group">
+                        <label for="ever_married">
+                            <i class="fas fa-ring input-icon"></i>
+                            Ever Married:
+                        </label>
+                        <select class="form-control" id="ever_married" name="ever_married" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="work_type">
+                            <i class="fas fa-briefcase input-icon"></i>
+                            Work Type:
+                        </label>
+                        <select class="form-control" id="work_type" name="work_type" required>
+                            <option value="" disabled selected>Select Work Type</option>
+                            <option value="Private">Private</option>
+                            <option value="Self-employed">Self-employed</option>
+                            <option value="Govt_job">Govt Job</option>
+                            <option value="Never_worked">Never Worked</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="Residence_type">
+                            <i class="fas fa-home input-icon"></i>
+                            Residence Type:
+                        </label>
+                        <select class="form-control" id="Residence_type" name="Residence_type" required>
+                            <option value="" disabled selected>Select Residence Type</option>
+                            <option value="Urban">Urban</option>
+                            <option value="Rural">Rural</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Health Metrics -->
+                    <div class="form-group">
+                        <label for="avg_glucose_level">
+                            <i class="fas fa-tint input-icon"></i>
+                            Average Glucose Level:
+                        </label>
+                        <input type="number" class="form-control" id="avg_glucose_level" name="avg_glucose_level" step="0.1" placeholder="Enter glucose level" required min="50" max="300">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bmi">
+                            <i class="fas fa-weight input-icon"></i>
+                            BMI:
+                        </label>
+                        <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" placeholder="Enter your BMI" required min="10" max="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="smoking_status">
+                            <i class="fas fa-smoking input-icon"></i>
+                            Smoking Status:
+                        </label>
+                        <select class="form-control" id="smoking_status" name="smoking_status" required>
+                            <option value="" disabled selected>Select Smoking Status</option>
+                            <option value="formerly smoked">Formerly Smoked</option>
+                            <option value="never smoked">Never Smoked</option>
+                            <option value="smokes">Smokes</option>
+                            <option value="Unknown">Unknown</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-brain"></i>
+                        Predict Stroke Risk
+                    </button>
+                </div>
+            </form>
         </div>
-    
-        <div class="form-group">
-            <label for="hypertension">Hypertension:</label>
-            <select class="form-control" id="hypertension" name="hypertension" required>
-                <option value="" disabled selected>Select an option</option>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>
-            <div class="invalid-feedback">Please select an option.</div>
+        
+        <div class="footer">
+            <p>© 2023 Health Analytics System | For educational purposes only | <a href="#">Privacy Policy</a></p>
         </div>
-    
-        <div class="form-group">
-            <label for="heart_disease">Heart Disease:</label>
-            <select class="form-control" id="heart_disease" name="heart_disease" required>
-                <option value="" disabled selected>Select an option</option>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>
-            <div class="invalid-feedback">Please select an option.</div>
-        </div>
-    
-        <div class="form-group">
-            <label for="ever_married">Ever Married:</label>
-            <select class="form-control" id="ever_married" name="ever_married" required>
-                <option value="" disabled selected>Select an option</option>
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
-            </select>
-            <div class="invalid-feedback">Please select an option.</div>
-        </div>
-    
-        <div class="form-group">
-            <label for="work_type">Work Type:</label>
-            <select class="form-control" id="work_type" name="work_type" required>
-                <option value="" disabled selected>Select Work Type</option>
-                <option value="Private">Private</option>
-                <option value="Self-employed">Self-employed</option>
-                <option value="Govt_job">Govt Job</option>
-                <option value="Never_worked">Never Worked</option>
-            </select>
-            <div class="invalid-feedback">Please select your work type.</div>
-        </div>
-    
-        <div class="form-group">
-            <label for="Residence_type">Residence Type:</label>
-            <select class="form-control" id="Residence_type" name="Residence_type" required>
-                <option value="" disabled selected>Select Residence Type</option>
-                <option value="Urban">Urban</option>
-                <option value="Rural">Rural</option>
-            </select>
-            <div class="invalid-feedback">Please select your residence type.</div>
-        </div>
-    
-        <div class="form-group">
-            <label for="avg_glucose_level">Average Glucose Level:</label>
-            <input type="number" class="form-control" id="avg_glucose_level" name="avg_glucose_level" step="0.1" placeholder="Enter your average glucose level" required min="50" max="300">
-            <div class="invalid-feedback">Please enter a valid glucose level (50-300).</div>
-        </div>
-    
-        <div class="form-group">
-            <label for="bmi">BMI:</label>
-            <input type="number" class="form-control" id="bmi" name="bmi" step="0.1" placeholder="Enter your BMI" required min="10" max="50">
-            <div class="invalid-feedback">Please enter a valid BMI (10-50).</div>
-        </div>
-    
-        <div class="form-group">
-            <label for="smoking_status">Smoking Status:</label>
-            <select class="form-control" id="smoking_status" name="smoking_status" required>
-                <option value="" disabled selected>Select Smoking Status</option>
-                <option value="formerly smoked">Formerly Smoked</option>
-                <option value="never smoked">Never Smoked</option>
-                <option value="smokes">Smokes</option>
-                <option value="Unknown">Unknown</option>
-            </select>
-            <div class="invalid-feedback">Please select your smoking status.</div>
-        </div>
-    
-        <button type="submit" class="btn btn-custom btn-block">Predict</button>
-    </form>
+    </div>
     
     <script>
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                var form = document.getElementById('predictionForm');
-                form.addEventListener('submit', function(event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            }, false);
-        })();
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        // Form validation and local storage
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('predictionForm');
-        
-            // Load data
-            // Autofill existing values from localStorage (excluding csrf)
-    for (let field of form.elements) {
-        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
-            field.value = localStorage.getItem(field.name);
-        }
-    }
-
-    // Save new values on input/select change (excluding csrf)
-    form.addEventListener('input', function () {
-        for (let field of form.elements) {
-            if (field.name && field.name !== 'csrfmiddlewaretoken') {
-                localStorage.setItem(field.name, field.value);
+            
+            // Load data from localStorage
+            for (let field of form.elements) {
+                if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+                    field.value = localStorage.getItem(field.name);
+                }
             }
-        }
-    });
-});
-        </script>
-        
-       </div>
-   </div>
-   <!-- Bootstrap JS and dependencies -->
-   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            
+            // Save data to localStorage
+            form.addEventListener('input', function() {
+                for (let field of form.elements) {
+                    if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                        localStorage.setItem(field.name, field.value);
+                    }
+                }
+            });
+            
+            // Form validation
+            form.addEventListener('submit', function(event) {
+                let valid = true;
+                
+                for (let field of form.elements) {
+                    if (field.required && !field.value) {
+                        valid = false;
+                        field.classList.add('invalid');
+                    } else {
+                        field.classList.remove('invalid');
+                    }
+                }
+                
+                if (!valid) {
+                    event.preventDefault();
+                    alert('Please fill in all required fields.');
+                }
+            });
+            
+            // Add focus styles
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-3px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
-{% endblock %}

@@ -1,227 +1,444 @@
-{% extends 'index.html' %}
-{% load static %}
-{% block body %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync | Lifestyle Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            height: auto;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
-    background-attachment: fixed;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0c2461 0%, #1e3799 25%, #4a69bd 50%, #6a89cc 75%, #82ccdd 100%);
+            background-attachment: fixed;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
-        .container1 {
-            padding: 40px;
-            max-width: 800px;
-            margin: 50px auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-            color: #007bff;
+
+        .header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
             margin-bottom: 20px;
         }
-        .form-label {
-            font-weight: bold;
-            color: #495057;
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .form-control, .form-select {
-            border-radius: 5px;
-            padding: 10px;
-        }
-        .btn-submit {
-            width: 100%;
-            background: #007bff;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
+
+        .logo i {
+            font-size: 28px;
+            color: #fff;
+            background: #0c2461;
             padding: 12px;
-            border-radius: 5px;
-            transition: 0.3s;
-            border: none;
+            border-radius: 50%;
         }
-        .btn-submit:hover {
-            background: #0056b3;
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .prediction-message {
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: white;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .form-header {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            padding: 25px 40px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .form-header i {
+            font-size: 36px;
+        }
+
+        .form-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .form-intro {
+            padding: 20px 40px 10px;
+            background: #f8f9ff;
+            border-bottom: 1px solid #eaeef7;
+        }
+
+        .form-intro p {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .form-content {
+            padding: 30px 40px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            flex: 1 1 300px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+            font-size: 15px;
+        }
+
+        .form-label i {
+            margin-right: 8px;
+            color: #4a69bd;
+            width: 20px;
             text-align: center;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #4a69bd;
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: #a0aec0;
+        }
+
+        .btn-submit {
+            background: linear-gradient(90deg, #0c2461, #1e3799);
+            color: white;
+            border: none;
+            padding: 16px 30px;
             font-size: 18px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(12, 36, 97, 0.25);
         }
+
+        .btn-submit:hover {
+            background: linear-gradient(90deg, #1e3799, #4a69bd);
+            box-shadow: 0 6px 15px rgba(12, 36, 97, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .prediction-container {
+            padding: 20px 40px;
+            background: #f8f9ff;
+            border-top: 1px solid #eaeef7;
+        }
+
+        .prediction-message {
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
         .risk-high {
-            background-color: #ffcccc;
-            color: #cc0000;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #b71540;
         }
+
         .risk-low {
-            background-color: #ccffcc;
-            color: #006600;
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            color: #0a558c;
+        }
+
+        .prediction-icon {
+            font-size: 24px;
+        }
+
+        .form-footer {
+            text-align: center;
+            padding: 25px 40px;
+            background: #f8f9ff;
+            border-top: 1px solid #eaeef7;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: #1e3799;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .form-header, .form-intro, .form-content, .form-footer {
+                padding: 20px;
+            }
+            
+            .form-header h2 {
+                font-size: 24px;
+            }
+            
+            .prediction-icon {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container1">
-    <h2>Lifestyle Assessment</h2>
+    <div class="container">
+        <div class="form-header">
+            <i class="fas fa-clipboard-list"></i>
+            <h2>Lifestyle Health Assessment</h2>
+        </div>
+        
+        <div class="form-intro">
+            <p>Complete this comprehensive assessment to evaluate your lifestyle health factors. Our ML-powered system will analyze your inputs and provide personalized insights about your health risks.</p>
+        </div>
+        
+        {% if prediction_message is not None %}
+        <div class="prediction-container">
+            <div class="prediction-message {% if 'chances' in prediction_message %}risk-high{% else %}risk-low{% endif %}">
+                <i class="fas {% if 'chances' in prediction_message %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %} prediciton-icon"></i>
+                {{ prediction_message }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <form method="post" novalidate id="sleepForm">
+            {% csrf_token %}
+            <div class="form-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender" class="form-label"><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select name="gender" id="gender" class="form-select" required>
+                            <option value="" disabled selected>Select your gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your gender</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age" class="form-label"><i class="fas fa-birthday-cake"></i> Age</label>
+                        <input type="number" name="age" id="age" class="form-control" placeholder="Enter your age" required min="1" max="120">
+                        <div class="invalid-feedback">Please enter a valid age</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="occupation" class="form-label"><i class="fas fa-briefcase"></i> Occupation</label>
+                        <select name="occupation" id="occupation" class="form-select" required>
+                            <option value="" disabled selected>Select your occupation</option>
+                            <option value="Engineer">Engineer</option>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Artist">Artist</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your occupation</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bmi_category" class="form-label"><i class="fas fa-weight"></i> BMI Category</label>
+                        <select name="bmi_category" id="bmi_category" class="form-select" required>
+                            <option value="" disabled selected>Select BMI category</option>
+                            <option value="Underweight">Underweight</option>
+                            <option value="Normal weight">Normal weight</option>
+                            <option value="Overweight">Overweight</option>
+                            <option value="Obese">Obese</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your BMI category</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="blood_pressure" class="form-label"><i class="fas fa-heartbeat"></i> Blood Pressure</label>
+                        <select name="blood_pressure" id="blood_pressure" class="form-select" required>
+                            <option value="" disabled selected>Select blood pressure level</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Elevated">Elevated</option>
+                            <option value="High">High</option>
+                        </select>
+                        <div class="invalid-feedback">Please select blood pressure level</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sleep_disorder" class="form-label"><i class="fas fa-bed"></i> Sleep Disorder</label>
+                        <select name="sleep_disorder" id="sleep_disorder" class="form-select" required>
+                            <option value="" disabled selected>Select sleep disorder status</option>
+                            <option value="None">None</option>
+                            <option value="Insomnia">Insomnia</option>
+                            <option value="Sleep Apnea">Sleep Apnea</option>
+                        </select>
+                        <div class="invalid-feedback">Please select sleep disorder status</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sleep_duration" class="form-label"><i class="fas fa-moon"></i> Sleep Duration (hours/night)</label>
+                        <input type="number" name="sleep_duration" id="sleep_duration" class="form-control" placeholder="Enter hours per night" required step="0.1" min="0" max="24">
+                        <div class="invalid-feedback">Please enter valid sleep duration</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quality_of_sleep" class="form-label"><i class="fas fa-star"></i> Sleep Quality (1-10)</label>
+                        <input type="number" name="quality_of_sleep" id="quality_of_sleep" class="form-control" placeholder="Rate from 1 to 10" required min="1" max="10">
+                        <div class="invalid-feedback">Please enter a number between 1-10</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="physical_activity" class="form-label"><i class="fas fa-running"></i> Physical Activity (1-100)</label>
+                        <input type="number" name="physical_activity" id="physical_activity" class="form-control" placeholder="Enter activity level (1-100)" required min="1" max="100">
+                        <div class="invalid-feedback">Please enter a number between 1-100</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stress_level" class="form-label"><i class="fas fa-brain"></i> Stress Level (1-10)</label>
+                        <input type="number" name="stress_level" id="stress_level" class="form-control" placeholder="Rate from 1 to 10" required min="1" max="10">
+                        <div class="invalid-feedback">Please enter a number between 1-10</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="heart_rate" class="form-label"><i class="fas fa-heart"></i> Heart Rate (bpm)</label>
+                        <input type="number" name="heart_rate" id="heart_rate" class="form-control" placeholder="Enter resting heart rate" required min="30" max="200">
+                        <div class="invalid-feedback">Please enter a valid heart rate</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="daily_steps" class="form-label"><i class="fas fa-shoe-prints"></i> Daily Steps</label>
+                        <input type="number" name="daily_steps" id="daily_steps" class="form-control" placeholder="Enter steps per day" required min="0" max="50000">
+                        <div class="invalid-feedback">Please enter a valid number of steps</div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-calculator"></i> Analyze My Health Profile
+                </button>
+            </div>
+        </form>
+        
+        <div class="form-footer">
+           <p><strong>Disclaimer:</strong> This is just a prediction based on your lifestyle data. Please talk to a real doctor for proper medical advice.</p>
 
-    {% if prediction_message is not None %}
-        <div class="prediction-message {% if 'chances' in prediction_message %}risk-high{% else %}risk-low{% endif %}" style="margin-bottom: 20px;">
-            {{ prediction_message }}
+
         </div>
-    {% endif %}
-    
-    <form method="post" novalidate id="sleepForm">
-        {% csrf_token %}
-    
-        <div class="mb-3">
-            <label for="gender" class="form-label">Gender:</label>
-            <select name="gender" id="gender" class="form-select" required>
-                <option value="" disabled>Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-            <div class="invalid-feedback">Please select a gender.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="occupation" class="form-label">Occupation:</label>
-            <select name="occupation" id="occupation" class="form-select" required>
-                <option value="" disabled>Select Occupation</option>
-                <option value="Engineer">Engineer</option>
-                <option value="Doctor">Doctor</option>
-                <option value="Teacher">Teacher</option>
-                <option value="Artist">Artist</option>
-                <option value="Other">Other</option>
-            </select>
-            <div class="invalid-feedback">Please select an occupation.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="bmi_category" class="form-label">BMI Category:</label>
-            <select name="bmi_category" id="bmi_category" class="form-select" required>
-                <option value="" disabled>Select BMI Category</option>
-                <option value="Underweight">Underweight</option>
-                <option value="Normal weight">Normal weight</option>
-                <option value="Overweight">Overweight</option>
-                <option value="Obese">Obese</option>
-            </select>
-            <div class="invalid-feedback">Please select a BMI category.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="blood_pressure" class="form-label">Blood Pressure:</label>
-            <select name="blood_pressure" id="blood_pressure" class="form-select" required>
-                <option value="" disabled>Select Blood Pressure</option>
-                <option value="Normal">Normal</option>
-                <option value="Elevated">Elevated</option>
-                <option value="High">High</option>
-            </select>
-            <div class="invalid-feedback">Please select a blood pressure level.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="sleep_disorder" class="form-label">Sleep Disorder:</label>
-            <select name="sleep_disorder" id="sleep_disorder" class="form-select" required>
-                <option value="" disabled>Select Sleep Disorder</option>
-                <option value="None">None</option>
-                <option value="Insomnia">Insomnia</option>
-                <option value="Sleep Apnea">Sleep Apnea</option>
-            </select>
-            <div class="invalid-feedback">Please select a sleep disorder status.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="age" class="form-label">Age:</label>
-            <input type="number" name="age" id="age" class="form-control" placeholder="Enter your age" required min="1">
-            <div class="invalid-feedback">Please enter a valid age.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="sleep_duration" class="form-label">Sleep Duration (hours per night):</label>
-            <input type="number" name="sleep_duration" id="sleep_duration" class="form-control" placeholder="Enter hours" required step="0.1" min="0">
-            <div class="invalid-feedback">Please enter valid sleep duration.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="quality_of_sleep" class="form-label">Quality of Sleep (1-10):</label>
-            <input type="number" name="quality_of_sleep" id="quality_of_sleep" class="form-control" placeholder="Rate from 1 to 10" required min="1" max="10">
-            <div class="invalid-feedback">Please enter a number between 1 and 10.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="physical_activity" class="form-label">Physical Activity Level (1-100):</label>
-            <input type="number" name="physical_activity" id="physical_activity" class="form-control" placeholder="Enter activity level (1-100)" required min="1" max="100">
-            <div class="invalid-feedback">Please enter a number between 1 and 100.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="stress_level" class="form-label">Stress Level (1-10):</label>
-            <input type="number" name="stress_level" id="stress_level" class="form-control" placeholder="Rate from 1 to 10" required min="1" max="10">
-            <div class="invalid-feedback">Please enter a number between 1 and 10.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="heart_rate" class="form-label">Heart Rate (bpm):</label>
-            <input type="number" name="heart_rate" id="heart_rate" class="form-control" placeholder="Enter bpm" required min="1">
-            <div class="invalid-feedback">Please enter a valid heart rate.</div>
-        </div>
-    
-        <div class="mb-3">
-            <label for="daily_steps" class="form-label">Daily Steps:</label>
-            <input type="number" name="daily_steps" id="daily_steps" class="form-control" placeholder="Enter steps per day" required min="0">
-            <div class="invalid-feedback">Please enter a valid number of steps.</div>
-        </div>
-    
-        <button type="submit" class="btn btn-submit">Predict</button>
-    </form>
+    </div>
     
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('sleepForm');
-    
-        // Load saved values
-  // Autofill existing values from localStorage (excluding csrf)
-  for (let field of form.elements) {
-        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
-            field.value = localStorage.getItem(field.name);
-        }
-    }
-
-    // Save new values on input/select change (excluding csrf)
-    form.addEventListener('input', function () {
-        for (let field of form.elements) {
-            if (field.name && field.name !== 'csrfmiddlewaretoken') {
-                localStorage.setItem(field.name, field.value);
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('sleepForm');
+            
+            // Form validation
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+            
+            // Load saved values
+            for (let field of form.elements) {
+                if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+                    field.value = localStorage.getItem(field.name);
+                }
             }
-        }
-    });
-});
-    </script>
-    
-    <script>
-        (function() {
-            'use strict';
-            var forms = document.querySelectorAll('form');
-            Array.prototype.slice.call(forms).forEach(function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
+            
+            // Save new values on input/select change
+            form.addEventListener('input', function () {
+                for (let field of form.elements) {
+                    if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                        localStorage.setItem(field.name, field.value);
                     }
-                    form.classList.add('was-validated');
-                }, false);
+                }
             });
-        })();
+        });
     </script>
-    
-</div>
-
 </body>
 </html>
-{% endblock %}
