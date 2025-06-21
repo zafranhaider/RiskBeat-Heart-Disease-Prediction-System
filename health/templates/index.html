@@ -321,7 +321,9 @@
     <!-- //top header -->
 
     <!-- second header -->
-    <div class="main-top" style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
+ <div class="main-top" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #009dff 75%, #00daf7 100%);
+">
+
       <div class="container-fluid">
         <div class="header d-md-flex justify-content-between align-items-center py-3">
           <!-- logo -->
@@ -403,17 +405,9 @@
                     <i class="fa fa-home"></i> Home
                   </a>
                 </li>
-                <li style="margin-right: 15px;">
-                  <a href="/check-disease/">
-                    <i class="fa fa-stethoscope"></i> View Diseases
-                  </a>
-                </li>
+             
 
-                <li style="margin-right: 15px;">
-                  <a href="/health_deals/">
-                    <i class="fa fa-briefcase-medical"></i> Health Deals  <!-- Medical kit -->
-                  </a>
-                </li>
+           
                 <li style="margin-right: 15px;">
                   <a href="/community">
                     <i class="fa fa-users"></i> Community
@@ -455,6 +449,10 @@
                   <ul style="margin-top:8%;width:80%;margin-right:5%">
                     <li style="width:100%;"><a href="{% url 'profile_doctor' %}" class="drop-text"> Settings</a></li>
                     <li style="width:100%;"><a href="{% url 'appointment_status' %}" class="drop-text"> Booking Status</a></li>
+                    <li style="width:100%;">     <a href="/health_deals/" class="drop-text"> Health Deals</a></li>
+                     
+                    <li style="width:100%;"><a href="/check-disease/" class="drop-text"> View Disease</a></li>
+            
            <li style="width:100%;"><a href="{% url 'change_password' %}" class="drop-text"> Password</a></li>
                     <li style="width:100%;"><a href="{% url 'logout' %}" class="drop-text"> Logout</a></li>
                   </ul>

@@ -32,7 +32,7 @@ def predict3(request):
             
             # Make prediction using the loaded model
             pred = model.predict(input_data)
-            prediction = "Risk of Heart Disease" if pred[0] == 1 else "Low Risk"
+            prediction = "Risk of Cardiovascular Disease" if pred[0] == 1 else "Low Risk"
         
         except Exception as e:
             prediction = f"Error: {str(e)}"

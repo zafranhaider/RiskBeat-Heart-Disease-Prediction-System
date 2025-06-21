@@ -482,144 +482,151 @@
                 <p>Complete this form to evaluate your Heart-health risks</p>
             </div>
             
-            <div class="form-body">
-                <div class="prediction-result no-risk">
-                    <div class="prediction-text">Complete the form to see your risk assessment</div>
-                    <div class="accuracy">Your results will appear here after submission</div>
-                </div>
-                
-                <form id="healthForm" onsubmit="return validateForm()">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="age"><i class="fas fa-birthday-cake"></i> Age (years)</label>
-                            <div class="input-icon">
-                                <i class="fas fa-user"></i>
-                                <input type="number" class="form-control" id="age" name="age" placeholder="29-64 years">
-                            </div>
-                            <span class="error-message" id="ageError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
-                            <div class="input-icon">
-                                <i class="fas fa-venus"></i>
-                                <select class="form-control" id="gender" name="gender">
-                                    <option value="" disabled selected>Select gender</option>
-                                    <option value="1">Female</option>
-                                    <option value="2">Male</option>
-                                </select>
-                            </div>
-                            <span class="error-message" id="genderError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="height"><i class="fas fa-arrows-alt-v"></i> Height (cm)</label>
-                            <div class="input-icon">
-                                <i class="fas fa-ruler-vertical"></i>
-                                <input type="number" class="form-control" id="height" name="height" placeholder="100-250 cm">
-                            </div>
-                            <span class="error-message" id="heightError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="weight"><i class="fas fa-weight"></i> Weight (kg)</label>
-                            <div class="input-icon">
-                                <i class="fas fa-weight-hanging"></i>
-                                <input type="number" class="form-control" id="weight" name="weight" placeholder="30-200 kg">
-                            </div>
-                            <span class="error-message" id="weightError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="ap_hi"><i class="fas fa-tachometer-alt"></i> Systolic BP</label>
-                            <div class="input-icon">
-                                <i class="fas fa-heartbeat"></i>
-                                <input type="number" class="form-control" id="ap_hi" name="ap_hi" placeholder="60-240 mmHg">
-                            </div>
-                            <span class="error-message" id="ap_hiError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="ap_lo"><i class="fas fa-tachometer-alt"></i> Diastolic BP</label>
-                            <div class="input-icon">
-                                <i class="fas fa-heartbeat"></i>
-                                <input type="number" class="form-control" id="ap_lo" name="ap_lo" placeholder="40-182 mmHg">
-                            </div>
-                            <span class="error-message" id="ap_loError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cholesterol"><i class="fas fa-vial"></i> Cholesterol Level</label>
-                            <div class="input-icon">
-                                <i class="fas fa-flask"></i>
-                                <select class="form-control" id="cholesterol" name="cholesterol">
-                                    <option value="" disabled selected>Select level</option>
-                                    <option value="1">Normal</option>
-                                    <option value="2">Above Normal</option>
-                                    <option value="3">High</option>
-                                </select>
-                            </div>
-                            <span class="error-message" id="cholesterolError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="gluc"><i class="fas fa-syringe"></i> Glucose Level</label>
-                            <div class="input-icon">
-                                <i class="fas fa-prescription-bottle"></i>
-                                <select class="form-control" id="gluc" name="gluc">
-                                    <option value="" disabled selected>Select level</option>
-                                    <option value="1">Normal</option>
-                                    <option value="2">Above Normal</option>
-                                    <option value="3">High</option>
-                                </select>
-                            </div>
-                            <span class="error-message" id="glucError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="smoke"><i class="fas fa-smoking"></i> Smoking</label>
-                            <div class="input-icon">
-                                <i class="fas fa-ban"></i>
-                                <select class="form-control" id="smoke" name="smoke">
-                                    <option value="" disabled selected>Select option</option>
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                            </div>
-                            <span class="error-message" id="smokeError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="alco"><i class="fas fa-wine-glass-alt"></i> Alcohol Intake</label>
-                            <div class="input-icon">
-                                <i class="fas fa-glass-whiskey"></i>
-                                <select class="form-control" id="alco" name="alco">
-                                    <option value="" disabled selected>Select option</option>
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                            </div>
-                            <span class="error-message" id="alcoError"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="active"><i class="fas fa-running"></i> Physical Activity</label>
-                            <div class="input-icon">
-                                <i class="fas fa-bicycle"></i>
-                                <select class="form-control" id="active" name="active">
-                                    <option value="" disabled selected>Select option</option>
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                            </div>
-                            <span class="error-message" id="activeError"></span>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-heartbeat"></i> Assess My Heart Health
-                        </button>
-                    </div>
-                </form>
+          
+      <div class="form-body">
+        <div class="prediction-result {% if prediction %}{% if prediction == 'Risk of Heart Disease' %}risk{% else %}no-risk{% endif %}{% else %}no-risk{% endif %}">
+          <div class="prediction-text">
+            {% if prediction %}
+              Prediction: {{ prediction }}
+            {% else %}
+              Complete the form to see your risk assessment
+            {% endif %}
+          </div>
+          <div class="accuracy">
+            {% if prediction %}
+              {% if prediction == "Risk of Heart Disease" %}
+                Please consult a healthcare professional.
+              {% else %}
+                Continue your healthy habits!
+              {% endif %}
+            {% else %}
+              Your results will appear here after submission
+            {% endif %}
+          </div>
+        </div>
+
+        <form method="POST" action="{% url 'predict4' %}">
+          {% csrf_token %}
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="age"><i class="fas fa-birthday-cake"></i> Age (years)</label>
+              <div class="input-icon">
+                <i class="fas fa-user"></i>
+                <input type="number" class="form-control" id="age" name="age" placeholder="29-64 years" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+              <div class="input-icon">
+                <i class="fas fa-venus"></i>
+                <select class="form-control" id="gender" name="gender" required>
+                  <option value="" disabled selected>Select gender</option>
+                  <option value="1">Female</option>
+                  <option value="2">Male</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="height"><i class="fas fa-arrows-alt-v"></i> Height (cm)</label>
+              <div class="input-icon">
+                <i class="fas fa-ruler-vertical"></i>
+                <input type="number" class="form-control" id="height" name="height" placeholder="100-250 cm" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="weight"><i class="fas fa-weight"></i> Weight (kg)</label>
+              <div class="input-icon">
+                <i class="fas fa-weight-hanging"></i>
+                <input type="number" class="form-control" id="weight" name="weight" placeholder="30-200 kg" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ap_hi"><i class="fas fa-tachometer-alt"></i> Systolic BP</label>
+              <div class="input-icon">
+                <i class="fas fa-heartbeat"></i>
+                <input type="number" class="form-control" id="ap_hi" name="ap_hi" placeholder="60-240 mmHg" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ap_lo"><i class="fas fa-tachometer-alt"></i> Diastolic BP</label>
+              <div class="input-icon">
+                <i class="fas fa-heartbeat"></i>
+                <input type="number" class="form-control" id="ap_lo" name="ap_lo" placeholder="40-182 mmHg" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cholesterol"><i class="fas fa-vial"></i> Cholesterol Level</label>
+              <div class="input-icon">
+                <i class="fas fa-flask"></i>
+                <select class="form-control" id="cholesterol" name="cholesterol" required>
+                  <option value="" disabled selected>Select level</option>
+                  <option value="1">Normal</option>
+                  <option value="2">Above Normal</option>
+                  <option value="3">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="gluc"><i class="fas fa-syringe"></i> Glucose Level</label>
+              <div class="input-icon">
+                <i class="fas fa-prescription-bottle"></i>
+                <select class="form-control" id="gluc" name="gluc" required>
+                  <option value="" disabled selected>Select level</option>
+                  <option value="1">Normal</option>
+                  <option value="2">Above Normal</option>
+                  <option value="3">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="smoke"><i class="fas fa-smoking"></i> Smoking</label>
+              <div class="input-icon">
+                <i class="fas fa-ban"></i>
+                <select class="form-control" id="smoke" name="smoke" required>
+                  <option value="" disabled selected>Select option</option>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="alco"><i class="fas fa-wine-glass-alt"></i> Alcohol Intake</label>
+              <div class="input-icon">
+                <i class="fas fa-glass-whiskey"></i>
+                <select class="form-control" id="alco" name="alco" required>
+                  <option value="" disabled selected>Select option</option>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="active"><i class="fas fa-running"></i> Physical Activity</label>
+              <div class="input-icon">
+                <i class="fas fa-bicycle"></i>
+                <select class="form-control" id="active" name="active" required>
+                  <option value="" disabled selected>Select option</option>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-heartbeat"></i> Assess My Heart Health
+            </button>
+          </div>
+        </form>
             </div>
         </div>
     </div>
