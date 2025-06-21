@@ -3,314 +3,645 @@
 {% block body %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
 <link href="{% static 'css/owl.carousel.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/owl.theme.default.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/templatemo-medic-care.css' %}" rel="stylesheet">
 <style>
-    body {
-        margin: 0;
-        padding: 0;
+/* Animated Background Styles */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+    background-attachment: fixed;
+}
+
+.bg-element {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(46, 204, 113, 0.08) 100%);
+    animation: float 25s infinite linear;
+    filter: blur(40px);
+}
+
+/* Pulse animation for some elements */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Floating animation */
+@keyframes float {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); }
+    25% { transform: translateY(-50px) translateX(50px) rotate(90deg); }
+    50% { transform: translateY(0) translateX(100px) rotate(180deg); }
+    75% { transform: translateY(50px) translateX(50px) rotate(270deg); }
+    100% { transform: translateY(0) translateX(0) rotate(360deg); }
+}
+
+/* Gradient wave animation */
+@keyframes wave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Additional background elements */
+.bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.15) 0%, rgba(52, 152, 219, 0) 70%);
+    animation: pulse 8s infinite ease-in-out;
+}
+
+.bg-blob {
+    position: absolute;
+    filter: blur(60px);
+    opacity: 0.15;
+    animation: float 30s infinite linear;
+    background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+</style>
+
+<!-- Background HTML Elements -->
+<div class="animated-background">
+    <!-- Floating gradient circles -->
+    <div class="bg-element" style="width: 300px; height: 300px; top: 10%; left: 5%; animation-duration: 40s;"></div>
+    <div class="bg-element" style="width: 200px; height: 200px; top: 30%; left: 80%; animation-duration: 30s;"></div>
+    <div class="bg-element" style="width: 250px; height: 250px; top: 70%; left: 15%; animation-duration: 35s;"></div>
+    <div class="bg-element" style="width: 150px; height: 150px; top: 80%; left: 70%; animation-duration: 25s;"></div>
+    
+    <!-- Pulse circles -->
+    <div class="bg-circle" style="width: 500px; height: 500px; top: -100px; left: -100px;"></div>
+    <div class="bg-circle" style="width: 800px; height: 800px; bottom: -300px; right: -200px; animation-delay: 2s;"></div>
+    
+    <!-- Organic blobs -->
+    <div class="bg-blob" style="width: 400px; height: 400px; top: 20%; right: 10%; animation-duration: 45s;"></div>
+    <div class="bg-blob" style="width: 600px; height: 600px; bottom: 10%; left: 5%; animation-duration: 50s; animation-delay: 5s;"></div>
+</div>
+<style>
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --light-bg: #f8f9fa;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--primary-color);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: #2980b9;
+    transform: translateX(-3px);
+}
+
+.section-padding {
+    padding: 80px 0;
+}
+
+.booking-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.booking-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.booking-header p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.booking-form {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.booking-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), #1abc9c);
+}
+
+.form-control {
+    border: 2px solid #e1e5eb;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+#slot-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.slot-btn {
+    flex: 1 0 30%;
+    min-width: 120px;
+    border: 2px solid #e1e5eb;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    background: white;
+}
+
+.slot-btn:hover {
+    border-color: var(--primary-color);
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.slot-btn.selected {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+#submit-button {
+    background: linear-gradient(135deg, var(--primary-color), #1abc9c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 30px;
+    font-weight: 600;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 15px;
+    letter-spacing: 0.5px;
+}
+
+#submit-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 15px rgba(52, 152, 219, 0.3);
+}
+
+#submit-button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.doctor-profiles {
+    margin-top: 80px;
+}
+
+.doctor-profiles h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--secondary-color);
+    position: relative;
+}
+
+.doctor-profiles h3::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-color), #1abc9c);
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+.doctor-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    background: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.doctor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.doctor-img {
+    height: 220px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.card-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.card-text strong {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.availability-badge {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    align-self: flex-start;
+}
+
+/* Scrollable doctor cards */
+.doctors-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 15px 0 30px;
+    gap: 25px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) #f1f1f1;
+}
+
+.doctors-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.doctors-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.doctors-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .booking-form {
+        padding: 30px 20px;
     }
-    #submit-button {
-        background-color: #6a6767;
-        color: white;
+    
+    .back-button {
+        top: 15px;
+        left: 15px;
     }
+    
+    .section-padding {
+        padding: 60px 0;
+    }
+    
+    .slot-btn {
+        flex: 1 0 45%;
+    }
+}
 </style>
 
 <section class="section-padding" id="booking">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-12 mx-auto">
-          <div class="booking-form">
-            <h2 class="text-center mb-lg-3 mb-2">Book an Appointment</h2>
-            <form id="booking-form"
-            action="{% url 'booking_form' %}"
-            method="post">       {% csrf_token %}
-              <div class="row">
-                
-                <!-- Name -->
-                <div class="col-12">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
-                </div>
-                
-                <!-- Email -->
-                <div class="col-12">
-                  <input type="email" name="email" class="form-control" placeholder="Email Address" required>
-                </div>
-                
-                <!-- Contact -->
-                <div class="col-12">
-                  <input type="tel" name="contact_number" class="form-control" placeholder="Contact Number" required>
-                </div>
-                
-                <!-- Search -->
-                <div class="col-12">
-                  <input type="text" id="search" class="form-control" placeholder="Search doctor by name, specialization, or location">
-                </div>
-                
-                <!-- Doctor Select -->
-                <div class="col-12">
-                  <select name="doctor" id="doctor" class="form-control" required>
-                    <option value="" disabled selected>Select a Doctor</option>
-                    {% for doctor in doctors %}
-                      <option value="{{ doctor.id }}">{{ doctor.user.username }} – {{ doctor.category }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                
-                <!-- Appointment Type -->
-                <div class="col-12">
-                  <select name="appointment_type" class="form-control" required>
-                    <option value="" disabled selected>Select Appointment Type</option>
-                    <option value="in_person">In-Person</option>
-                    <option value="virtual">Virtual</option>
-                  </select>
-                </div>
-                
-                <!-- Date -->
-                <div class="col-lg-6 col-12">
-                  <input type="date" name="date" id="date" class="form-control" required>
-                </div>
-                
-                <!-- Slot Buttons will go here -->
-                <div class="col-12 mt-3" id="slot-container">
-                  <!-- JS injects radio‐buttons or “No slots available” -->
-                </div>
-                
-                <!-- Message -->
-                <div class="col-12">
-                  <textarea name="message" class="form-control" rows="5" placeholder="Additional Message"></textarea>
-                </div>
-                
-                <!-- Error Display -->
-                <div class="col-12">
-                  <div id="availability-error" class="alert alert-danger d-none"></div>
-                </div>
-                
-                <!-- Submit -->
-                <div class="col-lg-3 col-md-4 col-6 mx-auto">
-                  <button type="submit" class="form-control" id="submit-button" disabled>Book Now</button>
-                </div>
-                
-              </div>
-            </form>
-          </div>
+        <div class="back-button" onclick="history.back()">
+            <i class="bi bi-arrow-left"></i>
         </div>
-      </div>
-    </div>
-  </section>
-  
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const doctorInput   = document.getElementById("doctor");
-    const dateInput     = document.getElementById("date");
-    const slotContainer = document.getElementById("slot-container");
-    const submitButton  = document.getElementById("submit-button");
-    const searchInput   = document.getElementById("search");
-  
-    // Prevent past dates
-    const today = new Date().toISOString().split("T")[0];
-    dateInput.setAttribute("min", today);
-  
-    // Load available slots
-    function loadSlots() {
-      const doctorId = doctorInput.value;
-      const date      = dateInput.value;
-      if (!doctorId || !date) {
-        slotContainer.innerHTML = '';
-        submitButton.disabled = true;
-        return;
-      }
-  
-      fetch(`/check-slots/?doctor_id=${doctorId}&date=${date}`)
-        .then(r => r.json())
-        .then(data => {
-          slotContainer.innerHTML = '';
-          if (data.slots.length) {
-            data.slots.forEach(s => {
-              slotContainer.insertAdjacentHTML('beforeend', `
-                <label class="btn btn-outline-primary m-1">
-                  <input type="radio"
-                         name="chosen_slot"
-                         value="${s.slot_def_id}|${s.start}"
-                         required>
-                  ${s.start} – ${s.end}
-                </label>`);
-            });
-            submitButton.disabled = false;
-          } else {
-            slotContainer.innerHTML = '<div class="text-muted">No slots available</div>';
-            submitButton.disabled = true;
-          }
-        })
-        .catch(() => {
-          slotContainer.innerHTML = '<div class="text-danger">Failed to load slots</div>';
-          submitButton.disabled = true;
-        });
-    }
-  
-    // Filter doctors list
-    function filterDoctors() {
-      const term = searchInput.value.toLowerCase();
-      document.querySelectorAll('#doctor option').forEach(opt => {
-        if (opt.value === "") return;
-        opt.style.display = opt.textContent.toLowerCase().includes(term) ? 'block' : 'none';
-      });
-    }
-  
-    // Event listeners
-    doctorInput.addEventListener('change', loadSlots);
-    dateInput.addEventListener('change',   loadSlots);
-    searchInput.addEventListener('input',  filterDoctors);
-  
-    // AJAX form submit
-    document.getElementById("booking-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      submitButton.disabled = true;
-      const formData = new FormData(this);
-      fetch("{% url 'booking_form' %}", {
-        method: "POST",
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-          'X-Requested-With': 'XMLHttpRequest'    // ← ADD THIS
-        },
-        body: formData
-      })
-      
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) {
-          alert("Appointment booked successfully.");
-          window.location.reload();
-        } else {
-          const err = document.getElementById("availability-error");
-          err.textContent = data.error;
-          err.classList.remove("d-none");
-          submitButton.disabled = false;
-        }
-      })
-      .catch(() => {
-        const err = document.getElementById("availability-error");
-        err.textContent = "Something went wrong.";
-        err.classList.remove("d-none");
-        submitButton.disabled = false;
-      });
-    });
-  });
-  </script>
-                        
-<!-- Doctor Profiles Display -->
-<div class="doctor-profiles mt-5">
-    <h3 class="text-center">Available Doctors</h3>
-    <div class="row flex-nowrap overflow-auto">
-        {% for doctor in doctors %}
-            <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 flex-shrink-0">
-                <div class="card">
-                    <img src="{{ doctor.image.url }}" class="card-img-top" alt="{{ doctor.user.username }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ doctor.user.username }}</h5>
-                        <p class="card-text">
-                            <strong>Specialization:</strong> {{ doctor.category }}<br>
-                            <strong>Contact:</strong> {{ doctor.contact }}<br>
-                            <strong>Address:</strong> {{ doctor.address }}
-                            <strong>Experience:</strong> {{ doctor.experience }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</div>
-
-<style>
-/* Doctor Profiles Container */
-.doctor-profiles {
-    font-family: Arial, sans-serif;
-}
-
-/* Title Styling */
-.doctor-profiles h3 {
-    font-size: 2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Row Styling */
-.doctor-profiles .row {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 1.2rem;
-  padding-bottom: 1rem;
-  flex-direction: row;
-  justify-content: center;
-}
-
-/* Card Styling */
-.doctor-profiles .card {
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-}
-
-.doctor-profiles .card:hover {
-    transform: translateY(-5px);
-}
-
-/* Card Image */
-.doctor-profiles .card-img-top {
-    height: 180px;
-    object-fit: cover;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-/* Card Title */
-.doctor-profiles .card-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    text-align: center;
-    color: #333;
-}
-
-/* Card Text */
-.doctor-profiles .card-text {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #555;
-}
-
-/* Make Key Titles Bold */
-.doctor-profiles .card-text strong {
-    color: #222;
-}
-
-/* Scrollbar Customization */
-.doctor-profiles .row::-webkit-scrollbar {
-    height: 8px;
-}
-
-.doctor-profiles .row::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.doctor-profiles .row::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-</style>
-
-
-
-
-
+        
+        <div class="booking-header">
+            <h2>Book Your Appointment</h2>
+            <p>Schedule your visit with our expert doctors. Select a doctor, choose a date and time that works for you, and we'll take care of the rest.</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 col-12 mx-auto">
+                <div class="booking-form">
+                    <form id="booking-form" action="{% url 'booking_form' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <!-- Personal Info -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="name" class="form-control" placeholder="Your Full Name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input type="tel" name="contact_number" class="form-control" placeholder="Contact Number" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Doctor Selection -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input type="text" id="search" class="form-control" placeholder="Search doctor by name, specialization, or location">
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <select name="doctor" id="doctor" class="form-control" required>
+                                        <option value="" disabled selected>Select a Doctor</option>
+                                        {% for doctor in doctors %}
+                                            <option value="{{ doctor.id }}">{{ doctor.user.username }} – {{ doctor.category }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select name="appointment_type" class="form-control" required>
+                                        <option value="" disabled selected>Appointment Type</option>
+                                        <option value="in_person">In-Person</option>
+                                        <option value="virtual">Virtual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="date" name="date" id="date" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Time Slots -->
+                            <div class="col-12">
+                                <h5 class="mb-3">Available Time Slots:</h5>
+                                <div class="row" id="slot-container">
+                                    <!-- JS will inject slot buttons here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Message -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea name="message" class="form-control" rows="4" placeholder="Additional details about your condition or any special requests"></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Error Display -->
+                            <div class="col-12">
+                                <div id="availability-error" class="alert alert-danger d-none"></div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div class="col-lg-5 col-md-6 col-8 mx-auto mt-3">
+                                <button type="submit" class="btn" id="submit-button" disabled>Confirm Appointment</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Doctor Profiles -->
+<div class="doctor-profiles">
+    <div class="container">
+        <h3>Our Expert Medical Team</h3>
+        
+        <div class="doctors-scroll-container">
+            {% for doctor in doctors %}
+            <div class="doctor-card" style="min-width: 300px;">
+                <img src="{{ doctor.image.url }}" class="doctor-img" alt="{{ doctor.user.username }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ doctor.user.username }}</h5>
+                    <p class="card-text">
+                        <strong>Specialization:</strong> {{ doctor.category }}<br>
+                        <strong>Experience:</strong> {{ doctor.experience }} years<br>
+                        <strong>Contact:</strong> {{ doctor.contact }}<br>
+                        <strong>Location:</strong> {{ doctor.address }}
+                    </p>
+                    <span class="availability-badge">Available Today</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const doctorInput = document.getElementById("doctor");
+    const dateInput = document.getElementById("date");
+    const slotContainer = document.getElementById("slot-container");
+    const submitButton = document.getElementById("submit-button");
+    const searchInput = document.getElementById("search");
+    
+    // Prevent past dates
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.setAttribute("min", today);
+    
+    // Function to load available slots
+    function loadSlots() {
+        const doctorId = doctorInput.value;
+        const date = dateInput.value;
+        
+        if (!doctorId || !date) {
+            slotContainer.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Select a doctor and date to see available time slots</p></div>';
+            submitButton.disabled = true;
+            return;
+        }
+        
+        fetch(`/check-slots/?doctor_id=${doctorId}&date=${date}`)
+            .then(r => r.json())
+            .then(data => {
+                slotContainer.innerHTML = '';
+                
+                if (data.slots.length) {
+                    data.slots.forEach(slot => {
+                        const slotElement = document.createElement('div');
+                        slotElement.className = 'col-md-4 col-sm-6 col-12 mb-3';
+                        slotElement.innerHTML = `
+                            <div class="slot-btn" data-slot="${slot.slot_def_id}|${slot.start}">
+                                ${slot.start} – ${slot.end}
+                            </div>
+                        `;
+                        slotContainer.appendChild(slotElement);
+                    });
+                    
+                    // Add slot selection functionality
+                    document.querySelectorAll('.slot-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            // Remove previous selection
+                            document.querySelectorAll('.slot-btn').forEach(b => {
+                                b.classList.remove('selected');
+                            });
+                            
+                            // Select current
+                            this.classList.add('selected');
+                            
+                            // Create hidden input for slot if not exists
+                            let existingInput = document.querySelector('input[name="chosen_slot"]');
+                            if (existingInput) existingInput.remove();
+                            
+                            const slotInput = document.createElement('input');
+                            slotInput.type = 'hidden';
+                            slotInput.name = 'chosen_slot';
+                            slotInput.value = this.dataset.slot;
+                            
+                            this.appendChild(slotInput);
+                            submitButton.disabled = false;
+                        });
+                    });
+                } else {
+                    slotContainer.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">No available slots for this date. Please select another date.</p></div>';
+                    submitButton.disabled = true;
+                }
+            })
+            .catch(() => {
+                slotContainer.innerHTML = '<div class="col-12 text-center py-4"><p class="text-danger">Failed to load available slots. Please try again.</p></div>';
+                submitButton.disabled = true;
+            });
+    }
+    
+    // Filter doctors list
+    function filterDoctors() {
+        const term = searchInput.value.toLowerCase();
+        document.querySelectorAll('#doctor option').forEach(opt => {
+            if (opt.value === "") return;
+            opt.style.display = opt.textContent.toLowerCase().includes(term) ? 'block' : 'none';
+        });
+    }
+    
+    // Initialize slot container
+    slotContainer.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Select a doctor and date to see available time slots</p></div>';
+    
+    // Event listeners
+    doctorInput.addEventListener('change', loadSlots);
+    dateInput.addEventListener('change', loadSlots);
+    searchInput.addEventListener('input', filterDoctors);
+    
+    // AJAX form submit
+    document.getElementById("booking-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...';
+        
+        const formData = new FormData(this);
+        
+        fetch("{% url 'booking_form' %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const successHTML = `
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                        </div>
+                        <h3 class="mb-3">Appointment Confirmed!</h3>
+                        <p class="lead mb-4">Your appointment has been successfully booked.</p>
+                        <p>You'll receive a confirmation email with all the details.</p>
+                        <button class="btn btn-primary mt-3" onclick="window.location.reload()">Book Another Appointment</button>
+                    </div>
+                `;
+                this.parentElement.innerHTML = successHTML;
+            } else {
+                // Show error
+                const err = document.getElementById("availability-error");
+                err.textContent = data.error || "Something went wrong. Please try again.";
+                err.classList.remove("d-none");
+                
+                // Reset button
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Confirm Appointment';
+            }
+        })
+        .catch(() => {
+            const err = document.getElementById("availability-error");
+            err.textContent = "Network error. Please check your connection and try again.";
+            err.classList.remove("d-none");
+            
+            // Reset button
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Confirm Appointment';
+        });
+    });
+});
+</script>
 {% endblock %}

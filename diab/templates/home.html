@@ -1,197 +1,602 @@
-{% extends 'index.html' %}
-{% load static %}
-
-{% block body %}
-<main class="container my-5">
-    <div class="card border-0 shadow-lg mx-auto rounded-4 overflow-hidden" style="max-width: 700px; background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);">
-        <div class="card-header bg-primary text-white py-4">
-            <h2 class="text-center mb-0 display-5 fw-bold">
-                <i class="fas fa-heartbeat me-2"></i>Diabetes Risk Assessment
-            </h2>
-        </div>
-        
-        <div class="card-body p-4 p-md-5">
-            <form method="POST" action="{% url 'result' %}" class="needs-validation" novalidate id="diabetesForm">
-                {% csrf_token %}
-                
-                <div class="row g-4">
-                    <!-- Pregnancy Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" name="pregnancies" id="pregnancies" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="0" min="0" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="pregnancies" class="text-muted">
-                                <i class="fas fa-baby me-2"></i>Pregnancies
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- Glucose Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" name="glucose" id="glucose" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="70-200 mg/dL" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="glucose" class="text-muted">
-                                <i class="fas fa-vial me-2"></i>Glucose (mg/dL)
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- Blood Pressure Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" name="bloodpressure" id="bloodpressure" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="80-200 mmHg" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="bloodpressure" class="text-muted">
-                                <i class="fas fa-heart-pulse me-2"></i>Blood Pressure
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- Skin Thickness Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" name="skinthickness" id="skinthickness" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="0-99 mm" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="skinthickness" class="text-muted">
-                                <i class="fas fa-ruler-vertical me-2"></i>Skin Thickness
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- Insulin Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" name="insulin" id="insulin" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="0-900 μU/ml" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="insulin" class="text-muted">
-                                <i class="fas fa-syringe me-2"></i>Insulin Level
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- BMI Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" step="0.1" name="bmi" id="bmi" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="18.5-50" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="bmi" class="text-muted">
-                                <i class="fas fa-weight-scale me-2"></i>BMI
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- Diabetes Pedigree Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" step="0.001" name="diabetespedigreefunction" 
-                                   id="diabetespedigreefunction" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="0.000-2.000" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="diabetespedigreefunction" class="text-muted">
-                                <i class="fas fa-dna me-2"></i>Pedigree Function
-                            </label>
-                        </div>
-                    </div>
-            
-                    <!-- Age Field -->
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="number" name="age" id="age" 
-                                   class="form-control border-3 rounded-3 py-3"
-                                   placeholder="21-100" required
-                                   style="border-color: #e0e0e0;">
-                            <label for="age" class="text-muted">
-                                <i class="fas fa-user-clock me-2"></i>Age
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            
-                <!-- Submit Button -->
-                <div class="d-grid mt-5">
-                    <button type="submit" class="btn btn-lg rounded-pill fw-bold text-white" 
-                            style="background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-                                   transition: all 0.3s ease;">
-                        Analyze Risk
-                        <i class="fas fa-arrow-right-long ms-2"></i>
-                    </button>
-                </div>
-            
-                <!-- Privacy Note -->
-                <p class="text-center text-muted mt-4 small">
-                    <i class="fas fa-shield-alt me-2"></i>Your health data is protected with 256-bit encryption
-                </p>
-            </form>
-            
-            <!-- Autofill Script -->
-            <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const form = document.getElementById('diabetesForm');
-            
-                // Autofill existing values
-                // Autofill existing values from localStorage (excluding csrf)
-    for (let field of form.elements) {
-        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
-            field.value = localStorage.getItem(field.name);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Risk Assessment | Advanced Health Analytics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
-
-    // Save new values on input/select change (excluding csrf)
-    form.addEventListener('input', function () {
-        for (let field of form.elements) {
-            if (field.name && field.name !== 'csrfmiddlewaretoken') {
-                localStorage.setItem(field.name, field.value);
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+        
+        .card-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .card-header i {
+            font-size: 2.2rem;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        
+        .card-body {
+            padding: 40px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            flex: 1 1 calc(50% - 20px);
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #3a7bd5;
+            padding-left: 10px;
+        }
+        
+        .form-group i {
+            margin-right: 10px;
+            color: #00d2ff;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3a7bd5;
+            z-index: 2;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 18px 18px 18px 50px;
+            border: 2px solid #e0f0ff;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 10px rgba(58, 123, 213, 0.1);
+        }
+        
+        .form-control:focus {
+            border-color: #3a7bd5;
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+            outline: none;
+            background: white;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(58, 123, 213, 0.4);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .submit-btn::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            transform: rotate(30deg);
+            transition: transform 0.5s ease;
+            opacity: 0;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(58, 123, 213, 0.6);
+        }
+        
+        .submit-btn:hover i {
+            transform: translateX(5px);
+        }
+        
+        .submit-btn:hover::after {
+            opacity: 1;
+            transform: rotate(30deg) translate(10px, 10px);
+        }
+        
+        .privacy-note {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #666;
+            padding: 15px;
+            background: rgba(224, 240, 255, 0.5);
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        .privacy-note i {
+            color: #3a7bd5;
+            margin-right: 8px;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 350px;
+            animation: fadeInRight 1s ease;
+        }
+        
+        .info-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #3a7bd5;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .info-card h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #3a7bd5, #00d2ff);
+            border-radius: 2px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(224, 240, 255, 0.3);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .info-item:hover {
+            transform: translateX(5px);
+            background: rgba(224, 240, 255, 0.5);
+        }
+        
+        .info-item i {
+            font-size: 1.5rem;
+            color: #00d2ff;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+        
+        .info-content h4 {
+            color: #2a5298;
+            margin-bottom: 5px;
+        }
+        
+        .info-content p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(58, 123, 213, 0.1) 0%, rgba(0, 210, 255, 0.1) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3a7bd5;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #2a5298;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
-    });
-});
-            </script>
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(58, 123, 213, 0.2); }
+            70% { box-shadow: 0 0 0 10px rgba(58, 123, 213, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(58, 123, 213, 0); }
+        }
+        
+        @media (max-width: 900px) {
+            .card-container {
+                flex-direction: column;
+                align-items: center;
+            }
             
+            .info-card {
+                max-width: 800px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .card-header h2 {
+                font-size: 2rem;
+            }
+            
+            .form-group {
+                flex: 1 1 100%;
+            }
+            
+            .card-body {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Diabetes Risk Assessment</h1>
+            <p>Complete this comprehensive assessment to evaluate your diabetes risk based on key health indicators</p>
+        </div>
+        
+        <div class="card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-heartbeat"></i>Health Assessment Form</h2>
+                </div>
+                
+                <div class="card-body">
+                    <form method="POST" action="{% url 'result' %}" class="needs-validation" novalidate id="diabetesForm">
+                        {% csrf_token %}
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pregnancies"><i class="fas fa-baby"></i>Pregnancies</label>
+                                <div class="input-container">
+                                    <i class="fas fa-baby-carriage"></i>
+                                    <input type="number" name="pregnancies" id="pregnancies" 
+                                           class="form-control" placeholder="0" min="0" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="glucose"><i class="fas fa-vial"></i>Glucose (mg/dL)</label>
+                                <div class="input-container">
+                                    <i class="fas fa-flask"></i>
+                                    <input type="number" name="glucose" id="glucose" 
+                                           class="form-control" placeholder="70-200 mg/dL" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bloodpressure"><i class="fas fa-heart-pulse"></i>Blood Pressure</label>
+                                <div class="input-container">
+                                    <i class="fas fa-heart"></i>
+                                    <input type="number" name="bloodpressure" id="bloodpressure" 
+                                           class="form-control" placeholder="80-200 mmHg" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="skinthickness"><i class="fas fa-ruler-vertical"></i>Skin Thickness</label>
+                                <div class="input-container">
+                                    <i class="fas fa-ruler-combined"></i>
+                                    <input type="number" name="skinthickness" id="skinthickness" 
+                                           class="form-control" placeholder="0-99 mm" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="insulin"><i class="fas fa-syringe"></i>Insulin Level</label>
+                                <div class="input-container">
+                                    <i class="fas fa-prescription-bottle"></i>
+                                    <input type="number" name="insulin" id="insulin" 
+                                           class="form-control" placeholder="0-900 μU/ml" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="bmi"><i class="fas fa-weight-scale"></i>BMI</label>
+                                <div class="input-container">
+                                    <i class="fas fa-scale-balanced"></i>
+                                    <input type="number" step="0.1" name="bmi" id="bmi" 
+                                           class="form-control" placeholder="18.5-50" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="diabetespedigreefunction"><i class="fas fa-dna"></i>Pedigree Function</label>
+                                <div class="input-container">
+                                    <i class="fas fa-family"></i>
+                                    <input type="number" step="0.001" name="diabetespedigreefunction" 
+                                           id="diabetespedigreefunction" 
+                                           class="form-control" placeholder="0.000-2.000" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="age"><i class="fas fa-user-clock"></i>Age</label>
+                                <div class="input-container">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    <input type="number" name="age" id="age" 
+                                           class="form-control" placeholder="21-100" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            Analyze Diabetes Risk <i class="fas fa-arrow-right-long"></i>
+                        </button>
+                        
+                        <div class="privacy-note">
+                            <i class="fas fa-shield-alt"></i>Your health data is protected with 256-bit encryption
+                        </div>
+                    </form>
+                    
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('diabetesForm');
+                    
+                        // Autofill existing values from localStorage (excluding csrf)
+                        for (let field of form.elements) {
+                            if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+                                field.value = localStorage.getItem(field.name);
+                            }
+                        }
+                    
+                        // Save new values on input/select change (excluding csrf)
+                        form.addEventListener('input', function () {
+                            for (let field of form.elements) {
+                                if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                                    localStorage.setItem(field.name, field.value);
+                                }
+                            }
+                        });
+                    });
+                    </script>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>Why Assess Diabetes Risk?</h3>
+                
+                <div class="info-item">
+                    <i class="fas fa-flag"></i>
+                    <div class="info-content">
+                        <h4>Early Detection</h4>
+                        <p>Identifying risk factors early can prevent or delay the onset of type 2 diabetes through lifestyle changes.</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="info-content">
+                        <h4>Health Monitoring</h4>
+                        <p>Regular assessments help track changes in your health profile over time.</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <i class="fas fa-lightbulb"></i>
+                    <div class="info-content">
+                        <h4>Personalized Insights</h4>
+                        <p>Get tailored recommendations based on your specific health indicators.</p>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-value">463M</div>
+                        <div class="stat-label">People with diabetes worldwide</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-value">50%</div>
+                        <div class="stat-label">Undiagnosed cases</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</main>
-
-<!-- Include Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-<style>
-    body{    height: auto;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
-    background-attachment: fixed;}
-    .form-control:focus {
-        border-color: #3a7bd5 !important;
-        box-shadow: 0 0 0 3px rgba(58,123,213,0.1);
-    }
     
-    .form-floating label {
-        transition: all 0.2s ease;
-        opacity: 0.8;
-    }
-    
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(58,123,213,0.3);
-    }
-    
-    .card-header {
-        background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-    }
-</style>
-{% endblock %}
+    <script>
+        // Add animation to form elements on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+            
+            formGroups.forEach((group, index) => {
+                setTimeout(() => {
+                    group.style.opacity = '0';
+                    group.style.transform = 'translateY(20px)';
+                    group.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+                }, 0);
+            });
+        });
+    </script>
+</body>
+</html>

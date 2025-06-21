@@ -1,6 +1,0 @@
--Slot Setting (User Can Select Between from Slots)
--The same or different User Can Select the already booked
--The user Can Select The Previous Day Slot Only The Next Day Slot 
--The Slot Which Us Booked Should Be Shown Gray Color and The Not Booked Should be In Highlighted form
-
--If Can Add A Rating System for Doctor User can give Rating 
