@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealthSync | Lifestyle Assessment</title>
@@ -265,10 +266,30 @@
 <body>
 
     <div class="container">
-        <div class="form-header">
-            <i class="fas fa-clipboard-list"></i>
-            <h2>Lifestyle Health Assessment</h2>
-        </div>
+        <div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-clipboard-list"></i>
+        <h2 style="margin: 0;">Lifestyle Health Assessment</h2>
+    </div>
+    <a href="{% url 'patient_home' %}" class="home-button">Home</a>
+</div>
+
+<style>
+  .home-button {
+    padding: 8px 16px;
+        background: linear-gradient(135deg, #0c2461 0%, #1e3799 25%, #4a69bd 50%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .home-button:hover {
+    background-color: #45a049;
+  }
+</style>
+
         
         <div class="form-intro">
             <p>Complete this comprehensive assessment to evaluate your lifestyle health factors. Our ML-powered system will analyze your inputs and provide personalized insights about your health risks.</p>

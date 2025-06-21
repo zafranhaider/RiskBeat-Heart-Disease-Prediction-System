@@ -33,6 +33,14 @@ def predict_risk(request):
         heart_rate = float(request.POST.get("heart_rate"))
         daily_steps = float(request.POST.get("daily_steps"))
 
+        # Critical heart rate check
+        if heart_rate >= 220:
+            prediction_message = "💀 You are probably dead. This is not a joke. Seek emergency help immediately."
+            return render(request, "predict3.html", {"prediction_message": prediction_message})
+        elif heart_rate >= 180:
+            prediction_message = "⚠️ Your heart rate is critically high. You are at extreme risk. Please consult a doctor immediately."
+            return render(request, "predict3.html", {"prediction_message": prediction_message})
+
         # Encode categorical values using label encoders
         gender_encoded = label_encoders["Gender"].get(gender, -1)
         occupation_encoded = label_encoders["Occupation"].get(occupation, -1)
@@ -54,7 +62,8 @@ def predict_risk(request):
             "Physical Activity Level", "Stress Level", "BMI Category",
             "Blood Pressure", "Heart Rate", "Daily Steps", "Sleep Disorder"
         ])
-        
+
+        # Make prediction
         prediction = model.predict(input_data)[0]
 
         # Convert prediction to human-readable message

@@ -1,27 +1,28 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-import pandas as pd
-import joblib
-from django.urls import path
 from django.contrib.auth.decorators import login_required
-# Load saved model and encoders
+import pandas as pd
+import numpy as np
+import joblib
+from health.views import track_user_diseases
+
+# Load model and preprocessors
 model = joblib.load("Machine_Learning/stroke_model.pkl")
 label_encoders = joblib.load("Machine_Learning/label_encoders.pkl")
 imputer = joblib.load("Machine_Learning/imputer.pkl")
-from health.views import track_user_diseases
+scaler = joblib.load("Machine_Learning/scaler.pkl")
 
-# Manually set accuracy from training script
-model_accuracy = 92  # Replace this with the actual printed accuracy value
-
-# Categorical columns used for encoding
+model_accuracy = 92  # Update with real validation score
 categorical_columns = ["gender", "ever_married", "work_type", "Residence_type", "smoking_status"]
+
 @login_required()
 def predict_stroke(request):
     track_user_diseases(request, "Stroke")
     prediction = None
-    accuracy = model_accuracy  # Pass the stored accuracy
+    reason = ""
+    accuracy = model_accuracy
 
     if request.method == "POST":
+        # Extract data from form
         data = {
             "gender": request.POST.get("gender"),
             "age": float(request.POST.get("age")),
@@ -34,18 +35,45 @@ def predict_stroke(request):
             "bmi": float(request.POST.get("bmi")),
             "smoking_status": request.POST.get("smoking_status"),
         }
-        
-        # Encode categorical variables
-        for col in categorical_columns:
-            data[col] = label_encoders[col].transform([data[col]])[0]
-        
-        # Convert input data to DataFrame
-        df_input = pd.DataFrame([data])
-        
-        # Handle missing values using imputer
-        df_input["bmi"] = imputer.transform(df_input[["bmi"]])
 
-        # Make prediction
-        prediction = model.predict(df_input)[0]
-        
-    return render(request, "predict2.html", {"prediction": prediction, "accuracy": accuracy})
+        # --- Risk Rule Checks ---
+        risk_factors = []
+ 
+        if data["hypertension"] == 1:
+            risk_factors.append("Has hypertension")
+        if data["heart_disease"] == 1:
+            risk_factors.append("Has heart disease")
+        if data["avg_glucose_level"] > 200:
+            risk_factors.append("High glucose level (>200)")
+        if data["bmi"] > 30:
+            risk_factors.append("Obese (BMI > 30)")
+ 
+
+        # Combine reasons if any
+        if risk_factors:
+            reason = "Stroke May Happen : " + ", ".join(risk_factors)
+        else:
+            reason = "Low stroke risk based on current health indicators."
+
+        # --- Preprocessing for ML model ---
+        for col in categorical_columns:
+            encoder = label_encoders[col]
+            data[col] = encoder.transform([data[col]])[0]
+
+        # Convert to DataFrame
+        df_input = pd.DataFrame([data])
+
+        # Impute missing values
+        df_imputed = imputer.transform(df_input)
+
+        # Scale features
+        df_scaled = scaler.transform(df_imputed)
+
+        # Predict using the model
+        prediction = model.predict(df_scaled)[0]
+
+    return render(request, "predict2.html", {
+        "prediction": prediction,
+        "accuracy": accuracy,
+        "reason": reason,
+    })

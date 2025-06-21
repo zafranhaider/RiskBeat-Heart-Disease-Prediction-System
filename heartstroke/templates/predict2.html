@@ -326,17 +326,47 @@
         <!-- Prediction Result -->
         <div class="prediction-result">
             <div class="result-title">
-                <i class="fas fa-heartbeat"></i>
+   <a href="{% url 'patient_home' %}" class="back-icon-button">
+    <i class="fas fa-arrow-left"></i> 
+</a>
+
+<style>
+  .back-icon-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 2px 6px;
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-icon-button i {
+    font-size: 1em; /* Match the heartbeat icon size */
+  }
+
+  .back-icon-button:hover {
+    background-color: #e6e6e6;
+  }
+</style>
+
+                
                 <span>Prediction Result:</span>
+                
             </div>
-               <h2>Heart Stroke Prediction</h2>
-           {% if prediction is not None %}
-           <div class="alert alert-info text-center" role="alert">
-               <strong>Prediction:</strong> {% if prediction == 1 %} Stroke Likely {% else %} No Stroke {% endif %}
-           </div>
-       
-     
-       {% endif %}
+              <h2>Heart Stroke Prediction</h2>
+
+        {% if prediction is not None %}
+    <div class="alert alert-info text-center" role="alert">
+        <strong>Prediction:</strong> {% if prediction == 1 %} Stroke Likely {% else %} No Stroke {% endif %}<br>
+        <strong>Reason:</strong> {{ reason }}
+    </div>
+{% endif %}
+
+ 
+
+
+
         </div>
         
         <div class="form-container">
