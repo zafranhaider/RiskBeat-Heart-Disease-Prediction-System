@@ -1,161 +1,594 @@
-{% extends 'index.html' %}
-{% load static %}
-{% block body %}
-<!-- Add Background Color to Body -->
-<style>
-body {
-    height: auto;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
-    background-attachment: fixed;
-}
-    .form-container {
-        background-color: white; /* Keep the form's background white or any other color */
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        width: 90%;
-        max-width: 900px;
-    }
-</style>
-
-<!-- Register -->
-<center>
-    <section class="logins py-5">
-        <div class="container py-xl-5 py-lg-3">
-            <div class="title-section mb-md-5 mb-4">
-                <h3 class="w3ls-title text-uppercase text-dark font-weight-bold" style="background: linear-gradient(to right, white, #dddddd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Add Coronary Heart Details</h3>
-
-            </div>
-            <hr />
-            <div class="form-container">
-                <form action="{% url 'add_conrheartdetail' %}" method="post" enctype="multipart/form-data" id="conrHeartForm">
-                    {% csrf_token %}
-                
-                    <!-- Row 1 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Age</label>
-                            <input type="number" class="form-control" name="age" min="1" max="120" placeholder="49" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Sex</label>
-                            <select class="form-control" name="male" required>
-                                <option value="0">Female</option>
-                                <option value="1" selected>Male</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Education Level</label>
-                            <input type="number" class="form-control" name="education" min="0" max="5" placeholder="2" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Current Smoker</label>
-                            <select class="form-control" name="currentSmoker" required>
-                                <option value="0" selected>No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                
-                    <!-- Row 2 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center"></label>
-                            <input type="hidden" class="form-control" name="cigsPerDay" min="0" max="100" placeholder="9" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">BP Medications</label>
-                            <select class="form-control" name="BPMeds" required>
-                                <option value="0" selected>No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Prevalent Stroke</label>
-                            <select class="form-control" name="prevalentStroke" required>
-                                <option value="0" selected>No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Prevalent Hypertension</label>
-                            <select class="form-control" name="prevalentHyp" required>
-                                <option value="0" selected>No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                
-                    <!-- Row 3 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Diabetes</label>
-                            <select class="form-control" name="diabetes" required>
-                                <option value="0" selected>No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Total Cholesterol</label>
-                            <input type="number" class="form-control" name="totChol" min="100" max="600" placeholder="235" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Systolic Blood Pressure</label>
-                            <input type="number" class="form-control" name="sysBP" min="50" max="200" placeholder="130" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Diastolic Blood Pressure</label>
-                            <input type="number" class="form-control" name="diaBP" min="30" max="120" placeholder="82" required>
-                        </div>
-                    </div>
-                
-                    <!-- Row 4 -->
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">BMI</label>
-                            <input type="number" step="0.1" class="form-control" name="BMI" min="10" max="50" placeholder="25.5" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Heart Rate</label>
-                            <input type="number" class="form-control" name="heartRate" min="40" placeholder="75" required>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="w-100 text-center">Glucose</label>
-                            <input type="number" class="form-control" name="glucose" min="50" max="300" placeholder="79" required>
-                        </div>
-                    </div>
-                
-                    <button type="submit" class="btn submit mt-4" style="background-color: #726f6e;">Send Heart Data</button>
-                </form>
-                
-                <!-- Autofill Script -->
-                <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const form = document.getElementById('conrHeartForm');
-                
-           // Autofill existing values from localStorage (excluding csrf)
-    for (let field of form.elements) {
-        if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
-            field.value = localStorage.getItem(field.name);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coronary Heart Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
-
-    // Save new values on input/select change (excluding csrf)
-    form.addEventListener('input', function () {
-        for (let field of form.elements) {
-            if (field.name && field.name !== 'csrfmiddlewaretoken') {
-                localStorage.setItem(field.name, field.value);
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f1b3a 0%, #1a3c78 25%, #1a6dbd 50%, #4a9de0 75%, #a2d9ff 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 100, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform: translateY(0);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 70px rgba(0, 0, 120, 0.5);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, #0f1b3a, #1a3c78);
+            color: white;
+            padding: 35px 40px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #ff6b6b, #4a9de0, #1a6dbd);
+        }
+        
+        .card-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .card-body {
+            padding: 45px 40px 50px;
+        }
+        
+        .form-container {
+            width: 100%;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: -65px;
+            left: 0;
+            background: linear-gradient(to right, #0f1b3a, #1a3c78);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(15, 27, 58, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(15, 27, 58, 0.4);
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px 20px;
+        }
+        
+        .form-group {
+            flex: 0 0 calc(25% - 30px);
+            margin: 0 15px 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1a3c78;
+            margin-bottom: 15px;
+            font-size: 17px;
+            text-align: left;
+            padding-left: 5px;
+            position: relative;
+        }
+        
+        .form-group label::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(to right, #ff6b6b, #4a9de0);
+            border-radius: 2px;
+        }
+        
+        .form-control {
+            width: 100%;
+            height: 60px;
+            padding: 0 20px;
+            border: 2px solid #e1e9f7;
+            border-radius: 15px;
+            font-size: 17px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background-color: #f8faff;
+            color: #1a3c78;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #4a9de0;
+            box-shadow: 0 0 0 3px rgba(74, 157, 224, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            background-color: #fff;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231a3c78' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 18px;
+            padding-right: 50px;
+        }
+        
+        .info-icon {
+            position: absolute;
+            right: 18px;
+            top: 53px;
+            color: #4a9de0;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .info-icon:hover {
+            color: #ff6b6b;
+            transform: scale(1.1);
+        }
+        
+        .info-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1a3c78;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-submit {
+            display: block;
+            width: 280px;
+            height: 65px;
+            margin: 40px auto 0;
+            background: linear-gradient(to right, #ff6b6b, #4a9de0);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
+            background: linear-gradient(to right, #ff7b7b, #5aade8);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+        .btn-submit i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-submit:hover i {
+            transform: translateX(5px);
+        }
+        
+        .heart-icon {
+            position: absolute;
+            top: 25px;
+            right: 45px;
+            color: #ff6b6b;
+            font-size: 35px;
+            animation: heartbeat 1.5s infinite;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.2); }
+            60% { transform: scale(1); }
+        }
+        
+        .form-divider {
+            text-align: center;
+            margin: 35px 0;
+            position: relative;
+        }
+        
+        .form-divider span {
+            background: white;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            color: #1a3c78;
+            font-weight: 600;
+            font-size: 18px;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .form-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ff6b6b, #4a9de0, transparent);
+            z-index: 1;
+        }
+        
+        .health-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(to right, #f0f7ff, #e6f2ff);
+            border-radius: 18px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #d4e5ff;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            padding: 15px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a6dbd;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 15px;
+            color: #4a658a;
+            font-weight: 500;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Hide the cigarettes per day field */
+        .hidden-field {
+            display: none;
+        }
+        
+        @media (max-width: 1100px) {
+            .form-group {
+                flex: 0 0 calc(33.333% - 30px);
             }
         }
-    });
-});
-                </script>
-                
+        
+        @media (max-width: 850px) {
+            .card-body {
+                padding: 35px 25px;
+            }
+            
+            .form-group {
+                flex: 0 0 calc(50% - 30px);
+            }
+            
+            .card-header h1 {
+                font-size: 2.1rem;
+            }
+            
+            .health-stats {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .form-group {
+                flex: 0 0 100%;
+                margin: 0 0 30px;
+            }
+            
+            .btn-submit {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .back-button {
+                top: -60px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 300px;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .heart-icon {
+                top: 20px;
+                right: 20px;
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card pulse-animation">
+            <div class="card-header">
+                <i class="fas fa-heartbeat heart-icon"></i>
+                <h1>Coronary Heart Assessment</h1>
+                <p>Complete this detailed form to evaluate your heart health risk factors. All information is securely stored and analyzed.</p>
+            </div>
+            
+            <div class="card-body">
+                <div class="form-container">
+                    <a href="{% url 'patient_home' %}" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    
+                    <div class="health-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">High</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1 Min</div>
+                            <div class="stat-label">Completion Time</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Secure</div>
+                            <div class="stat-label">Data Protection</div>
+                        </div>
+                    </div>
+                    
+                    <form action="{% url 'add_conrheartdetail' %}" method="post" enctype="multipart/form-data" id="conrHeartForm">
+                        {% csrf_token %}
+                    
+                        <!-- Row 1 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" class="form-control" name="age" id="age" min="1" max="120" placeholder="49" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Patient's age in years"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="male">Sex</label>
+                                <select class="form-control" name="male" id="male" required>
+                                    <option value="0">Female</option>
+                                    <option value="1" selected>Male</option>
+                                </select>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Patient's biological sex"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="education">Education Level</label>
+                                <input type="number" class="form-control" name="education" id="education" min="0" max="5" placeholder="2" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="0=Lowest, 4=Highest"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="currentSmoker">Current Smoker</label>
+                                <select class="form-control" name="currentSmoker" id="currentSmoker" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Is the patient a current smoker?"></i>
+                            </div>
+                        </div>
+                    
+                        <!-- Row 2 -->
+                        <div class="form-row">
+                            <!-- Hidden Cigarettes Per Day Field -->
+                            <div class="form-group hidden-field">
+                                <label for="cigsPerDay">Cigarettes Per Day</label>
+                                <input type="number" class="form-control" name="cigsPerDay" id="cigsPerDay" min="0" max="100" placeholder="9" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="BPMeds">BP Medications</label>
+                                <select class="form-control" name="BPMeds" id="BPMeds" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Is the patient on BP medication?"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="prevalentStroke">Prevalent Stroke</label>
+                                <select class="form-control" name="prevalentStroke" id="prevalentStroke" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="History of stroke"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="prevalentHyp">Prevalent Hypertension</label>
+                                <select class="form-control" name="prevalentHyp" id="prevalentHyp" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="History of hypertension"></i>
+                            </div>
+                        </div>
+                    
+                        <div class="form-divider">
+                            <span>Health Metrics</span>
+                        </div>
+                    
+                        <!-- Row 3 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="diabetes">Diabetes</label>
+                                <select class="form-control" name="diabetes" id="diabetes" required>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Has the patient been diagnosed with diabetes?"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="totChol">Total Cholesterol</label>
+                                <input type="number" class="form-control" name="totChol" id="totChol" min="100" max="600" placeholder="235" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="mg/dL"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="sysBP">Systolic BP</label>
+                                <input type="number" class="form-control" name="sysBP" id="sysBP" min="50" max="200" placeholder="130" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Systolic blood pressure (mmHg)"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="diaBP">Diastolic BP</label>
+                                <input type="number" class="form-control" name="diaBP" id="diaBP" min="30" max="120" placeholder="82" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Diastolic blood pressure (mmHg)"></i>
+                            </div>
+                        </div>
+                    
+                        <!-- Row 4 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="BMI">BMI</label>
+                                <input type="number" step="0.1" class="form-control" name="BMI" id="BMI" min="10" max="50" placeholder="25.5" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Body Mass Index (kg/m²)"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="heartRate">Heart Rate</label>
+                                <input type="number" class="form-control" name="heartRate" id="heartRate" min="40" placeholder="75" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="Beats per minute (bpm)"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="glucose">Glucose</label>
+                                <input type="number" class="form-control" name="glucose" id="glucose" min="50" max="300" placeholder="79" required>
+                                <i class="fas fa-info-circle info-icon" data-tooltip="mg/dL"></i>
+                            </div>
+                        </div>
+                    
+                        <button type="submit" class="btn-submit">
+                            Analyze Heart Data <i class="fas fa-chart-line"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Autofill Script -->
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('conrHeartForm');
+                    
+                        // Autofill existing values from localStorage (excluding csrf)
+                        for (let field of form.elements) {
+                            if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+                                field.value = localStorage.getItem(field.name);
+                            }
+                        }
+                    
+                        // Save new values on input/select change (excluding csrf)
+                        form.addEventListener('input', function () {
+                            for (let field of form.elements) {
+                                if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                                    localStorage.setItem(field.name, field.value);
+                                }
+                            }
+                        });
+                        
+                        // Handle the hidden field for non-smokers
+                        const smokerSelect = document.getElementById('currentSmoker');
+                        const cigsField = document.getElementById('cigsPerDay');
+                        
+                        smokerSelect.addEventListener('change', function() {
+                            if (this.value === '0') {
+                                cigsField.value = '0';
+                            }
+                        });
+                    });
+                    </script>
+                </div>
             </div>
         </div>
-    </section>
-</center>
-{% endblock %}
+    </div>
+</body>
+</html>
