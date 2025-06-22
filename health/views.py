@@ -689,19 +689,25 @@ def view_appointments(request):
     return render(request, 'apoint_view.html', {'appointments': appointments})
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Doctor, Booking
+
 @login_required
 def appointment_status(request):
     try:
         # Check if the logged-in user is a doctor
         doctor = Doctor.objects.get(user=request.user)
         # Fetch bookings for the doctor
-        user_bookings = Booking.objects.filter(doctor=doctor)
+        bookings = Booking.objects.filter(doctor=doctor).order_by('-date', '-time')
     except Doctor.DoesNotExist:
         # If the user is not a doctor, fetch bookings where their email matches
-      bookings = Booking.objects.filter(user=request.user).order_by('-date','-time')
+        bookings = Booking.objects.filter(user=request.user).order_by('-date', '-time')
+
     return render(request, 'appointment_status.html', {
         'bookings': bookings
     })
+
 
 ########################################################################################################
 ############################ Machine Learning Logics Algoritham ########################################
