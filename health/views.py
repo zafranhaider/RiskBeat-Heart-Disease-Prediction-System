@@ -385,7 +385,6 @@ def Edit_My_deatail(request):
             sign.save()
         except:
             pass
-        to1 = datetime.date.today()
         sign.user.first_name = f
         sign.user.last_name = l
         sign.user.email = e
