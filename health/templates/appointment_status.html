@@ -59,7 +59,8 @@
                             
                             <div>
                                 <h5 class="doctor-name">Dr. {{ booking.doctor.user.username }}</h5>
-                                <p class="doctor-specialty">Cardiology Specialist</p>
+<p class="doctor-specialty">{{ booking.doctor.category }}</p>
+
                             </div>
                         </div>
                         <div class="appointment-meta">
@@ -97,15 +98,14 @@
                                 </div>
                             </div>
                       <div class="detail">
-    <div class="detail-icon">
-        <i class="fas fa-calendar-check"></i>
-    </div>
-    <div>
-        <small>Availability</small>
-        <p>Available</p>
-    </div>
+<div class="detail-icon">
+    <i class="fas fa-user-md"></i>
 </div>
-
+<div>
+    <small>Selected Doctor</small>
+    <p>1</p>
+</div>
+                      </div>
                         </div>
                     </div>
                     
