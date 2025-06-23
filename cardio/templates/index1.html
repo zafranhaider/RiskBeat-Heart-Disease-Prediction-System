@@ -329,8 +329,8 @@
                 <i class="fas fa-heartbeat"></i>
             </div>
             <h2>Cardiovascular Health Assessment</h2>
-            <p>Early detection of heart disease risk can save lives. Our AI-powered assessment provides personalized insights based on medical research and clinical data.</p>
-            
+<p><strong>Medical Disclaimer:</strong> This AI-powered assessment offers personalized health insights using clinical data and medical research. However, it is not intended to diagnose or treat any condition. Always seek guidance from a qualified healthcare professional for medical decisions.</p>
+
             <div class="stats">
                 <div class="stat-item">
                     <div class="stat-value">17.9M</div>
@@ -586,5 +586,21 @@
             });
         });
     </script>
+    <script>
+  // …your existing toggle-option click handlers…
+
+  // On load, initialize all hidden inputs from their active toggles
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toggle-container').forEach(container => {
+      // find the next hidden <input> sibling
+      const hidden = container.nextElementSibling;
+      const active = container.querySelector('.toggle-option.active');
+      if (active && hidden && hidden.type === 'hidden') {
+        hidden.value = active.dataset.value;
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
