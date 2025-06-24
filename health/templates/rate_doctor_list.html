@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<div class="container" style="margin-top:8%">
+  <h2 class="text-center">Rate Your Doctors</h2>
+  <hr>
+  <table class="table table-bordered text-center">
+    <thead>
+      <tr>
+        <th>#</th><th>Name</th><th>Specialty</th><th>Your Rating</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in doctor_list %}
+        {% with doc=entry.doctor score=entry.your_score %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>Dr. {{ doc.user.first_name }} {{ doc.user.last_name }}</td>
+          <td>{{ doc.category }}</td>
+          <td>
+            {% if score %}
+              {{ score }}★
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'submit_rating' doc.id %}">
+              {% if score %}
+                <button class="btn btn-sm btn-success">Change</button>
+              {% else %}
+                <button class="btn btn-sm btn-primary">Rate</button>
+              {% endif %}
+            </a>
+          </td>
+        </tr>
+        {% endwith %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

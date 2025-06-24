@@ -104,6 +104,18 @@ class Booking(models.Model):
         return f"{self.user.username if self.user else self.name} – {self.date} {self.time}"
 
 
+class DoctorRating(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='ratings')
+    doctor  = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='ratings')
+    score   = models.PositiveSmallIntegerField(choices=[(i,i) for i in range(1,6)])
+    comment = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('patient','doctor')
+
+    def __str__(self):
+        return f"{self.patient.user.username} → {self.doctor.user.username}: {self.score}★"
 
 
 class Admin_Helath_CSV(models.Model):
@@ -141,3 +153,28 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
+    
+    # models.py
+from django.db import models
+from django.contrib.auth.models import User
+from datetime import time
+
+# … your existing Patient, Doctor, DoctorSlot, Booking, etc. …
+
+class DayAvailability(models.Model):
+    DAY_CHOICES = [
+        ('Monday','Monday'),
+        ('Tuesday','Tuesday'),
+        ('Wednesday','Wednesday'),
+        ('Thursday','Thursday'),
+        ('Friday','Friday'),
+    ]
+    doctor      = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="day_availabilities")
+    day         = models.CharField(max_length=9, choices=DAY_CHOICES)
+    is_available= models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('doctor','day')
+
+    def __str__(self):
+        return f"{self.doctor.user.username} – {self.day} {'✓' if self.is_available else '✗'}"

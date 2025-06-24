@@ -9,6 +9,11 @@ from django.views.generic.base import RedirectView
 from django.urls import re_path
 from community import views as community_views
 from health import views    # now unambiguous
+from health.views import manage_slots, toggle_slot, toggle_day, delete_slot
+from django.urls import path
+from health import views
+from health.views import doctors_to_rate, submit_rating
+
 
 
 from health_deals.views import *
@@ -65,13 +70,23 @@ urlpatterns = [
     path('predict_desease/<str:pred>/<str:accuracy>/', predict_desease, name="predict_desease"),
     path('apoint/', User_book, name="apoint"),
     path('search-doctor/', search_doctor, name='search_doctor'),
-path('book/',            views.book_appointment,  name='booking_form'),
+path('book/',            book_appointment,  name='booking_form'),
     path('appointments/', view_appointments, name='view_appointments'),
     path('update-status/<int:booking_id>/', update_booking_status, name='update_booking_status'),
     path('appointment-status/', appointment_status, name='appointment_status'),
     path('submission-success/', booking_form, name='submission_success'),
+      path('rate-doctors/', doctors_to_rate, name='doctors_to_rate'),
+    path('rate-doctor/<int:doctor_id>/', submit_rating, name='submit_rating'),
     path('check-disease/', check_disease, name='disease_check'),
-path('check-slots/',     views.check_slots,       name='check_slots'),
+path('check-slots/',     check_slots,       name='check_slots'),
+
+path('my-ratings/', my_doctor_ratings, name='my_doctor_ratings'),
+
+
+ path('manage-slots/',        manage_slots, name='manage_slots'),
+    path('toggle-slot/<int:slot_id>/', toggle_slot, name='toggle_slot'),
+    path('toggle-day/<str:day>/',     toggle_day,  name='toggle_day'),
+    path('delete-slot/<int:slot_id>/', delete_slot, name='delete_slot'),
 
     #Cornary Heart
     path('add_conrheartdetail/', add_conrheartdetail, name="add_conrheartdetail"),
