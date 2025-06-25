@@ -46,14 +46,18 @@ def Home(request):
     return render(request, 'carousel.html', {'dis': dis})
 
 
+@login_required
 def Admin_Home(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not authorized to view this page.")
+
     dis = Search_Data.objects.all()
     pat = Patient.objects.all()
     doc = Doctor.objects.all()
     feed = Feedback.objects.all()
 
-    d = {'dis':dis.count(),'pat':pat.count(),'doc':doc.count(),'feed':feed.count()}
-    return render(request,'admin_home.html',d)
+    d = {'dis': dis.count(), 'pat': pat.count(), 'doc': doc.count(), 'feed': feed.count()}
+    return render(request, 'admin_home.html', d)
 
 
 
@@ -131,11 +135,17 @@ def delete_searched(request,pid):
     doc.delete()
     return redirect('view_search_pat')
 
+
+
 @login_required(login_url="login")
 def View_Doctor(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not authorized to view this page.")
+
     doc = Doctor.objects.all()
-    d = {'doc':doc}
-    return render(request,'view_doctor.html',d)
+    d = {'doc': doc}
+    return render(request, 'view_doctor.html', d)
+
 
 @login_required(login_url="login")
 def View_Patient(request):
@@ -267,36 +277,52 @@ def Change_Password(request):
 
 
 
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+
 @login_required(login_url="login")
-def assign_status(request,pid):
+def assign_status(request, pid):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not authorized to perform this action.")
+
     doctor = Doctor.objects.get(id=pid)
     if doctor.status == 1:
         doctor.status = 2
-        messages.success(request, 'Selected doctor are successfully withdraw his approval.')
+        messages.success(request, 'Selected doctor has been successfully withdrawn from approval.')
     else:
         doctor.status = 1
-        messages.success(request, 'Selected doctor are successfully approved.')
+        messages.success(request, 'Selected doctor has been successfully approved.')
     doctor.save()
     return redirect('view_doctor')
 
+
 @login_required(login_url="login")
-def add_doctor(request,pid=None):
+def add_doctor(request, pid=None):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not authorized to perform this action.")
+
     doctor = None
     if pid:
         doctor = Doctor.objects.get(id=pid)
+
     if request.method == "POST":
-        form = DoctorForm(request.POST, request.FILES, instance = doctor)
+        form = DoctorForm(request.POST, request.FILES, instance=doctor)
         if form.is_valid():
-            new_doc = form.save()
+            new_doc = form.save(commit=False)
             new_doc.status = 1
             if not pid:
-                user = User.objects.create_user(password=request.POST['password'], username=request.POST['username'], first_name=request.POST['first_name'], last_name=request.POST['last_name'])
+                user = User.objects.create_user(
+                    password=request.POST['password'],
+                    username=request.POST['username'],
+                    first_name=request.POST['first_name'],
+                    last_name=request.POST['last_name']
+                )
                 new_doc.user = user
             new_doc.save()
             return redirect('view_doctor')
+
     d = {"doctor": doctor}
     return render(request, 'add_doctor.html', d)
-
 
 
 
