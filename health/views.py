@@ -61,9 +61,13 @@ def Admin_Home(request):
 def User_Home(request):
     return render(request,'patient_home.html')
 
+from django.db.models import Avg
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 @login_required(login_url="login")
 def User_book(request):
-    doctors = Doctor.objects.all()
+    doctors = Doctor.objects.annotate(avg_rating=Avg('ratings__score'))
     return render(request, 'apoint_page.html', {'doctors': doctors})
 
 
@@ -492,81 +496,80 @@ def get_available_slots(request):
     
     return JsonResponse({'slots': available_slots})
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts               import render, get_object_or_404
+from django.http                    import JsonResponse
+from django.contrib                 import messages
+from django.db.models               import Avg
+from datetime                       import datetime
+
+from .models import Doctor, DoctorSlot, Booking, DoctorRating
+
 @login_required
 def booking_form(request):
-    doctors = Doctor.objects.filter(status=1)
-    
+    # ——————————————————————————————————————————————
+    # Always annotate each Doctor with its avg_rating
+    doctors = Doctor.objects.filter(status=1) \
+               .annotate(avg_rating=Avg('ratings__score'))
+    # ——————————————————————————————————————————————
+
+    base_ctx = {
+      'doctors': doctors,
+    }
+
     if request.method == "POST":
-        name = request.POST.get('name')
-        email = request.POST.get('email')
+        name           = request.POST.get('name')
+        email          = request.POST.get('email')
         contact_number = request.POST.get('contact_number')
-        doctor_id = request.POST.get('doctor')
+        doctor_id      = request.POST.get('doctor')
         appointment_type = request.POST.get('appointment_type')
-        selected_date = request.POST.get('date')
-        slot_id = request.POST.get('slot')
-        start_time = request.POST.get('start_time')
-        message = request.POST.get('message', '')
-        
+        selected_date  = request.POST.get('date')
+        slot_id        = request.POST.get('slot')
+        start_time     = request.POST.get('start_time')
+        message        = request.POST.get('message','')
+
         try:
             doctor = get_object_or_404(Doctor, id=doctor_id, status=1)
-            slot = get_object_or_404(DoctorSlot, id=slot_id, doctor=doctor)
+            slot   = get_object_or_404(DoctorSlot, id=slot_id, doctor=doctor)
             selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
-            start_time = datetime.strptime(start_time, '%H:%M').time()
-            
-            # Check if slot is still available
+            start_time    = datetime.strptime(start_time, '%H:%M').time()
+
+            # check availability
             is_booked = Booking.objects.filter(
                 doctor=doctor,
                 date=selected_date,
                 time=start_time,
-                status__in=['pending', 'approved']
+                status__in=['pending','approved']
             ).exists()
-            
+
             if is_booked:
+                error = 'This time slot is no longer available.'
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                    return JsonResponse({
-                        'success': False,
-                        'error': 'This time slot is no longer available. Please choose another time.'
-                    })
-                else:
-                    messages.error(request, "This time slot is no longer available. Please choose another time.")
-                    return render(request, 'suc.html', {
-                        'doctors': doctors,
-                        'form_data': request.POST
-                    })
-            
-            # Create the booking
+                    return JsonResponse({'success': False, 'error': error})
+                messages.error(request, error)
+                return render(request, 'suc.html', {**base_ctx, 'form_data': request.POST})
+
+            # create booking
             Booking.objects.create(
-                name=name,
-                email=email,
-                contact_number=contact_number,
-                doctor=doctor,
-                appointment_type=appointment_type,
-                date=selected_date,
-                slot=slot,
-                time=start_time,
-                message=message,
+                name=name, email=email, contact_number=contact_number,
+                doctor=doctor, appointment_type=appointment_type,
+                date=selected_date, slot=slot, time=start_time, message=message
             )
-            
+
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': True})
-            
+
             messages.success(request, "Appointment booked successfully!")
-            return render(request, 'suc.html', {'doctors': doctors})
-            
+            return render(request, 'suc.html', base_ctx)
+
         except Exception as e:
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': False,
-                    'error': str(e)
-                })
-            else:
-                messages.error(request, f"Error booking appointment: {str(e)}")
-                return render(request, 'suc.html', {
-                    'doctors': doctors,
-                    'form_data': request.POST
-                })
-    
-    return render(request, 'suc.html', {'doctors': doctors})
+                return JsonResponse({'success': False, 'error': str(e)})
+            messages.error(request, f"Error booking: {e}")
+            return render(request, 'suc.html', {**base_ctx, 'form_data': request.POST})
+
+    # GET
+    return render(request, 'suc.html', base_ctx)
 
 
 
@@ -577,35 +580,55 @@ def manage_slots(request):
         return redirect('home')
 
     doctor = request.user.doctor_profile
+    DAYS   = ['Monday','Tuesday','Wednesday','Thursday','Friday']
+
+    # ensure a DayAvailability exists for each day
+    for d in DAYS:
+        DayAvailability.objects.get_or_create(doctor=doctor, day=d)
 
     if request.method == "POST":
-        day = request.POST.get('day')
-        start_time = request.POST.get('start_time')
-        end_time = request.POST.get('end_time')
-        slot_duration = request.POST.get('slot_duration', 30)
+        day           = request.POST['day']
+        start_time    = request.POST['start_time']
+        end_time      = request.POST['end_time']
+        slot_duration = int(request.POST.get('slot_duration', 30))
 
+        # parse and validate
         try:
-            start = datetime.strptime(start_time, '%H:%M').time()
-            end = datetime.strptime(end_time, '%H:%M').time()
+            st = datetime.strptime(start_time, '%H:%M').time()
+            et = datetime.strptime(end_time,   '%H:%M').time()
+        except ValueError:
+            messages.error(request, "Invalid time format")
+            return redirect('manage_slots')
 
-            if start >= end:
-                messages.error(request, "End time must be after start time")
-                return redirect('manage_slots')
+        if st >= et:
+            messages.error(request, "End time must be after start time")
+            return redirect('manage_slots')
 
-            DoctorSlot.objects.create(
-                doctor=doctor,
-                day=day,
-                start_time=start_time,
-                end_time=end_time,
-                slot_duration=slot_duration
-            )
-            messages.success(request, "Slot added successfully")
-        except Exception as e:
-            messages.error(request, f"Error adding slot: {str(e)}")
+        # **1) Overwrite**: delete any existing slots for that day
+        DoctorSlot.objects.filter(doctor=doctor, day=day).delete()
 
-    slots = DoctorSlot.objects.filter(doctor=doctor).order_by('day', 'start_time')
-    days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-    slots_by_day = [(day, slots.filter(day=day)) for day in days_order]
+        # create the new slot
+        DoctorSlot.objects.create(
+            doctor        = doctor,
+            day           = day,
+            start_time    = st,
+            end_time      = et,
+            slot_duration = slot_duration,
+            is_active     = True
+        )
+        messages.success(request, f"{day} slots updated")
+        return redirect('manage_slots')
+
+    # build context: for each day, grab availability + slots
+    avail_map    = { a.day: a for a in doctor.day_availabilities.all() }
+    slots_qs     = DoctorSlot.objects.filter(doctor=doctor)
+    slots_by_day = []
+    for d in DAYS:
+        slots_by_day.append({
+            'day':          d,
+            'is_available': avail_map[d].is_available,
+            'slots':        slots_qs.filter(day=d).order_by('start_time'),
+        })
 
     return render(request, 'manage_slots.html', {
         'slots_by_day': slots_by_day,
@@ -1192,3 +1215,114 @@ def book_appointment(request):
         return JsonResponse({'success': False, 'error': 'Missing form data.'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts              import render, get_object_or_404, redirect
+from django.contrib                import messages
+
+from .models import Doctor, Patient, Booking, DoctorRating
+
+@login_required
+def doctors_to_rate(request):
+    patient = get_object_or_404(Patient, user=request.user)
+
+    # all doctors this patient has booked
+    docs = Doctor.objects.filter(
+        booking__user=request.user
+    ).distinct()
+
+    # fetch your ratings in one go
+    ratings_qs = DoctorRating.objects.filter(patient=patient)
+    existing = { r.doctor_id: r.score for r in ratings_qs }
+
+    # build a flat list of (doctor, your_score_or_None)
+    doctor_list = []
+    for d in docs:
+        doctor_list.append({
+            'doctor': d,
+            'your_score': existing.get(d.id),     # int or None
+        })
+
+    return render(request, 'rate_doctor_list.html', {
+        'doctor_list': doctor_list,
+    })
+
+@login_required
+def submit_rating(request, doctor_id):
+    patient = get_object_or_404(Patient, user=request.user)
+    doc     = get_object_or_404(Doctor, id=doctor_id)
+
+    # ensure booking exists
+    if not Booking.objects.filter(user=request.user, doctor=doc).exists():
+        messages.error(request, "You can only rate doctors you’ve booked.")
+        return redirect('doctors_to_rate')
+
+    if request.method == 'POST':
+        score   = int(request.POST['score'])
+        comment = request.POST.get('comment','').strip()
+        DoctorRating.objects.update_or_create(
+            patient=patient, doctor=doc,
+            defaults={'score':score,'comment':comment}
+        )
+        messages.success(request, f"You rated Dr. {doc.user.last_name} {score}★")
+        return redirect('doctors_to_rate')
+
+    prev = DoctorRating.objects.filter(patient=patient, doctor=doc).first()
+    return render(request, 'rate_doctor_form.html', {
+        'doctor': doc,
+        'prev': prev
+    })
+
+@login_required
+def my_doctor_ratings(request):
+    patient = get_object_or_404(Patient, user=request.user)
+    ratings = DoctorRating.objects.filter(patient=patient).select_related('doctor__user')
+
+    return render(request, 'my_ratings.html', {
+        'ratings': ratings,
+    })
+
+# views.py
+from django.shortcuts    import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib       import messages
+from django.http          import JsonResponse
+from django.utils         import timezone
+from datetime             import datetime, timedelta
+
+from .models              import DoctorSlot, Booking, DayAvailability
+
+
+@login_required
+def toggle_day(request, day):
+    """Flip availability for a whole weekday and, if turning off,
+       bump all future Bookings on that day +7 days."""
+    doctor = request.user.doctor_profile
+    avail  = get_object_or_404(DayAvailability, doctor=doctor, day=day)
+    avail.is_available = not avail.is_available
+    avail.save()
+
+    if not avail.is_available:
+        today = timezone.localdate()
+        # Django week_day: Sunday=1 … Saturday=7
+        target_wd = ['Monday','Tuesday','Wednesday','Thursday','Friday'].index(day) + 2
+        to_move = Booking.objects.filter(
+            doctor=doctor,
+            date__gte=today,
+            date__week_day=target_wd
+        )
+        for b in to_move:
+            b.date += timedelta(days=7)
+            b.save()
+
+    return JsonResponse({'success': True, 'is_available': avail.is_available})
+
+
+@login_required
+def delete_slot(request, slot_id):
+    """Delete a single DoctorSlot."""
+    doctor = request.user.doctor_profile
+    slot   = get_object_or_404(DoctorSlot, pk=slot_id, doctor=doctor)
+    slot.delete()
+    return JsonResponse({'success': True})

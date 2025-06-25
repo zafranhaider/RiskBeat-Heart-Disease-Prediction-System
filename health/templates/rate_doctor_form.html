@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<div class="container" style="width:50%; margin-top:8%">
+  <h3>Rate Dr. {{ doctor.user.get_full_name }}</h3>
+  <form method="post">{% csrf_token %}
+    <div class="form-group">
+      <label>Score:</label><br>
+      {% for score in "12345" %}
+        <label class="mr-3">
+          <input type="radio" name="score" value="{{ score }}"
+            {% if prev and prev.score|stringformat:"s" == score %}checked{% endif %}>
+          {{ score }}★
+        </label>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      <label>Comment (optional):</label>
+      <textarea name="comment" class="form-control" rows="3">
+        {% if prev %}{{ prev.comment }}{% endif %}
+      </textarea>
+    </div>
+    <button class="btn btn-success">Submit</button>
+    <a href="{% url 'doctors_to_rate' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
+{% endblock %}
