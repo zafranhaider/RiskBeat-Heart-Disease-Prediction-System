@@ -74,9 +74,6 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - Enables users to find heart specialists by location or expertise.
 - Displays contact details and availability for consultations.
 
-### Fitness Tracker
-- Helps users manage fitness goals by tracking daily calories, food intake, nutritional information, and exercise calories burned.
-
 ### Health Deals and Checkup Alerts
 - Notifies users about free health checkup events and medicine discounts.
 
@@ -95,7 +92,6 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 - **Machine Learning Models**: Gradient Boosting and Logistic Regression for accurate predictions.
 - **User-Friendly Interface**: Easy navigation for health data submission and result viewing.
 - **Doctor Search and Appointment Booking**: Integrated module for finding and booking doctors.
-- **Fitness and Lifestyle Tracking**: Supports health and fitness management.
 - **Feedback Collection**: System improvement based on user suggestions.
 
 ---
@@ -148,8 +144,5 @@ The Heart Disease Risk Prediction System addresses these challenges by:
 ---
 
 
-
-## Feedback and Contributions
-We welcome feedback and contributions. If you find any issues or have suggestions for improvement, please create an issue or submit a pull request.
 
 
