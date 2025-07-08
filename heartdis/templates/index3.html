@@ -502,6 +502,16 @@
             {% else %}
               Your results will appear here after submission
             {% endif %}
+
+            {% if explanations %}
+    <h3 style="color:#003366;">Health Insight:</h3>
+    <ul>
+        {% for reason in explanations %}
+            <li>{{ reason }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
           </div>
         </div>
 
@@ -627,9 +637,37 @@
             </button>
           </div>
         </form>
+{% if prediction %}
+    <div style="max-width: 600px; margin: 30px auto; padding: 25px; background: linear-gradient(135deg, #fdfcfb, #e2d1c3); border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-family: 'Segoe UI', sans-serif;">
+        <p style="font-size: 20px; font-weight: bold; color: #2c3e50; text-align: center;">
+            <span style="color: #27ae60;">✔️ Result:</span> {{ prediction }}
+        </p>
+        <form method="get" action="{% url 'generate_pdf_report' %}" style="text-align: center; margin-top: 20px;">
+            {% for key, value in user_data.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+            <input type="hidden" name="prediction" value="{{ prediction }}">
+            <button type="submit" style="
+                background: #e74c3c;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            " onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='#e74c3c'">
+                📄 Download Report as PDF
+            </button>
+        </form>
+    </div>
+{% endif %}
+
             </div>
         </div>
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

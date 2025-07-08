@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Heart Health Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 14px; padding: 20px; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        td, th { border: 1px solid #999; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Heart Health Report</h1>
+    <table>
+        {% for key, value in user_data.items %}
+        <tr>
+            <th>{{ key|capfirst }}</th>
+            <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
