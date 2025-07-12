@@ -428,6 +428,7 @@
             z-index: 1;
         }
     </style>
+    
 </head>
 <body>
     <div class="container">
@@ -514,6 +515,25 @@
 
           </div>
         </div>
+
+
+<!-- Google Translate Language Switcher -->
+<div id="google_translate_element" style="text-align:right; margin-bottom: 10px;"></div>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,ur,ar',  // Add more if needed
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+</script>
+
+<script type="text/javascript" 
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
 
         <form method="POST" action="{% url 'predict4' %}">
           {% csrf_token %}
@@ -632,9 +652,23 @@
               </div>
             </div>
 
+
+<div id="heart-age-box" style="margin: 20px 0; display:none;">
+  <p style="font-weight: bold;" id="heart-age-output"></p>
+</div>
+
             <button type="submit" class="submit-btn">
               <i class="fas fa-heartbeat"></i> Assess My Heart Health
             </button>
+            
+<div id="risk-score-container" style="margin: 20px 0;">
+  <label><strong>Live Risk Estimation:</strong></label>
+  <div style="background-color: #eee; border-radius: 10px; overflow: hidden;">
+    <div id="risk-bar" style="width: 0%; height: 20px; background-color: green; transition: width 0.5s;"></div>
+  </div>
+  <p id="risk-label" style="margin-top: 5px; font-weight: bold;"></p>
+</div>
+
           </div>
         </form>
 {% if prediction %}
@@ -753,6 +787,118 @@
             
             return false; // Prevent actual form submission for this demo
         }
-    </script>
+
+// Save input on change
+document.querySelectorAll("input, select").forEach((input) => {
+    const name = input.name;
+    const savedValue = localStorage.getItem(name);
+    if (savedValue) input.value = savedValue;
+
+    input.addEventListener("change", () => {
+        localStorage.setItem(name, input.value);
+    });
+});
+
+// Optional: clear form memory button
+function clearFormMemory() {
+    document.querySelectorAll("input, select").forEach((input) => {
+        localStorage.removeItem(input.name);
+        input.value = "";
+    });
+}
+
+  function calculateRiskScore() {
+    let age = parseInt(document.getElementById('age')?.value || 0);
+    let ap_hi = parseInt(document.getElementById('ap_hi')?.value || 0);
+    let ap_lo = parseInt(document.getElementById('ap_lo')?.value || 0);
+    let cholesterol = parseInt(document.getElementById('cholesterol')?.value || 1);
+    let gluc = parseInt(document.getElementById('gluc')?.value || 1);
+    let smoke = parseInt(document.getElementById('smoke')?.value || 0);
+    let alco = parseInt(document.getElementById('alco')?.value || 0);
+    let active = parseInt(document.getElementById('active')?.value || 1);
+
+    // Basic scoring logic (you can refine this)
+    let score = 0;
+    if (age > 50) score += 2;
+    if (ap_hi > 140 || ap_lo > 90) score += 2;
+    if (cholesterol > 1) score += (cholesterol - 1) * 2;
+    if (gluc > 1) score += (gluc - 1) * 2;
+    if (smoke) score += 2;
+    if (alco) score += 1;
+    if (!active) score += 1;
+
+    let maxScore = 12;
+    let riskPercent = Math.min(100, (score / maxScore) * 100);
+
+    let bar = document.getElementById('risk-bar');
+    let label = document.getElementById('risk-label');
+
+    bar.style.width = riskPercent + "%";
+
+    if (riskPercent < 30) {
+      bar.style.backgroundColor = "green";
+      label.innerHTML = "✅ Low Risk";
+    } else if (riskPercent < 70) {
+      bar.style.backgroundColor = "orange";
+      label.innerHTML = "⚠️ Moderate Risk";
+    } else {
+      bar.style.backgroundColor = "red";
+      label.innerHTML = "❗ High Risk";
+    }
+  }
+
+  // Listen to changes on relevant inputs
+  ['age', 'ap_hi', 'ap_lo', 'cholesterol', 'gluc', 'smoke', 'alco', 'active'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', calculateRiskScore);
+    document.getElementById(id)?.addEventListener('change', calculateRiskScore);
+  });
+
+  function estimateHeartAge() {
+    let age = parseInt(document.getElementById("age")?.value || 0);
+    let ap_hi = parseInt(document.getElementById("ap_hi")?.value || 0);
+    let cholesterol = parseInt(document.getElementById("cholesterol")?.value || 1);
+    let gluc = parseInt(document.getElementById("gluc")?.value || 1);
+    let smoke = parseInt(document.getElementById("smoke")?.value || 0);
+    let alco = parseInt(document.getElementById("alco")?.value || 0);
+    let active = parseInt(document.getElementById("active")?.value || 1);
+
+    if (!age || age < 20) return;
+
+    // Custom heart age logic
+    let heartAge = age;
+
+    if (ap_hi >= 140) heartAge += 5;
+    if (cholesterol > 1) heartAge += (cholesterol - 1) * 4;
+    if (gluc > 1) heartAge += (gluc - 1) * 3;
+    if (smoke) heartAge += 5;
+    if (alco) heartAge += 3;
+    if (!active) heartAge += 2;
+
+    // Limit heart age to max 90
+    heartAge = Math.min(heartAge, 90);
+
+    let gap = heartAge - age;
+    let msg = `🧍 Your real age: ${age} | ❤️ Estimated heart age: ${heartAge}`;
+
+    if (gap <= 0) {
+      msg += " ✅ (You're doing great!)";
+    } else if (gap <= 5) {
+      msg += " ⚠️ (Slightly above normal)";
+    } else {
+      msg += " ❗ (Higher than expected)";
+    }
+
+    document.getElementById("heart-age-output").innerText = msg;
+    document.getElementById("heart-age-box").style.display = "block";
+  }
+
+  // Call heart age on form input
+  ['age', 'ap_hi', 'cholesterol', 'gluc', 'smoke', 'alco', 'active'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', estimateHeartAge);
+    document.getElementById(id)?.addEventListener('input', estimateHeartAge);
+  });
+</script>
+
+
 </body>
 </html>
