@@ -1,0 +1,22 @@
+The progress bar gives a rough, rule-based estimate; the trained model gives a data-driven, accurate prediction based on real patient patterns.
+
+Catch: The bar is for user engagement; the model is for real diagnosis-level accuracy.
+
+
+
+
+why we use model when we can use checks ----
+______________________________________________________________________________________________________________________
+Because real-world health risks aren't linear or obvious.
+
+Rule-based checks only work for simple, fixed cases. But health outcomes depend on complex, non-obvious patterns — like how moderate BP + high glucose + no activity might be more dangerous than very high BP alone.
+
+A model learns from thousands of real cases — it can detect interactions, outliers, and hidden correlations that you can't cover with manual conditions.
+
+Manual logic = assumption-based. Model = evidence-based.
+
+That's why even doctors use predictive models — not checklists — for accurate, reliable diagnosis.
+
+
+
+PT

@@ -1,129 +1,385 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block body %}
-<div class="container mt-5">
-    <h3 class="text-uppercase text-dark font-weight-bold text-center">Search Doctor</h3>
-    <hr/>
-    <div class="login px-3">
-        <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>Select By</label>
-                <select class="form-control" name="type" required>
-                    <option value="Name">Name</option>
-                    <option value="Type">Type</option>
-                    <option value="Address">Address</option>
-                </select>
+<style>
+    :root {
+        --primary: #2c6fbb;
+        --primary-dark: #1a4c8a;
+        --secondary: #e9f2fa;
+        --accent: #ff6b6b;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --success: #28a745;
+        --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        --transition: all 0.3s ease;
+    }
+    
+    .search-hero {
+        background: linear-gradient(135deg, #2c6fbb 0%, #1a4c8a 100%);
+        color: white;
+        padding: 3rem 0;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 3rem;
+        box-shadow: var(--shadow);
+    }
+    
+    .search-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: none;
+        overflow: hidden;
+    }
+    
+    .search-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .search-header {
+        background-color: var(--primary);
+        color: white;
+        padding: 1.2rem 1.5rem;
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(44, 111, 187, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        padding: 0.7rem 1.5rem;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+    
+    .results-title {
+        color: var(--primary-dark);
+        font-weight: 700;
+        position: relative;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .results-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--accent);
+        border-radius: 2px;
+    }
+    
+    .doctor-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+    
+    .doctor-table th {
+        background-color: var(--primary);
+        color: white;
+        padding: 1.2rem 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    
+    .doctor-table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .doctor-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .doctor-table tr:hover td {
+        background-color: rgba(233, 242, 250, 0.5);
+    }
+    
+    .no-results {
+        background: white;
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+    }
+    
+    .no-results i {
+        font-size: 4rem;
+        color: #ced4da;
+        margin-bottom: 1.5rem;
+    }
+    
+    .specialty-badge {
+        background: #e3f2fd;
+        color: var(--primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    
+    .select-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        pointer-events: none;
+    }
+    
+    .form-group {
+        position: relative;
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(44, 111, 187, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: var(--primary);
+        font-size: 1.8rem;
+    }
+    
+    .features-section {
+        background: var(--secondary);
+        padding: 4rem 0;
+        margin-top: 4rem;
+    }
+    
+    .feature-card {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        height: 100%;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card h5 {
+        color: var(--primary-dark);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="search-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-5 fw-bold mb-3">Find the Perfect Doctor</h1>
+                <p class="lead mb-4">Search by name, specialty, or location to find qualified healthcare professionals ready to assist you.</p>
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center me-4">
+                        <i class="fas fa-user-md fa-2x me-2"></i>
+                        <div>
+                            <div class="fw-bold">Many</div>
+                            <small>Qualified Doctors</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center me-4">
+                        <i class="fas fa-stethoscope fa-2x me-2"></i>
+                        <div>
+                            <div class="fw-bold">Many</div>
+                            <small>Specialties</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Write Text</label>
-                <input type="text" class="form-control" name="tex" placeholder="Enter Contact" required>
+            <div class="col-md-6 text-center">
+                <img src="https://cdn-icons-png.flaticon.com/512/5996/5996831.png" alt="Doctor Search" class="img-fluid" style="max-height: 250px;">
             </div>
-            <button type="submit" class="btn btn-primary btn-block mt-3">Search</button>
-        </form>
+        </div>
     </div>
 </div>
 
-{% if t == "Name" %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="search-card">
+                <div class="search-header">
+                    <h3 class="mb-0"><i class="fas fa-search me-2"></i>Search Doctor</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            <label class="form-label fw-bold mb-2">Search By</label>
+                            <div class="position-relative">
+                                <i class="fas fa-filter select-icon"></i>
+                                <select class="form-select form-select-lg" name="type" required>
+                                    <option value="Name">Doctor's Name</option>
+                                    <option value="Type">Specialty</option>
+                                    <option value="Address">Location</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label class="form-label fw-bold mb-2">Search Criteria</label>
+                            <div class="position-relative">
+                            
+                                <input type="text" class="form-control form-control-lg ps-5" name="tex" placeholder="Enter search term..." required>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>Search Doctors
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if t == "Name" or t == "Type" or t == "Address" %}
 <div class="container mt-5">
-    <h1 class="text-center font-weight-bold" style="font-family: 'Monotype Corsiva'; color: #E6120E;">View Doctor Detail</h1>
-    <hr>
-    <div class="table-responsive">
-        <table id="example" class="table table-bordered table-hover table-striped">
-            <thead class="thead-dark">
+    <h1 class="text-center results-title">Search Results</h1>
+    
+    {% if doc %}
+    <div class="table-responsive rounded">
+        <table class="table doctor-table">
+            <thead>
                 <tr>
                     <th>#</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Experience</th>
+                    <th>Doctor</th>
                     <th>Contact</th>
-                    <th>Address</th>
-                    <th>Category</th>
+                    <th>Experience</th>
+                    <th>Location</th>
+                    <th>Specialty</th>
                 </tr>
             </thead>
             <tbody>
                 {% for i in doc %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ i.user.first_name }} {{ i.user.last_name }}</td>
-                    <td>{{ i.user.email }}</td>
-                    <td>{{ i.experience }}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3">
+                                <div class="avatar-img rounded-circle bg-light" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background-color: #e3f2fd;">
+                                    <i class="fas fa-user-md text-primary"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fw-bold">{{ i.user.first_name }} {{ i.user.last_name }}</div>
+                                <div class="text-muted small">{{ i.user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
                     <td>{{ i.contact }}</td>
+                    <td>{{ i.experience }} years</td>
                     <td>{{ i.address }}</td>
-                    <td>{{ i.category }}</td>
+                    <td><span class="specialty-badge">{{ i.category }}</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-</div>
-
-{% elif t == "Type" %}
-<div class="container mt-5">
-    <h1 class="text-center font-weight-bold" style="font-family: 'Monotype Corsiva'; color: #E6120E;">View Doctor Detail</h1>
-    <hr>
-    <div class="table-responsive">
-        <table id="example" class="table table-bordered table-hover table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Experience</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                    <th>Category</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in doc %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ i.user.first_name }} {{ i.user.last_name }}</td>
-                    <td>{{ i.user.email }}</td>
-                    <td>{{ i.experience }}</td>
-                    <td>{{ i.contact }}</td>
-                    <td>{{ i.address }}</td>
-                    <td>{{ i.category }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% else %}
+    <div class="no-results">
+        <i class="fas fa-search-minus"></i>
+        <h3 class="mb-3">No Doctors Found</h3>
+        <p class="text-muted mb-4">We couldn't find any doctors matching your search criteria. Please try a different search term.</p>
+        <a href="#" class="btn btn-outline-primary">Try Again</a>
     </div>
-</div>
-
-{% elif t == "Address" %}
-<div class="container mt-5">
-    <h1 class="text-center font-weight-bold" style="font-family: 'Monotype Corsiva'; color: #E6120E;">View Doctor Detail</h1>
-    <hr>
-    <div class="table-responsive">
-        <table id="example" class="table table-bordered table-hover table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Experience</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                    <th>Category</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in doc %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ i.user.first_name }} {{ i.user.last_name }}</td>
-                    <td>{{ i.user.email }}</td>
-                    <td>{{ i.experience }}</td>
-                    <td>{{ i.contact }}</td>
-                    <td>{{ i.address }}</td>
-                    <td>{{ i.category }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% endif %}
 </div>
 {% endif %}
+
+<div class="features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="results-title">Why Choose Our Doctors</h2>
+            <p class="lead">We connect you with the best healthcare professionals</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h5>Qualified Professionals</h5>
+                    <p class="text-muted">All our doctors are board-certified and have extensive experience in their specialties.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h5>Easy Appointments</h5>
+                    <p class="text-muted">Book appointments online with your preferred doctor at your convenience.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h5>Patient-Centered Care</h5>
+                    <p class="text-muted">Our doctors prioritize your health and wellbeing with personalized treatment plans.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add FontAwesome icons
+    document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">');
+    
+    // Add hover effects to table rows
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableRows = document.querySelectorAll('.doctor-table tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.cursor = 'pointer';
+                this.style.transition = 'background-color 0.2s ease';
+            });
+        });
+    });
+</script>
 {% endblock %}

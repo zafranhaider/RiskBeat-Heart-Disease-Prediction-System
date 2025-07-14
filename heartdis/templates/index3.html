@@ -463,7 +463,52 @@
                     <div class="number">1 in 4</div>
                     <div class="label">Adults at Risk</div>
                 </div>
+                
             </div>
+            
+<!-- Animated Beating Heart -->
+<div style="margin-top: 70px; margin-bottom: 20px; text-align: center;">
+  <div id="heart" style="
+    width: 100px;
+    height: 90px;
+    background: red;
+    position: relative;
+    margin: 0 auto;
+    transform: rotate(-45deg);
+    animation: beat 1s infinite;
+  ">
+    <div style="
+      content: '';
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: -50px;
+      left: 0;
+    "></div>
+    <div style="
+      content: '';
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      left: 50px;
+      top: 0;
+    "></div>
+  </div>
+</div>
+
+<!-- Heart Animation -->
+<style>
+@keyframes beat {
+  0% { transform: rotate(-45deg) scale(1); }
+  50% { transform: rotate(-45deg) scale(1.1); }
+  100% { transform: rotate(-45deg) scale(1); }
+}
+</style>
+
         </div>
         
         <div class="form-card">
@@ -661,16 +706,25 @@ function googleTranslateElementInit() {
               <i class="fas fa-heartbeat"></i> Assess My Heart Health
             </button>
             
-<div id="risk-score-container" style="margin: 20px 0;">
+
+
+
+          </div>
+        </form>
+        <div id="risk-score-container" style="margin: 20px 0;">
   <label><strong>Live Risk Estimation:</strong></label>
   <div style="background-color: #eee; border-radius: 10px; overflow: hidden;">
     <div id="risk-bar" style="width: 0%; height: 20px; background-color: green; transition: width 0.5s;"></div>
   </div>
   <p id="risk-label" style="margin-top: 5px; font-weight: bold;"></p>
+  <small style="color: #888; font-style: italic; display: block; margin-top: 10px;">
+  ⚠️ This is a rough estimation. For accurate results, please click on <strong>“Assess My Heart Health”</strong> to get a prediction from our model trained on over <strong>70,000+ data samples</strong>.
+
+  </small>
 </div>
 
-          </div>
-        </form>
+
+
 {% if prediction %}
     <div style="max-width: 600px; margin: 30px auto; padding: 25px; background: linear-gradient(135deg, #fdfcfb, #e2d1c3); border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-family: 'Segoe UI', sans-serif;">
         <p style="font-size: 20px; font-weight: bold; color: #2c3e50; text-align: center;">
