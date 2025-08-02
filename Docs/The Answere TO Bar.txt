@@ -1,3 +1,4 @@
+We Can Use Bar For Prediction Why We use Model
 The progress bar gives a rough, rule-based estimate; the trained model gives a data-driven, accurate prediction based on real patient patterns.
 
 Catch: The bar is for user engagement; the model is for real diagnosis-level accuracy.

@@ -9,14 +9,30 @@
 <link href="{% static 'css/owl.carousel.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/owl.theme.default.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/templatemo-medic-care.css' %}" rel="stylesheet">
+
 <style>
     body {
         margin: 0;
         padding: 0;
     }
-    #submit-button {
-        background-color: #6a6767;
-        color: white;
+
+    .diseases-list .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .diseases-list .card-header {
+        padding: 1rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .diseases-list .card-body {
+        padding: 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
     }
 </style>
 
@@ -25,19 +41,9 @@
         <div class="row">
             <div class="col-lg-8 col-12 mx-auto">
                 <div class="diseases-info">
-                    <h2 class="text-center mb-lg-3 mb-2">Heart Diseases Information</h2>
-                    
-                    <!-- User Input Form for Symptoms -->
-                    <form method="post" action="{% url 'disease_check' %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="user-symptoms" class="form-label">Enter your symptoms</label>
-                            <textarea id="user-symptoms" name="symptoms" class="form-control" rows="3" required></textarea>
-                        </div>
-                        <button type="submit" id="submit-button" class="btn btn-primary">Check Disease</button>
-                    </form>
-                    
-                    <!-- Diseases Display -->
+                    <h2 class="text-center mb-lg-3 mb-2">All Disease Information</h2>
+
+                    <!-- Displaying all diseases -->
                     <div class="diseases-list mt-4">
                         {% if diseases %}
                             {% for disease in diseases %}
@@ -53,34 +59,13 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <p>No matching diseases found.</p>
+                            <p>No disease data available.</p>
                         {% endif %}
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-
-<style>
-.diseases-list .card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.diseases-list .card-header {
-    padding: 1rem;
-    font-size: 1.25rem;
-    font-weight: bold;
-}
-
-.diseases-list .card-body {
-    padding: 1rem;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-</style>
 {% endblock %}

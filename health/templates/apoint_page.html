@@ -298,6 +298,28 @@
       </div>
     </div>
   </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("date");
+
+    // Set min attribute to today (YYYY-MM-DD)
+    const today = new Date();
+    const formattedToday = today.toISOString().split('T')[0];
+    dateInput.setAttribute("min", formattedToday);
+
+    // Optional: Extra manual check if user types date manually
+    dateInput.addEventListener("change", function () {
+        const selectedDate = new Date(this.value);
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);  // Normalize to midnight
+
+        if (selectedDate < now) {
+            alert("You cannot select a past date.");
+            this.value = "";
+        }
+    });
+});
+</script>
 
 
 <!-- Doctor Profiles -->

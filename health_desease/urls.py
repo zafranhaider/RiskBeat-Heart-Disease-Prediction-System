@@ -66,6 +66,7 @@ urlpatterns = [
     path('delete_doctor/<int:pid>/', delete_doctor, name="delete_doctor"),
     path('assign_status/<int:pid>/', assign_status, name="assign_status"),
     path('delete_patient/<int:pid>/', delete_patient, name="delete_patient"),
+    path('doctor/ratings/', doctor_rating_responses, name='doctor_rating_responses'),
     path('delete_feedback/<int:pid>/', delete_feedback, name="delete_feedback"),
     path('predict_desease/<str:pred>/<str:accuracy>/', predict_desease, name="predict_desease"),
     path('apoint/', User_book, name="apoint"),

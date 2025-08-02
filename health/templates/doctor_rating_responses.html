@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<div class="container mt-5">
+  <h2 class="text-center">Your Ratings & Responses</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Patient</th>
+        <th>Rating</th>
+        <th>Comment</th>
+        <th>Your Response</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in ratings %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ r.patient.user.get_full_name }}</td>
+        <td>{{ r.score }}★</td>
+        <td>{{ r.comment|default:"—" }}</td>
+        <td>
+          {% if r.doctor_response %}
+            {{ r.doctor_response }}
+          {% else %}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="rating_id" value="{{ r.id }}">
+              <textarea name="doctor_response" class="form-control" rows="2" required></textarea>
+              <button class="btn btn-sm btn-success mt-2" type="submit">Reply</button>
+            </form>
+          {% endif %}
+        </td>
+        <td>{{ r.created|date:"Y-m-d" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

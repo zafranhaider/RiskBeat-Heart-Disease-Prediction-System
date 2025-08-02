@@ -104,11 +104,14 @@ class Booking(models.Model):
         return f"{self.user.username if self.user else self.name} – {self.date} {self.time}"
 
 
+# models.py
+
 class DoctorRating(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='ratings')
     doctor  = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='ratings')
     score   = models.PositiveSmallIntegerField(choices=[(i,i) for i in range(1,6)])
     comment = models.TextField(blank=True)
+    doctor_response = models.TextField(blank=True, null=True)  # ← Add this line
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

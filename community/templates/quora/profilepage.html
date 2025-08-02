@@ -10,7 +10,7 @@
 			{% endif %}
             {% if request.user.is_authenticated %}
 				{% if request.user == user %}
-					<a class="btn btn-secondary mb-2" href="{% url 'quora:edit_profile' %}">Edit Profile</a>
+					<a class="btn btn-secondary mb-2" href="{% url 'quora:edit_profile' %}"></a>
 				{% endif %}
 			{% endif %}
         </div>

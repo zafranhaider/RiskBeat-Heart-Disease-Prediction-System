@@ -599,6 +599,42 @@ def booking_form(request):
 
 
 
+
+
+def get_available_slots(request):
+    doctor_id = request.GET.get('doctor_id')
+    date_str  = request.GET.get('date')
+
+    if not doctor_id or not date_str:
+        return JsonResponse({'slots': []})
+
+    selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    today = timezone.localdate()
+
+    # ✅ Skip if selected date is in the past
+    if selected_date < today:
+        return JsonResponse({'slots': []})
+
+    weekday = selected_date.strftime('%A')
+    now_time = timezone.localtime().time()
+
+    slots = DoctorSlot.objects.filter(doctor_id=doctor_id, day=weekday)
+    response_slots = []
+
+    for slot in slots:
+        if selected_date == today and slot.start_time <= now_time:
+            continue  # ✅ Skip past times today
+
+        is_booked = Booking.objects.filter(slot=slot, date=selected_date).exists()
+        response_slots.append({
+            'slot_id': slot.id,
+            'start_time': str(slot.start_time),
+            'formatted': f"{slot.start_time.strftime('%I:%M %p')} - {slot.end_time.strftime('%I:%M %p')}",
+            'is_booked': is_booked
+        })
+
+    return JsonResponse({'slots': response_slots})
+
 @login_required
 def manage_slots(request):
     if not hasattr(request.user, 'doctor_profile'):
@@ -660,44 +696,6 @@ def manage_slots(request):
         'slots_by_day': slots_by_day,
     })
 
-
-from django.http import JsonResponse
-from datetime import datetime
-from django.utils import timezone
-
-def get_available_slots(request):
-    doctor_id = request.GET.get('doctor_id')
-    date_str  = request.GET.get('date')
-
-    if not doctor_id or not date_str:
-        return JsonResponse({'slots': []})
-
-    # parse date and get weekday
-    selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-    weekday = selected_date.strftime('%A')
-
-    # get current date/time
-    today = timezone.localdate()
-    now_time = timezone.localtime().time()
-
-    slots = DoctorSlot.objects.filter(doctor_id=doctor_id, day=weekday)
-    response_slots = []
-
-    for slot in slots:
-        # skip slots that started in the past if date is today
-        if selected_date == today and slot.start_time <= now_time:
-            continue
-
-        is_booked = Booking.objects.filter(slot=slot, date=selected_date).exists()
-        response_slots.append({
-            'slot_id': slot.id,
-            'start_time': str(slot.start_time),
-            'formatted': f"{slot.start_time.strftime('%I:%M %p')} - {slot.end_time.strftime('%I:%M %p')}",
-            'is_booked': is_booked
-        })
-
-    return JsonResponse({'slots': response_slots})
-
 @login_required
 @require_POST
 def toggle_slot(request, slot_id):
@@ -742,20 +740,28 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Doctor, Booking
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Booking, Doctor
+
 @login_required
 def appointment_status(request):
-    try:
-        # Check if the logged-in user is a doctor
-        doctor = Doctor.objects.get(user=request.user)
-        # Fetch bookings for the doctor
-        bookings = Booking.objects.filter(doctor=doctor).order_by('-date', '-time')
-    except Doctor.DoesNotExist:
-        # If the user is not a doctor, fetch bookings where their email matches
-        bookings = Booking.objects.filter(user=request.user).order_by('-date', '-time')
+    # If the user is a superuser, show all bookings
+    if request.user.is_superuser:
+        bookings = Booking.objects.all().order_by('-date', '-time')
+    else:
+        try:
+            # Check if the user is a doctor
+            doctor = Doctor.objects.get(user=request.user)
+            bookings = Booking.objects.filter(doctor=doctor).order_by('-date', '-time')
+        except Doctor.DoesNotExist:
+            # Otherwise, assume it's a patient
+            bookings = Booking.objects.filter(user=request.user).order_by('-date', '-time')
 
     return render(request, 'appointment_status.html', {
         'bookings': bookings
     })
+
 
 
 ########################################################################################################
@@ -1101,21 +1107,374 @@ def predict_corndesease(request):
 
 
 
-@login_required()
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+# Example static data, replace with your model if needed
+heart_diseases = [
+    {
+        'name': "Acute Coronary Syndrome",
+        'symptoms': "Chest pain, nausea, sweating",
+        'causes': "Reduced blood flow to heart muscle",
+        'treatment': "Antiplatelet drugs, angioplasty"
+    },
+    {
+        'name': "Angina Pectoris",
+        'symptoms': "Chest pressure, pain radiating to arm",
+        'causes': "Coronary artery narrowing",
+        'treatment': "Nitroglycerin, beta-blockers"
+    },
+    {
+        'name': "Aortic Aneurysm",
+        'symptoms': "Back pain, abdominal pulsation",
+        'causes': "Atherosclerosis, genetic factors",
+        'treatment': "Surgical repair, blood pressure control"
+    },
+    {
+        'name': "Aortic Dissection",
+        'symptoms': "Tearing chest pain, unequal pulses",
+        'causes': "High blood pressure, connective tissue disorders",
+        'treatment': "Emergency surgery, blood pressure management"
+    },
+    {
+        'name': "Aortic Stenosis",
+        'symptoms': "Chest pain, fainting, heart murmur",
+        'causes': "Calcification of aortic valve",
+        'treatment': "Valve replacement"
+    },
+    {
+        'name': "Arrhythmogenic Right Ventricular Dysplasia",
+        'symptoms': "Palpitations, fainting, ventricular arrhythmias",
+        'causes': "Genetic mutation",
+        'treatment': "Implantable defibrillator, antiarrhythmics"
+    },
+    {
+        'name': "Atrial Fibrillation",
+        'symptoms': "Irregular heartbeat, fatigue, palpitations",
+        'causes': "High blood pressure, heart valve disease",
+        'treatment': "Rate control, anticoagulants, ablation"
+    },
+    {
+        'name': "Atrial Flutter",
+        'symptoms': "Rapid heartbeat, shortness of breath",
+        'causes': "Electrical circuit abnormalities",
+        'treatment': "Cardioversion, ablation"
+    },
+    {
+        'name': "Brugada Syndrome",
+        'symptoms': "Fainting, irregular heartbeat",
+        'causes': "Genetic sodium channel disorder",
+        'treatment': "Implantable defibrillator"
+    },
+    {
+        'name': "Cardiac Amyloidosis",
+        'symptoms': "Fatigue, swelling, irregular heartbeat",
+        'causes': "Protein deposits in heart tissue",
+        'treatment': "Chemotherapy, heart transplant"
+    },
+    {
+        'name': "Cardiac Sarcoidosis",
+        'symptoms': "Palpitations, shortness of breath",
+        'causes': "Inflammatory granulomas",
+        'treatment': "Immunosuppressants, pacemaker"
+    },
+    {
+        'name': "Cardiogenic Shock",
+        'symptoms': "Rapid breathing, confusion, weak pulse",
+        'causes': "Severe heart attack",
+        'treatment': "Vasopressors, mechanical support"
+    },
+    {
+        'name': "Cardiomyopathy (Dilated)",
+        'symptoms': "Fatigue, swelling, palpitations",
+        'causes': "Genetic, alcohol abuse, infections",
+        'treatment': "ACE inhibitors, beta-blockers"
+    },
+    {
+        'name': "Cardiomyopathy (Hypertrophic)",
+        'symptoms': "Chest pain, fainting, shortness of breath",
+        'causes': "Genetic mutation",
+        'treatment': "Beta-blockers, septal reduction"
+    },
+    {
+        'name': "Cardiomyopathy (Restrictive)",
+        'symptoms': "Fatigue, swelling, exercise intolerance",
+        'causes': "Amyloidosis, radiation therapy",
+        'treatment': "Diuretics, transplant"
+    },
+    {
+        'name': "Chronic Thromboembolic Pulmonary Hypertension",
+        'symptoms': "Shortness of breath, fatigue",
+        'causes': "Blood clots in lungs",
+        'treatment': "Pulmonary endarterectomy"
+    },
+    {
+        'name': "Congenital Heart Disease (Atrial Septal Defect)",
+        'symptoms': "Shortness of breath, fatigue",
+        'causes': "Birth defect",
+        'treatment': "Surgical repair"
+    },
+    {
+        'name': "Congenital Heart Disease (Ventricular Septal Defect)",
+        'symptoms': "Poor feeding, failure to thrive",
+        'causes': "Birth defect",
+        'treatment': "Surgical repair"
+    },
+    {
+        'name': "Cor Pulmonale",
+        'symptoms': "Shortness of breath, swelling",
+        'causes': "Chronic lung disease",
+        'treatment': "Oxygen therapy, diuretics"
+    },
+    {
+        'name': "Coronary Artery Dissection",
+        'symptoms': "Sudden chest pain, nausea",
+        'causes': "Spontaneous artery tear",
+        'treatment': "Stenting, bypass surgery"
+    },
+    {
+        'name': "Dextrocardia",
+        'symptoms': "Usually asymptomatic",
+        'causes': "Congenital condition",
+        'treatment': "Management of associated defects"
+    },
+    {
+        'name': "Ebstein's Anomaly",
+        'symptoms': "Cyanosis, heart murmur",
+        'causes': "Congenital defect",
+        'treatment': "Valve repair/replacement"
+    },
+    {
+        'name': "Eisenmenger Syndrome",
+        'symptoms': "Blue skin, shortness of breath",
+        'causes': "Congenital heart defects",
+        'treatment': "Oxygen, phlebotomy"
+    },
+    {
+        'name': "Endocarditis",
+        'symptoms': "Fever, heart murmur, fatigue",
+        'causes': "Bacterial infection",
+        'treatment': "Antibiotics, valve surgery"
+    },
+    {
+        'name': "Heart Block (First Degree)",
+        'symptoms': "Usually asymptomatic",
+        'causes': "Aging, heart disease",
+        'treatment': "Usually none needed"
+    },
+    {
+        'name': "Heart Block (Second Degree)",
+        'symptoms': "Dizziness, fainting",
+        'causes': "Aging, heart disease",
+        'treatment': "Pacemaker if symptomatic"
+    },
+    {
+        'name': "Heart Block (Third Degree)",
+        'symptoms': "Fatigue, fainting, dizziness",
+        'causes': "Complete electrical pathway blockage",
+        'treatment': "Pacemaker"
+    },
+    {
+        'name': "Heart Valve Disease (Mitral Regurgitation)",
+        'symptoms': "Fatigue, shortness of breath",
+        'causes': "Valve degeneration, heart attack",
+        'treatment': "Valve repair/replacement"
+    },
+    {
+        'name': "Heart Valve Disease (Mitral Stenosis)",
+        'symptoms': "Shortness of breath, fatigue",
+        'causes': "Rheumatic fever",
+        'treatment': "Valvuloplasty, replacement"
+    },
+    {
+        'name': "Heart Valve Disease (Tricuspid Regurgitation)",
+        'symptoms': "Swelling, fatigue",
+        'causes': "Right ventricle enlargement",
+        'treatment': "Diuretics, valve repair"
+    },
+    {
+        'name': "Hypertrophic Obstructive Cardiomyopathy",
+        'symptoms': "Chest pain, fainting",
+        'causes': "Genetic thickening of heart muscle",
+        'treatment': "Beta-blockers, surgery"
+    },
+    {
+        'name': "Hypoplastic Left Heart Syndrome",
+        'symptoms': "Cyanosis, rapid breathing",
+        'causes': "Congenital defect",
+        'treatment': "Staged surgeries, transplant"
+    },
+    {
+        'name': "Kawasaki Disease",
+        'symptoms': "Fever, rash, swollen hands/feet",
+        'causes': "Unknown (possibly infectious)",
+        'treatment': "IVIG, aspirin"
+    },
+    {
+        'name': "Long QT Syndrome",
+        'symptoms': "Fainting, seizures",
+        'causes': "Genetic or medication-induced",
+        'treatment': "Beta-blockers, defibrillator"
+    },
+    {
+        'name': "Marfan Syndrome (Cardiac Manifestations)",
+        'symptoms': "Tall stature, aortic dilation",
+        'causes': "Genetic connective tissue disorder",
+        'treatment': "Beta-blockers, aortic monitoring"
+    },
+    {
+        'name': "Mitral Valve Prolapse",
+        'symptoms': "Palpitations, chest discomfort",
+        'causes': "Valve leaflet abnormality",
+        'treatment': "Usually none, beta-blockers if symptomatic"
+    },
+    {
+        'name': "Myocardial Bridge",
+        'symptoms': "Chest pain, especially during exercise",
+        'causes': "Coronary artery runs through heart muscle",
+        'treatment': "Beta-blockers, surgery in severe cases"
+    },
+    {
+        'name': "Myocarditis",
+        'symptoms': "Chest pain, fatigue, arrhythmias",
+        'causes': "Viral infection, autoimmune",
+        'treatment': "Supportive care, immunosuppressants"
+    },
+    {
+        'name': "Patent Ductus Arteriosus",
+        'symptoms': "Poor feeding, rapid breathing",
+        'causes': "Failure of fetal connection to close",
+        'treatment': "Medication, device closure"
+    },
+    {
+        'name': "Pericardial Effusion",
+        'symptoms': "Shortness of breath, chest pressure",
+        'causes': "Infection, cancer, trauma",
+        'treatment': "Pericardiocentesis"
+    },
+    {
+        'name': "Pericarditis",
+        'symptoms': "Sharp chest pain relieved by sitting forward",
+        'causes': "Viral infection, autoimmune",
+        'treatment': "NSAIDs, colchicine"
+    },
+    {
+        'name': "Premature Ventricular Contractions",
+        'symptoms': "Palpitations, skipped beats",
+        'causes': "Stress, caffeine, heart disease",
+        'treatment': "Beta-blockers if symptomatic"
+    },
+    {
+        'name': "Pulmonary Atresia",
+        'symptoms': "Cyanosis, rapid breathing",
+        'causes': "Congenital defect",
+        'treatment': "Surgical repair"
+    },
+    {
+        'name': "Pulmonary Hypertension",
+        'symptoms': "Shortness of breath, fatigue",
+        'causes': "Various lung and heart conditions",
+        'treatment': "Vasodilators, oxygen"
+    },
+    {
+        'name': "Pulmonary Stenosis",
+        'symptoms': "Chest pain, shortness of breath",
+        'causes': "Congenital narrowing",
+        'treatment': "Balloon valvuloplasty"
+    },
+    {
+        'name': "Pulmonary Valve Regurgitation",
+        'symptoms': "Fatigue, shortness of breath",
+        'causes': "Pulmonary hypertension, congenital",
+        'treatment': "Valve replacement if severe"
+    },
+    {
+        'name': "Restrictive Cardiomyopathy",
+        'symptoms': "Fatigue, swelling, exercise intolerance",
+        'causes': "Amyloidosis, radiation therapy",
+        'treatment': "Diuretics, transplant"
+    },
+    {
+        'name': "Rheumatic Heart Disease",
+        'symptoms': "Shortness of breath, chest pain",
+        'causes': "Untreated strep throat",
+        'treatment': "Antibiotics, valve repair"
+    },
+    {
+        'name': "Sick Sinus Syndrome",
+        'symptoms': "Fatigue, dizziness, fainting",
+        'causes': "Sinus node dysfunction",
+        'treatment': "Pacemaker"
+    },
+    {
+        'name': "Subaortic Stenosis",
+        'symptoms': "Chest pain, fainting",
+        'causes': "Congenital narrowing",
+        'treatment': "Surgical resection"
+    },
+    {
+        'name': "Supraventricular Tachycardia",
+        'symptoms': "Rapid heartbeat, palpitations",
+        'causes': "Abnormal electrical pathways",
+        'treatment': "Vagal maneuvers, ablation"
+    },
+    {
+        'name': "Takotsubo Cardiomyopathy",
+        'symptoms': "Chest pain, shortness of breath",
+        'causes': "Severe emotional/physical stress",
+        'treatment': "Supportive care, usually reversible"
+    },
+    {
+        'name': "Tetralogy of Fallot",
+        'symptoms': "Cyanosis, clubbed fingers",
+        'causes': "Congenital defect",
+        'treatment': "Surgical repair"
+    },
+    {
+        'name': "Transposition of the Great Arteries",
+        'symptoms': "Cyanosis, rapid breathing",
+        'causes': "Congenital defect",
+        'treatment': "Surgical correction"
+    },
+    {
+        'name': "Tricuspid Atresia",
+        'symptoms': "Cyanosis, fatigue",
+        'causes': "Congenital absence of valve",
+        'treatment': "Staged surgeries"
+    },
+    {
+        'name': "Ventricular Fibrillation",
+        'symptoms': "Collapse, no pulse",
+        'causes': "Severe heart disease",
+        'treatment': "Defibrillation, CPR"
+    },
+    {
+        'name': "Ventricular Septal Defect",
+        'symptoms': "Poor feeding, failure to thrive",
+        'causes': "Congenital defect",
+        'treatment': "Surgical repair"
+    },
+    {
+        'name': "Ventricular Tachycardia",
+        'symptoms': "Palpitations, dizziness",
+        'causes': "Heart disease, scar tissue",
+        'treatment': "Ablation, defibrillator"
+    },
+    {
+        'name': "Wolff-Parkinson-White Syndrome",
+        'symptoms': "Palpitations, rapid heartbeat",
+        'causes': "Extra electrical pathway",
+        'treatment': "Ablation"
+    }
+]
+
+
+
+@login_required
 def check_disease(request):
-    matched_diseases = []
+    # Directly return all diseases without filtering
+    return render(request, 'Diss_view.html', {'diseases': diseases})
 
-    if request.method == 'POST':
-        user_input = request.POST.get('symptoms', '').lower().replace(" ", "")  # Remove spaces for better matching
-        
-        for disease in diseases:
-            disease_symptoms = disease['symptoms'].lower().replace(" ", "")  # Remove spaces for better matching
-            
-            # Check for partial matches (e.g., "chestpa" should match "chest pain")
-            if re.search(user_input, disease_symptoms):  
-                matched_diseases.append(disease)
-
-    return render(request, 'Diss_view.html', {'diseases': matched_diseases})
 
 
 import random
@@ -1352,3 +1711,18 @@ def delete_slot(request, slot_id):
     slot   = get_object_or_404(DoctorSlot, pk=slot_id, doctor=doctor)
     slot.delete()
     return JsonResponse({'success': True})
+
+@login_required
+def doctor_rating_responses(request):
+    doctor = get_object_or_404(Doctor, user=request.user)
+    ratings = DoctorRating.objects.filter(doctor=doctor)
+
+    if request.method == 'POST':
+        rating_id = request.POST.get('rating_id')
+        response_text = request.POST.get('doctor_response')
+        rating = get_object_or_404(DoctorRating, id=rating_id, doctor=doctor)
+        rating.doctor_response = response_text
+        rating.save()
+        return redirect('doctor_rating_responses')
+
+    return render(request, 'doctor_rating_responses.html', {'ratings': ratings})
