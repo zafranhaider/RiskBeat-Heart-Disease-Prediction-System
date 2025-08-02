@@ -9,6 +9,21 @@ from django.contrib.auth import authenticate, login, logout
 import numpy as np
 import pandas as pd
 import logging
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.db import transaction
+from datetime import datetime
+# views.py
+from django.shortcuts    import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib       import messages
+from django.http          import JsonResponse
+from django.utils         import timezone
+from datetime             import datetime, timedelta
+
+from .models              import DoctorSlot, Booking, DayAvailability
+
 import re
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -1545,11 +1560,7 @@ def check_slots(request):
     return JsonResponse({'slots': available})
 
 
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.views.decorators.http import require_POST
-from django.db import transaction
-from datetime import datetime
+
 
 from .models import DoctorSlot, Booking
 
@@ -1608,6 +1619,10 @@ from django.contrib                import messages
 
 from .models import Doctor, Patient, Booking, DoctorRating
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import Patient, Doctor, DoctorRating
+
 @login_required
 def doctors_to_rate(request):
     patient = get_object_or_404(Patient, user=request.user)
@@ -1619,19 +1634,22 @@ def doctors_to_rate(request):
 
     # fetch your ratings in one go
     ratings_qs = DoctorRating.objects.filter(patient=patient)
-    existing = { r.doctor_id: r.score for r in ratings_qs }
+    existing = {r.doctor_id: r for r in ratings_qs}  # store whole object now
 
-    # build a flat list of (doctor, your_score_or_None)
+    # build a flat list of (doctor, your_score, doctor_response)
     doctor_list = []
     for d in docs:
+        rating = existing.get(d.id)
         doctor_list.append({
             'doctor': d,
-            'your_score': existing.get(d.id),     # int or None
+            'your_score': rating.score if rating else None,
+            'doctor_response': rating.doctor_response if rating else None,
         })
 
     return render(request, 'rate_doctor_list.html', {
         'doctor_list': doctor_list,
     })
+
 
 @login_required
 def submit_rating(request, doctor_id):
@@ -1668,15 +1686,6 @@ def my_doctor_ratings(request):
         'ratings': ratings,
     })
 
-# views.py
-from django.shortcuts    import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib       import messages
-from django.http          import JsonResponse
-from django.utils         import timezone
-from datetime             import datetime, timedelta
-
-from .models              import DoctorSlot, Booking, DayAvailability
 
 
 @login_required

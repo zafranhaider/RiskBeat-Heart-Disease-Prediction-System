@@ -7,12 +7,18 @@
   <table class="table table-bordered text-center">
     <thead>
       <tr>
-        <th>#</th><th>Name</th><th>Specialty</th><th>Your Rating</th><th>Action</th>
+        <th>#</th>
+        <th>Name</th>
+        <th>Specialty</th>
+        <th>Your Rating</th>
+        <th>Doctor Response</th> <!-- NEW COLUMN -->
+        <th>Action</th>
       </tr>
     </thead>
+    
     <tbody>
       {% for entry in doctor_list %}
-        {% with doc=entry.doctor score=entry.your_score %}
+        {% with doc=entry.doctor score=entry.your_score response=entry.doctor_response %}
         <tr>
           <td>{{ forloop.counter }}</td>
           <td>Dr. {{ doc.user.first_name }} {{ doc.user.last_name }}</td>
@@ -21,7 +27,14 @@
             {% if score %}
               {{ score }}★
             {% else %}
-              —
+              — 
+            {% endif %}
+          </td>
+          <td>
+            {% if response %}
+              {{ response }}
+            {% else %}
+              <span class="text-muted">No response yet</span>
             {% endif %}
           </td>
           <td>
